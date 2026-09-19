@@ -196,9 +196,27 @@ function animatePercent(el,target,duration=1500){
   }
   requestAnimationFrame(frame);
 }
-function makePlayerChip(p){
+function animateSignedNumber(el,from,to,duration=850,suffix=""){
+  let t0=performance.now();
+  el.textContent=signed(from)+suffix;
+  function frame(now){
+    let p=Math.min(1,(now-t0)/duration),eased=1-Math.pow(1-p,3);
+    let v=Math.round(from+(to-from)*eased);
+    el.textContent=signed(v)+suffix;
+    if(p<1)requestAnimationFrame(frame);
+    else{el.textContent=signed(to)+suffix;el.classList.add("scoreflash");setTimeout(()=>el.classList.remove("scoreflash"),700)}
+  }
+  requestAnimationFrame(frame);
+}
+function scoreTone(delta,delay=0){
+  setTimeout(()=>{
+    if(delta>0){tone(690,.08,.014);setTimeout(()=>tone(960,.12,.016),90)}
+    else{tone(240,.13,.012)}
+  },delay);
+}
+function makePlayerChip(p,index=0){
   let chip=document.createElement("div");
-  chip.className="playerchip";
+  chip.className="playerchip "+(p.correct?"winchip":"losechip");
 
   let avatarWrap=document.createElement("div");
   if(p.avatar){
@@ -221,6 +239,8 @@ function makePlayerChip(p){
       img.referrerPolicy="no-referrer";
       avatarWrap.replaceWith(img);
       p.avatar=url;
+      let saved=allTimePlayers.get(p.key);
+      if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
     });
   }
   chip.appendChild(avatarWrap);
@@ -230,11 +250,33 @@ function makePlayerChip(p){
   let name=document.createElement("div");
   name.className="playername";
   name.textContent="@"+p.name;
-  let score=document.createElement("div");
-  score.className="playerscore";
-  score.innerHTML="ANSWER <b>"+(p.delta>0?"+1":"−1")+"</b> · ROUND <b>"+signed(p.roundPoints)+"</b> · ALL-TIME <b>"+signed(p.allTimePoints)+"</b>";
-  info.append(name,score);
+
+  let delta=document.createElement("div");
+  delta.className="answerdelta";
+  delta.textContent=(p.delta>0?"✓ CORRECT  +1 POINT":"✕ WRONG  −1 POINT");
+
+  let scores=document.createElement("div");
+  scores.className="scoreline";
+
+  let round=document.createElement("span");
+  round.className="scorebit";
+  round.innerHTML="ROUND <span class='scoreold'>"+signed(p.roundBefore)+"</span><span class='scorearrow'>→</span><b class='scorenew'>"+signed(p.roundBefore)+"</b>";
+
+  let all=document.createElement("span");
+  all.className="scorebit";
+  all.innerHTML="ALL-TIME <span class='scoreold'>"+signed(p.allTimeBefore)+"</span><span class='scorearrow'>→</span><b class='scorenew'>"+signed(p.allTimeBefore)+"</b>";
+
+  scores.append(round,all);
+  info.append(name,delta,scores);
   chip.appendChild(info);
+
+  requestAnimationFrame(()=>setTimeout(()=>{
+    let nums=chip.querySelectorAll(".scorenew");
+    animateSignedNumber(nums[0],p.roundBefore,p.roundPoints,850);
+    animateSignedNumber(nums[1],p.allTimeBefore,p.allTimePoints,1000);
+    if(index<6)scoreTone(p.delta,index*90);
+  },220+index*70));
+
   return chip;
 }
 function fillPlayerGrid(id,players){
@@ -247,29 +289,31 @@ function fillPlayerGrid(id,players){
     box.appendChild(empty);
     return;
   }
-  players.slice(0,10).forEach(p=>box.appendChild(makePlayerChip(p)));
-  if(players.length>10){
+  players.slice(0,6).forEach((p,n)=>box.appendChild(makePlayerChip(p,n)));
+  if(players.length>6){
     let more=document.createElement("div");
     more.className="morechip";
-    more.textContent="+"+(players.length-10)+" more players";
+    more.textContent="+"+(players.length-6)+" more players";
     box.appendChild(more);
   }
 }
 function scoreQuestion(players,correctLetter){
   let scored=players.map((p,n)=>{
     let key=p.key||("dev-"+n),delta=p.answer===correctLetter?1:-1;
-    let roundPoints=(roundScores.get(key)||0)+delta;
+    let roundBefore=roundScores.get(key)||0;
+    let roundPoints=roundBefore+delta;
     roundScores.set(key,roundPoints);
 
     let old=allTimePlayers.get(key)||{points:0,name:p.name||"PLAYER",avatar:p.avatar||""};
+    let allTimeBefore=Number(old.points)||0;
     let updated={
-      points:(Number(old.points)||0)+delta,
+      points:allTimeBefore+delta,
       name:p.name||old.name||"PLAYER",
       avatar:p.avatar||old.avatar||""
     };
     allTimePlayers.set(key,updated);
 
-    return {...p,key,delta,roundPoints,allTimePoints:updated.points,correct:delta>0};
+    return {...p,key,delta,roundBefore,roundPoints,allTimeBefore,allTimePoints:updated.points,correct:delta>0};
   });
   saveAllTime();
   return scored;
