@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>QuizGameMaster Engine</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#02070d;color:#fff;font-family:Arial,sans-serif;overflow:hidden}#app{height:100vh;max-width:520px;margin:auto;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 22%,#245f8d,#0b2235 50%,#020911 100%)}.stage{position:absolute;top:2.5%;bottom:29%;left:5%;right:5%}.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:scale(.98);transition:.35s;pointer-events:none}.on{opacity:1;transform:none}.ey{font-size:1.3vh;letter-spacing:.15em;color:#a9c0d0;font-weight:900}.reel{height:27vh;width:88%;margin:1.6vh 0 1vh;overflow:hidden;position:relative;mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}#items{font-size:2.5vh;line-height:5.4vh;text-align:center;font-weight:900;color:#7694aa;will-change:transform}#items div{height:5.4vh}.focus{position:absolute;left:8%;right:8%;top:10.8vh;height:5.4vh;border-top:1px solid #ffd45e44;border-bottom:1px solid #ffd45e44;background:#ffd45e08}.selected{color:#ffd45e!important;font-size:3vh!important;text-shadow:0 0 .8vh #ffd45e,0 0 2.4vh #ffd45e88;animation:pop .65s cubic-bezier(.2,1.5,.35,1)}@keyframes pop{55%{transform:scale(1.22)}100%{transform:scale(1.08)}}.difficulty{width:100%;opacity:0;transform:translateY(1vh);transition:.35s}.difficulty.show{opacity:1;transform:none}.dl{text-align:center;font-size:1.05vh;font-weight:900;letter-spacing:.16em;color:#9eb7c8}.rail{display:flex;justify-content:center;gap:.65vh;margin:1.2vh auto}.rank{width:7.4vh;padding:.85vh .1vh;border-radius:1.1vh;border:1px solid #ffffff1d;background:#ffffff08;text-align:center;font-size:.95vh;font-weight:900;color:#7993a6;transition:.16s}.rank span{display:block;font-size:2.25vh}.rank.hot{transform:translateY(-.45vh) scale(1.08);color:#fff;border-color:#ffd45e;background:#ffd45e18}.rank.final{color:#fff;border-color:#ffd45e;background:#ffd45e2b;box-shadow:0 0 1.2vh #ffd45e,0 0 3vh #ffd45e88;transform:scale(1.18)}.ready{text-align:center;font-size:2.1vh;font-weight:1000;margin-top:1.1vh;opacity:0;transition:.3s}.ready.show{opacity:1}.roundhud{font-size:1.02vh;font-weight:900;letter-spacing:.12em;color:#9eb7c8;margin-bottom:.65vh}.timer{width:78%;height:1.5vh;border:2px solid white;border-radius:20px;padding:2px;margin-bottom:1.5vh}.bar{height:100%;width:100%;border-radius:12px;background:#43df54}.q{font-size:3vh;font-weight:900;line-height:1.04;text-align:center;margin-bottom:1.4vh}.visual{height:27vh;width:78%;border-radius:2vh;overflow:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#174b72,#07131e);box-shadow:0 1.4vh 4vh #0008}.visual.landscape{width:111%;height:auto;aspect-ratio:16/9;border-radius:0;box-shadow:none;background:transparent}.visual.landscape .mediafade{background:transparent}.visual.landscape .mediafade .blur{display:none}.visual.landscape .mediafade .main{object-fit:contain;-webkit-mask-image:none;mask-image:none}.visual img{width:100%;height:100%;object-fit:cover}.mediafade{position:relative;width:100%;height:100%;overflow:hidden;background:#07131e}.mediafade .blur{position:absolute;inset:-7%;width:114%;height:114%;object-fit:cover;filter:blur(18px) brightness(.55) saturate(.85);transform:scale(1.04)}.mediafade .main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:none;z-index:1;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 9%,#000 91%,transparent 100%)}.subject{font-size:4.4vh;font-weight:900;color:#f4d06b}.prompt{margin:.85vh 0 .15vh;font-size:1.15vh;color:#b9cfdd;font-weight:700}.answercount{margin-top:.7vh;padding:.65vh 1.4vh;border:1px solid #ffffff20;border-radius:2vh;background:#071824aa;color:#9eb7c8;font-size:1.15vh;font-weight:900;letter-spacing:.08em}.answercount b{color:#fff;font-size:1.45vh}.chatsim{display:none;position:absolute;left:50%;bottom:17%;transform:translateX(-50%);z-index:60;gap:.55vh}.chatsim.show{display:flex}.chatbtn{width:4.3vh;height:3.5vh;border-radius:.8vh;border:1px solid #62bfff66;background:#ffffff0d;color:#fff;font-size:1.35vh;font-weight:900}.prompt b{color:#f3d16d}.answers{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:1vh;margin-top:1.2vh}.ans{height:7vh;border:1px solid #ffffff25;border-radius:1.5vh;background:#ffffff0b;display:flex;align-items:center;gap:.8vh;padding:.7vh;font-size:1.7vh;font-weight:900;position:relative;overflow:hidden;transition:transform .55s,opacity .55s,border-color .55s,box-shadow .55s,background .55s}.ans>*{position:relative;z-index:1}.pctbar{position:absolute!important;z-index:0!important;left:0;top:0;bottom:0;width:0;background:#62bfff1f;transition:width 1.6s cubic-bezier(.16,.8,.22,1)}.pct{margin-left:auto;font-size:1.5vh;color:#fff;opacity:0;transform:scale(.6);transition:opacity .4s,transform .55s;white-space:nowrap}.ans.showpct .pct{opacity:1;transform:scale(1)}.letter{width:4.4vh;height:4.4vh;display:grid;place-items:center;border-radius:1vh;background:#ffffff10;color:#f2ce69;font-size:2vh}.ans img{width:5vh;height:3.3vh;object-fit:cover;border-radius:.4vh}@keyframes correctReveal{0%{transform:scale(1)}45%{transform:scale(1.06)}100%{transform:scale(1.025)}}.good{background:#0b673d!important;border-color:#58ef91!important;box-shadow:0 0 25px #43ec8544;transform:scale(1.025);animation:correctReveal 1.2s ease}.bad{opacity:.28}.correct{border:1px solid #52ee8d;background:#075f3bd9;color:#60f299;border-radius:25px;padding:.8vh 2vh;font-weight:900}.country{font-size:4.5vh;font-weight:900;margin:1.5vh}.factpic{width:111%;height:27vh;aspect-ratio:auto;border-radius:0;overflow:hidden;display:grid;place-items:center;font-size:7vh;background:transparent}.factpic .mediafade{border-radius:0;background:transparent}.factpic .mediafade .blur{display:none}.factpic .mediafade .main{object-fit:contain;-webkit-mask-image:none;mask-image:none}.fact{width:82%;margin-top:1.4vh;padding:1.2vh 1.5vh;border:1px solid #f1cf6566;border-radius:1.5vh;background:#071824e8;font-size:1.9vh;text-align:center}.fact b{display:block;color:#f3d16d;font-size:1.2vh;letter-spacing:.1em;margin-bottom:.4vh}.roundtitle{font-size:1.15vh;font-weight:1000;letter-spacing:.16em;color:#9eb7c8;margin-bottom:.8vh}.roundanswer{font-size:2.5vh;font-weight:1000;text-align:center;color:#fff;margin-bottom:1.4vh}.roundanswer b{color:#60f299}.resultgroups{width:108%;display:flex;flex-direction:column;gap:1vh}.resultsection{width:100%;padding:1vh;border-radius:1.5vh;border:1px solid #ffffff22;background:#071824d9;box-shadow:0 .8vh 2vh #0005}.resultsection.win{border-color:#55ed8b66;background:linear-gradient(180deg,#0b673d55,#071824d9)}.resultsection.lose{border-color:#ff6f7460;background:linear-gradient(180deg,#6b1d2850,#071824d9)}.resulthead{display:flex;align-items:center;justify-content:space-between;gap:1vh;font-size:1.22vh;font-weight:1000;letter-spacing:.08em}.resulthead .delta{padding:.35vh .75vh;border-radius:1vh;font-size:1.15vh}.win .delta{color:#72f2a1;background:#0b673d88;border:1px solid #55ed8b66}.lose .delta{color:#ff9a9f;background:#641c2788;border:1px solid #ff6f7460}.playergrid{display:flex;flex-direction:column;gap:.55vh;margin-top:.7vh;max-height:18vh;overflow:hidden}.playerchip{min-width:0;display:flex;align-items:center;gap:.7vh;padding:.55vh .75vh .55vh .45vh;border-radius:1.3vh;border:1px solid #ffffff22;background:#ffffff0c;box-shadow:0 .35vh 1vh #0004;animation:pop .45s ease;position:relative}.playerchip.winchip{border-color:#55ed8b55;background:linear-gradient(90deg,#0b673d3d,#ffffff08)}.playerchip.losechip{border-color:#ff6f7450;background:linear-gradient(90deg,#6b1d2838,#ffffff08)}.playeravatar,.playerfallback{width:4vh;height:4vh;border-radius:50%;flex:0 0 4vh;border:1px solid #ffffff44}.playeravatar{object-fit:cover;background:#0b2235}.playerfallback{display:grid;place-items:center;background:#18324a;color:#ffd45e;font-size:1.2vh;font-weight:1000}.playerinfo{min-width:0;flex:1}.playername{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:1.15vh;font-weight:1000}.answerdelta{font-size:.98vh;font-weight:1000;margin-top:.12vh}.winchip .answerdelta{color:#72f2a1}.losechip .answerdelta{color:#ff9a9f}.scoreline{display:flex;gap:.7vh;flex-wrap:wrap;margin-top:.18vh;font-size:.88vh;color:#8ea5b5}.scorebit b{color:#fff;font-size:1.02vh}.scoreold{opacity:.58;text-decoration:line-through}.scorenew{display:inline-block;min-width:2.1vh;color:#fff;font-weight:1000;transform:scale(1)}.scoreflash{animation:scorePop .65s ease}.scorearrow{color:#ffd45e;margin:0 .2vh}@keyframes scorePop{0%{transform:scale(.8);filter:brightness(1)}45%{transform:scale(1.38);filter:brightness(1.8)}100%{transform:scale(1);filter:brightness(1)}}.roundempty{grid-column:1/-1;text-align:center;padding:.8vh;color:#8ea5b5;font-size:1.05vh;font-weight:800}.morechip{grid-column:1/-1;text-align:center;color:#9eb7c8;font-size:1vh;font-weight:800;padding:.35vh}.leaderhead{text-align:center;margin-bottom:1.2vh}.leadertitle{font-size:2.7vh;font-weight:1000;color:#ffd45e;text-shadow:0 0 1.4vh #ffd45e55}.leadersub{font-size:1.05vh;font-weight:900;letter-spacing:.13em;color:#9eb7c8;margin-top:.35vh}.leaderlist{width:108%;display:flex;flex-direction:column;gap:.55vh}.lbrow{position:relative;display:flex;align-items:center;gap:.8vh;min-height:5.25vh;padding:.5vh .8vh;border-radius:1.35vh;border:1px solid #ffffff20;background:#071824dd;box-shadow:0 .4vh 1.2vh #0004;transition:transform 1s cubic-bezier(.16,.8,.22,1),opacity .6s}.lbrow.top1{min-height:7vh;border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8);box-shadow:0 0 2.4vh #ffd45e22}.lbrow.top2{min-height:6.2vh;border-color:#d8e0ea66;background:linear-gradient(90deg,#a8b4c222,#071824e8)}.lbrow.top3{min-height:5.8vh;border-color:#c8865166;background:linear-gradient(90deg,#a85d2a22,#071824e8)}.lbplace{width:3.4vh;text-align:center;font-size:1.35vh;font-weight:1000;color:#9eb7c8}.top1 .lbplace{font-size:2.1vh;color:#ffd45e}.top2 .lbplace{font-size:1.8vh;color:#e7edf5}.top3 .lbplace{font-size:1.65vh;color:#d89a67}.lbavatarwrap{position:relative;flex:0 0 auto}.lbavatar,.lbfallback{width:3.8vh;height:3.8vh;border-radius:50%;border:1px solid #ffffff44}.top1 .lbavatar,.top1 .lbfallback{width:5.3vh;height:5.3vh}.top2 .lbavatar,.top2 .lbfallback{width:4.6vh;height:4.6vh}.top3 .lbavatar,.top3 .lbfallback{width:4.2vh;height:4.2vh}.lbavatar{object-fit:cover;background:#0b2235}.lbfallback{display:grid;place-items:center;background:#18324a;color:#ffd45e;font-size:1.25vh;font-weight:1000}.rankornament{position:absolute;right:-.7vh;top:-1.2vh;font-size:2.2vh;filter:drop-shadow(0 .2vh .3vh #0008)}.top2 .rankornament,.top3 .rankornament{font-size:1.7vh;top:-.8vh}.lbinfo{min-width:0;flex:1}.lbname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15vh;font-weight:1000;color:#fff}.top1 .lbname{font-size:1.65vh}.top2 .lbname{font-size:1.45vh}.top3 .lbname{font-size:1.3vh}.lbmeta{font-size:.95vh;color:#9eb7c8;margin-top:.15vh}.lbscore{text-align:right;min-width:6.4vh}.lbscore b{display:block;font-size:1.55vh;color:#fff}.top1 .lbscore b{font-size:2.15vh;color:#ffd45e}.move{font-size:.93vh;font-weight:1000;margin-top:.15vh}.move.up{color:#72f2a1}.move.down{color:#ff9a9f}.move.same{color:#8ea5b5}.move.new{color:#62bfff}.safe{position:absolute;bottom:0;left:0;right:0;height:29%;border-top:1px dashed #ffffff0c}.safe div{text-align:center;color:#ffffff0a;font-size:1vh;margin-top:1vh}.version{position:absolute;z-index:50;top:1.4vh;right:2.4vh;font-size:.82vh;font-weight:700;letter-spacing:.05em;color:#ffffff66;pointer-events:none}.livestatus{display:none;position:absolute;z-index:50;top:1.4vh;left:2.4vh;font-size:.82vh;font-weight:900;letter-spacing:.05em;color:#ffd36e;pointer-events:none}.livestatus.show{display:block}.livestatus.ok{color:#72f2a1}.livestatus.bad{color:#ff7b7b}
-.modegate{position:absolute;inset:0;z-index:100;background:radial-gradient(circle at 50% 25%,#245f8d,#0b2235 48%,#020911);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6vh 7%;text-align:center}.modegate.hide{display:none}.modegate h1{margin:0 0 .8vh;font-size:4vh;letter-spacing:.03em}.modegate .sub{font-size:1.25vh;color:#9eb7c8;letter-spacing:.14em;font-weight:900;margin-bottom:5vh}.modebtn{width:88%;padding:2.1vh 1vh;margin:.8vh;border-radius:1.8vh;border:1px solid #ffffff25;background:#ffffff0c;color:white;font-size:2.15vh;font-weight:900;box-shadow:0 1vh 3vh #0005}.modebtn.live{border-color:#ff5c6888;box-shadow:0 0 2.5vh #ff405533}.modebtn.dev{border-color:#62bfff88;box-shadow:0 0 2.5vh #299cff33}.devpanel{position:absolute;inset:0;z-index:90;background:radial-gradient(circle at 50% 25%,#245f8d,#0b2235 48%,#020911);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}.devpanel.show{display:flex}.devpanel h2{font-size:2.8vh;margin:0 0 .7vh}.devpanel .hint{font-size:1.2vh;color:#9eb7c8;margin-bottom:3vh}.catbtn{width:72%;padding:1.7vh;margin:.7vh;border-radius:1.5vh;border:1px solid #f1cf6566;background:#ffffff0b;color:#fff;font-size:2vh;font-weight:900}.livepanel{position:absolute;inset:0;z-index:95;background:radial-gradient(circle at 50% 25%,#245f8d,#0b2235 48%,#020911);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}.livepanel.show{display:flex}.livepanel h2{font-size:2.8vh;margin:0 0 .7vh}.livepanel .hint{font-size:1.2vh;color:#9eb7c8;margin-bottom:2.4vh}.checks{width:76%;text-align:left;margin-bottom:2.4vh}.checkrow{display:flex;align-items:center;gap:1.3vh;padding:1.5vh;margin:.7vh 0;border:1px solid #ffffff22;border-radius:1.4vh;background:#ffffff0a;font-size:1.8vh;font-weight:900}.checkrow input{width:2.4vh;height:2.4vh;accent-color:#f3d16d}.startlive{width:76%;padding:1.8vh;border-radius:1.5vh;border:1px solid #ff5c6888;background:#ff40551c;color:#fff;font-size:2vh;font-weight:900}.startlive:disabled{opacity:.35}.timeset{width:76%;margin:0 0 1.4vh;text-align:left;color:#9eb7c8;font-size:1.08vh;font-weight:900;display:flex;flex-direction:column;gap:.5vh}.settingslabel{text-align:left;width:76%;font-size:.95vh;color:#ffd45e;letter-spacing:.12em;font-weight:1000;margin:.3vh 0 .2vh}.timeset label{display:flex;align-items:center;justify-content:space-between;gap:1vh}.timeset input{width:8vh;padding:.8vh;border-radius:.8vh;border:1px solid #ffffff2b;background:#ffffff0d;color:#fff;text-align:center;font-size:1.5vh;font-weight:900}
-</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v0.5.1</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">CHOOSE CATEGORY</div><div id="devcats"></div></div><div class="stage">
+*{box-sizing:border-box}body{margin:0;background:#02070d;color:#fff;font-family:Arial,sans-serif;overflow:hidden}#app{height:100vh;max-width:520px;margin:auto;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 22%,#245f8d,#0b2235 50%,#020911 100%)}.stage{position:absolute;top:2.5%;bottom:29%;left:5%;right:5%}.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:scale(.98);transition:.35s;pointer-events:none}.on{opacity:1;transform:none}.ey{font-size:1.3vh;letter-spacing:.15em;color:#a9c0d0;font-weight:900}.reel{height:27vh;width:88%;margin:1.6vh 0 1vh;overflow:hidden;position:relative;mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}#items{font-size:2.5vh;line-height:5.4vh;text-align:center;font-weight:900;color:#7694aa;will-change:transform}#items div{height:5.4vh}.focus{position:absolute;left:8%;right:8%;top:10.8vh;height:5.4vh;border-top:1px solid #ffd45e44;border-bottom:1px solid #ffd45e44;background:#ffd45e08}.selected{color:#ffd45e!important;font-size:3vh!important;text-shadow:0 0 .8vh #ffd45e,0 0 2.4vh #ffd45e88;animation:pop .65s cubic-bezier(.2,1.5,.35,1)}@keyframes pop{55%{transform:scale(1.22)}100%{transform:scale(1.08)}}.difficulty{width:100%;opacity:0;transform:translateY(1vh);transition:.35s}.difficulty.show{opacity:1;transform:none}.dl{text-align:center;font-size:1.05vh;font-weight:900;letter-spacing:.16em;color:#9eb7c8}.rail{display:flex;justify-content:center;gap:.65vh;margin:1.2vh auto}.rank{width:7.4vh;padding:.85vh .1vh;border-radius:1.1vh;border:1px solid #ffffff1d;background:#ffffff08;text-align:center;font-size:.95vh;font-weight:900;color:#7993a6;transition:.16s}.rank span{display:block;font-size:2.25vh}.rank.hot{transform:translateY(-.45vh) scale(1.08);color:#fff;border-color:#ffd45e;background:#ffd45e18}.rank.final{color:#fff;border-color:#ffd45e;background:#ffd45e2b;box-shadow:0 0 1.2vh #ffd45e,0 0 3vh #ffd45e88;transform:scale(1.18)}.ready{text-align:center;font-size:2.1vh;font-weight:1000;margin-top:1.1vh;opacity:0;transition:.3s}.ready.show{opacity:1}.roundhud{font-size:1.02vh;font-weight:900;letter-spacing:.12em;color:#9eb7c8;margin-bottom:.65vh}.timer{width:78%;height:1.5vh;border:2px solid white;border-radius:20px;padding:2px;margin-bottom:1.5vh}.bar{height:100%;width:100%;border-radius:12px;background:#43df54}.q{font-size:3vh;font-weight:900;line-height:1.04;text-align:center;margin-bottom:1.4vh}.visual{height:27vh;width:78%;border-radius:2vh;overflow:hidden;display:grid;place-items:center;background:linear-gradient(145deg,#174b72,#07131e);box-shadow:0 1.4vh 4vh #0008}.visual.landscape{width:111%;height:auto;aspect-ratio:16/9;border-radius:0;box-shadow:none;background:transparent}.visual.landscape .mediafade{background:transparent}.visual.landscape .mediafade .blur{display:none}.visual.landscape .mediafade .main{object-fit:contain;-webkit-mask-image:none;mask-image:none}.visual img{width:100%;height:100%;object-fit:cover}.mediafade{position:relative;width:100%;height:100%;overflow:hidden;background:#07131e}.mediafade .blur{position:absolute;inset:-7%;width:114%;height:114%;object-fit:cover;filter:blur(18px) brightness(.55) saturate(.85);transform:scale(1.04)}.mediafade .main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:none;z-index:1;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,#000 9%,#000 91%,transparent 100%)}.subject{font-size:4.4vh;font-weight:900;color:#f4d06b}.prompt{margin:.85vh 0 .15vh;font-size:1.15vh;color:#b9cfdd;font-weight:700}.answercount{margin-top:.7vh;padding:.65vh 1.4vh;border:1px solid #ffffff20;border-radius:2vh;background:#071824aa;color:#9eb7c8;font-size:1.15vh;font-weight:900;letter-spacing:.08em}.answercount b{color:#fff;font-size:1.45vh}.devsim{display:none;position:absolute;z-index:70;left:3%;right:3%;bottom:1.1vh;flex-direction:column;gap:.42vh;padding:.7vh .8vh;border:1px solid #62bfff44;border-radius:1.4vh;background:#071824ee;box-shadow:0 0 2vh #299cff22}.devsim.show{display:flex}.devsimtitle{text-align:center;color:#62bfff;font-size:.9vh;font-weight:1000;letter-spacing:.12em;margin-bottom:.1vh}.devrow{display:grid;grid-template-columns:7.2vh repeat(4,1fr);gap:.45vh;align-items:center}.devname{font-size:.95vh;font-weight:1000;color:#bcd2df;white-space:nowrap}.chatbtn{height:3.2vh;border-radius:.75vh;border:1px solid #62bfff55;background:#ffffff0d;color:#fff;font-size:1.15vh;font-weight:1000;transition:.15s}.chatbtn.active{background:#2d8cff55;border-color:#62bfff;box-shadow:0 0 1vh #299cff55;transform:scale(1.05)}.prompt b{color:#f3d16d}.answers{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:1vh;margin-top:1.2vh}.ans{height:7vh;border:1px solid #ffffff25;border-radius:1.5vh;background:#ffffff0b;display:flex;align-items:center;gap:.8vh;padding:.7vh;font-size:1.7vh;font-weight:900;position:relative;overflow:hidden;transition:transform .55s,opacity .55s,border-color .55s,box-shadow .55s,background .55s}.ans>*{position:relative;z-index:1}.pctbar{position:absolute!important;z-index:0!important;left:0;top:0;bottom:0;width:0;background:#62bfff1f;transition:width 1.6s cubic-bezier(.16,.8,.22,1)}.pct{margin-left:auto;font-size:1.5vh;color:#fff;opacity:0;transform:scale(.6);transition:opacity .4s,transform .55s;white-space:nowrap}.ans.showpct .pct{opacity:1;transform:scale(1)}.letter{width:4.4vh;height:4.4vh;display:grid;place-items:center;border-radius:1vh;background:#ffffff10;color:#f2ce69;font-size:2vh}.ans img{width:5vh;height:3.3vh;object-fit:cover;border-radius:.4vh}@keyframes correctReveal{0%{transform:scale(1)}45%{transform:scale(1.06)}100%{transform:scale(1.025)}}.good{background:#0b673d!important;border-color:#58ef91!important;box-shadow:0 0 25px #43ec8544;transform:scale(1.025);animation:correctReveal 1.2s ease}.bad{opacity:.28}.correct{border:1px solid #52ee8d;background:#075f3bd9;color:#60f299;border-radius:25px;padding:.8vh 2vh;font-weight:900}.country{font-size:4.5vh;font-weight:900;margin:1.5vh}.factpic{width:111%;height:27vh;aspect-ratio:auto;border-radius:0;overflow:hidden;display:grid;place-items:center;font-size:7vh;background:transparent}.factpic .mediafade{border-radius:0;background:transparent}.factpic .mediafade .blur{display:none}.factpic .mediafade .main{object-fit:contain;-webkit-mask-image:none;mask-image:none}.fact{width:82%;margin-top:1.4vh;padding:1.2vh 1.5vh;border:1px solid #f1cf6566;border-radius:1.5vh;background:#071824e8;font-size:1.9vh;text-align:center}.fact b{display:block;color:#f3d16d;font-size:1.2vh;letter-spacing:.1em;margin-bottom:.4vh}.roundtitle{font-size:1.15vh;font-weight:1000;letter-spacing:.16em;color:#9eb7c8;margin-bottom:.8vh}.roundanswer{font-size:2.5vh;font-weight:1000;text-align:center;color:#fff;margin-bottom:1.4vh}.roundanswer b{color:#60f299}.resultgroups{width:108%;display:flex;flex-direction:column;gap:1vh}.resultsection{width:100%;padding:1vh;border-radius:1.5vh;border:1px solid #ffffff22;background:#071824d9;box-shadow:0 .8vh 2vh #0005}.resultsection.win{border-color:#55ed8b66;background:linear-gradient(180deg,#0b673d55,#071824d9)}.resultsection.lose{border-color:#ff6f7460;background:linear-gradient(180deg,#6b1d2850,#071824d9)}.resulthead{display:flex;align-items:center;justify-content:space-between;gap:1vh;font-size:1.22vh;font-weight:1000;letter-spacing:.08em}.resulthead .delta{padding:.35vh .75vh;border-radius:1vh;font-size:1.15vh}.win .delta{color:#72f2a1;background:#0b673d88;border:1px solid #55ed8b66}.lose .delta{color:#ff9a9f;background:#641c2788;border:1px solid #ff6f7460}.playergrid{display:flex;flex-direction:column;gap:.55vh;margin-top:.7vh;max-height:18vh;overflow:hidden}.playerchip{min-width:0;display:flex;align-items:center;gap:.7vh;padding:.55vh .75vh .55vh .45vh;border-radius:1.3vh;border:1px solid #ffffff22;background:#ffffff0c;box-shadow:0 .35vh 1vh #0004;animation:pop .45s ease;position:relative}.playerchip.winchip{border-color:#55ed8b55;background:linear-gradient(90deg,#0b673d3d,#ffffff08)}.playerchip.losechip{border-color:#ff6f7450;background:linear-gradient(90deg,#6b1d2838,#ffffff08)}.playeravatar,.playerfallback{width:4vh;height:4vh;border-radius:50%;flex:0 0 4vh;border:1px solid #ffffff44}.playeravatar{object-fit:cover;background:#0b2235}.playerfallback{display:grid;place-items:center;background:#18324a;color:#ffd45e;font-size:1.2vh;font-weight:1000}.playerinfo{min-width:0;flex:1}.playername{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:1.15vh;font-weight:1000}.answerdelta{font-size:.98vh;font-weight:1000;margin-top:.12vh}.winchip .answerdelta{color:#72f2a1}.losechip .answerdelta{color:#ff9a9f}.scoreline{display:flex;gap:.7vh;flex-wrap:wrap;margin-top:.18vh;font-size:.88vh;color:#8ea5b5}.scorebit b{color:#fff;font-size:1.02vh}.scoreold{opacity:.58;text-decoration:line-through}.scorenew{display:inline-block;min-width:2.1vh;color:#fff;font-weight:1000;transform:scale(1)}.scoreflash{animation:scorePop .65s ease}.scorearrow{color:#ffd45e;margin:0 .2vh}@keyframes scorePop{0%{transform:scale(.8);filter:brightness(1)}45%{transform:scale(1.38);filter:brightness(1.8)}100%{transform:scale(1);filter:brightness(1)}}.roundempty{grid-column:1/-1;text-align:center;padding:.8vh;color:#8ea5b5;font-size:1.05vh;font-weight:800}.morechip{grid-column:1/-1;text-align:center;color:#9eb7c8;font-size:1vh;font-weight:800;padding:.35vh}.leaderhead{text-align:center;margin-bottom:1.2vh}.leadertitle{font-size:2.7vh;font-weight:1000;color:#ffd45e;text-shadow:0 0 1.4vh #ffd45e55}.leadersub{font-size:1.05vh;font-weight:900;letter-spacing:.13em;color:#9eb7c8;margin-top:.35vh}.leaderlist{width:108%;display:flex;flex-direction:column;gap:.55vh}.lbrow{position:relative;display:flex;align-items:center;gap:.8vh;min-height:5.25vh;padding:.5vh .8vh;border-radius:1.35vh;border:1px solid #ffffff20;background:#071824dd;box-shadow:0 .4vh 1.2vh #0004;transition:transform 1s cubic-bezier(.16,.8,.22,1),opacity .6s}.lbrow.top1{min-height:7vh;border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8);box-shadow:0 0 2.4vh #ffd45e22}.lbrow.top2{min-height:6.2vh;border-color:#d8e0ea66;background:linear-gradient(90deg,#a8b4c222,#071824e8)}.lbrow.top3{min-height:5.8vh;border-color:#c8865166;background:linear-gradient(90deg,#a85d2a22,#071824e8)}.lbplace{width:3.4vh;text-align:center;font-size:1.35vh;font-weight:1000;color:#9eb7c8}.top1 .lbplace{font-size:2.1vh;color:#ffd45e}.top2 .lbplace{font-size:1.8vh;color:#e7edf5}.top3 .lbplace{font-size:1.65vh;color:#d89a67}.lbavatarwrap{position:relative;flex:0 0 auto}.lbavatar,.lbfallback{width:3.8vh;height:3.8vh;border-radius:50%;border:1px solid #ffffff44}.top1 .lbavatar,.top1 .lbfallback{width:5.3vh;height:5.3vh}.top2 .lbavatar,.top2 .lbfallback{width:4.6vh;height:4.6vh}.top3 .lbavatar,.top3 .lbfallback{width:4.2vh;height:4.2vh}.lbavatar{object-fit:cover;background:#0b2235}.lbfallback{display:grid;place-items:center;background:#18324a;color:#ffd45e;font-size:1.25vh;font-weight:1000}.rankornament{position:absolute;right:-.7vh;top:-1.2vh;font-size:2.2vh;filter:drop-shadow(0 .2vh .3vh #0008)}.top2 .rankornament,.top3 .rankornament{font-size:1.7vh;top:-.8vh}.lbinfo{min-width:0;flex:1}.lbname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15vh;font-weight:1000;color:#fff}.top1 .lbname{font-size:1.65vh}.top2 .lbname{font-size:1.45vh}.top3 .lbname{font-size:1.3vh}.lbmeta{font-size:.95vh;color:#9eb7c8;margin-top:.15vh}.lbscore{text-align:right;min-width:6.4vh}.lbscore b{display:block;font-size:1.55vh;color:#fff}.top1 .lbscore b{font-size:2.15vh;color:#ffd45e}.move{font-size:.93vh;font-weight:1000;margin-top:.15vh}.move.up{color:#72f2a1}.move.down{color:#ff9a9f}.move.same{color:#8ea5b5}.move.new{color:#62bfff}.safe{position:absolute;bottom:0;left:0;right:0;height:29%;border-top:1px dashed #ffffff0c}.safe div{text-align:center;color:#ffffff0a;font-size:1vh;margin-top:1vh}.version{position:absolute;z-index:50;top:1.4vh;right:2.4vh;font-size:.82vh;font-weight:700;letter-spacing:.05em;color:#ffffff66;pointer-events:none}.livestatus{display:none;position:absolute;z-index:50;top:1.4vh;left:2.4vh;font-size:.82vh;font-weight:900;letter-spacing:.05em;color:#ffd36e;pointer-events:none}.livestatus.show{display:block}.livestatus.ok{color:#72f2a1}.livestatus.bad{color:#ff7b7b}
+.modegate{position:absolute;inset:0;z-index:100;background:radial-gradient(circle at 50% 25%,#245f8d,#0b2235 48%,#020911);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6vh 7%;text-align:center}.modegate.hide{display:none}.modegate h1{margin:0 0 .8vh;font-size:4vh;letter-spacing:.03em}.modegate .sub{font-size:1.25vh;color:#9eb7c8;letter-spacing:.14em;font-weight:900;margin-bottom:5vh}.modebtn{width:88%;padding:2.1vh 1vh;margin:.8vh;border-radius:1.8vh;border:1px solid #ffffff25;background:#ffffff0c;color:white;font-size:2.15vh;font-weight:900;box-shadow:0 1vh 3vh #0005}.modebtn.live{border-color:#ff5c6888;box-shadow:0 0 2.5vh #ff405533}.modebtn.dev{border-color:#62bfff88;box-shadow:0 0 2.5vh #299cff33}.devpanel{position:absolute;inset:0;z-index:90;background:radial-gradient(circle at 50% 25%,#245f8d,#0b2235 48%,#020911);display:none;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;overflow-y:auto;padding:2.2vh 0 3vh}.devpanel.show{display:flex}.devpanel h2{font-size:2.8vh;margin:.5vh 0 .5vh}.devpanel .hint{font-size:1.05vh;color:#9eb7c8;margin-bottom:1.2vh}.startdev{width:76%;padding:1.55vh;border-radius:1.5vh;border:1px solid #62bfff88;background:#299cff20;color:#fff;font-size:1.8vh;font-weight:900}.startdev:disabled{opacity:.35}.livepanel{position:absolute;inset:0;z-index:95;background:radial-gradient(circle at 50% 25%,#245f8d,#0b2235 48%,#020911);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}.livepanel.show{display:flex}.livepanel h2{font-size:2.8vh;margin:0 0 .7vh}.livepanel .hint{font-size:1.2vh;color:#9eb7c8;margin-bottom:2.4vh}.checks{width:76%;text-align:left;margin-bottom:2.4vh}.checkrow{display:flex;align-items:center;gap:1.3vh;padding:1.5vh;margin:.7vh 0;border:1px solid #ffffff22;border-radius:1.4vh;background:#ffffff0a;font-size:1.8vh;font-weight:900}.checkrow input{width:2.4vh;height:2.4vh;accent-color:#f3d16d}.startlive{width:76%;padding:1.8vh;border-radius:1.5vh;border:1px solid #ff5c6888;background:#ff40551c;color:#fff;font-size:2vh;font-weight:900}.startlive:disabled{opacity:.35}.timeset{width:76%;margin:0 0 1.4vh;text-align:left;color:#9eb7c8;font-size:1.08vh;font-weight:900;display:flex;flex-direction:column;gap:.5vh}.settingslabel{text-align:left;width:76%;font-size:.95vh;color:#ffd45e;letter-spacing:.12em;font-weight:1000;margin:.3vh 0 .2vh}.timeset label{display:flex;align-items:center;justify-content:space-between;gap:1vh}.timeset input{width:8vh;padding:.8vh;border-radius:.8vh;border:1px solid #ffffff2b;background:#ffffff0d;color:#fff;text-align:center;font-size:1.5vh;font-weight:900}
+</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v0.5.2</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST</button></div><div class="stage">
 <div id="cat" class="screen on"><div class="ey">NEXT CATEGORY</div><div class="reel"><div id="items"></div><div class="focus"></div></div><div id="difficulty" class="difficulty"><div class="dl">DIFFICULTY LEVEL</div><div id="rail" class="rail"></div><div id="ready" class="ready">GET READY...</div></div></div>
-<div id="question" class="screen"><div id="roundhud" class="roundhud">ROUND 1 · QUESTION 1/20</div><div class="timer"><div id="bar" class="bar"></div></div><div id="qt" class="q"></div><div id="visual" class="visual"></div><div class="prompt">💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS</div><div class="answercount">ANSWERS: <b id="answercount">0</b></div><div id="answers" class="answers"></div></div>
-<div id="round" class="screen"><div class="roundtitle">ROUND RESULTS</div><div id="roundanswer" class="roundanswer"></div><div class="resultgroups"><div class="resultsection win"><div class="resulthead"><span>🏆 WINNERS</span><span class="delta">+1 POINT</span></div><div id="roundwinners" class="playergrid"></div></div><div class="resultsection lose"><div class="resulthead"><span>✕ WRONG ANSWERS</span><span class="delta">−1 POINT</span></div><div id="roundlosers" class="playergrid"></div></div></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
-</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="chatsim" class="chatsim"><button class="chatbtn" onclick="simulateAnswer('A')">A</button><button class="chatbtn" onclick="simulateAnswer('B')">B</button><button class="chatbtn" onclick="simulateAnswer('C')">C</button><button class="chatbtn" onclick="simulateAnswer('D')">D</button></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div class="version">QuizGameMaster · v0.5.1</div></div>
+<div id="question" class="screen"><div id="roundhud" class="roundhud">ROUND 1 · QUESTION 1/20</div><div class="timer"><div id="bar" class="bar"></div></div><div id="qt" class="q"></div><div id="visual" class="visual"></div><div id="answerprompt" class="prompt">💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS</div><div class="answercount">ANSWERS: <b id="answercount">0</b></div><div id="answers" class="answers"></div></div>
+<div id="round" class="screen"><div class="roundtitle">ROUND RESULTS</div><div id="roundanswer" class="roundanswer"></div><div class="resultgroups"><div class="resultsection win"><div class="resulthead"><span>🏆 WINNERS</span><span class="delta">+1 POINT</span></div><div id="roundwinners" class="playergrid"></div></div><div class="resultsection lose"><div class="resulthead"><span>✕ WRONG ANSWERS</span><span class="delta">−1 POINT</span></div><div id="roundlosers" class="playergrid"></div></div></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div id="leadertitle" class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
+</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div class="version">QuizGameMaster · v0.5.2</div></div>
 <script>
 // Always fetch fresh game/data when opened from the fullscreen browser home page.
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
@@ -19,14 +19,33 @@ const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",LIVE_UN
 const DEFAULT_SETTINGS={answerTime:30,questionsPerRound:20,percentSeconds:4,playerResultsSeconds:5.5,factSeconds:7,leaderboardSeconds:12,categories:[]};
 let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false;
 let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Map();
+let devAnswers=new Map(),devAllTimePlayers=new Map();
 let roundScores=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
 let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
 function show(x){["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y))}
-let answersIn=0,devPlayerAnswered=false;
-function resetAnswers(){answersIn=0;devPlayerAnswered=false;liveAnswers.clear();if($("answercount"))$("answercount").textContent="0";if($("chatsim"))$("chatsim").classList.toggle("show",mode==="dev")}
+let answersIn=0;
+function resetAnswers(){
+  answersIn=0;
+  liveAnswers.clear();
+  devAnswers.clear();
+  if($("answercount"))$("answercount").textContent="0";
+  if($("devsim"))$("devsim").classList.toggle("show",mode==="dev");
+  document.querySelectorAll(".devsim .chatbtn").forEach(b=>b.classList.remove("active"));
+}
 function countAnswer(){answersIn++;if($("answercount"))$("answercount").textContent=answersIn}
-function simulateAnswer(letter){if(mode!=="dev"||state!=="q")return;if(!devPlayerAnswered){devPlayerAnswered=true;countAnswer()}window.devLastAnswer=letter}
+function simulateAnswer(player,letter){
+  if(mode!=="dev"||state!=="q")return;
+  player=Number(player);
+  if(player<1||player>4||!["A","B","C","D"].includes(letter))return;
+  let key="dev-player-"+player;
+  if(!devAnswers.has(key))countAnswer();
+  devAnswers.set(key,{key,answer:letter,name:"PLAYER "+player,avatar:""});
+  let row=document.querySelector('.devrow[data-player="'+player+'"]');
+  if(row){
+    row.querySelectorAll(".chatbtn").forEach(b=>b.classList.toggle("active",b.dataset.answer===letter));
+  }
+}
 function setLiveStatus(text,kind=""){let e=$("livestatus");if(!e)return;e.textContent="TIKTOK: "+text;e.className="livestatus show "+kind}
 function clampNumber(v,min,max,fallback){
   let n=Number(v);
@@ -66,28 +85,39 @@ function applySettingsToUI(){
   let pairs=[
     ["livetime",gameSettings.answerTime],["roundq",gameSettings.questionsPerRound],
     ["holdpct",gameSettings.percentSeconds],["holdplayers",gameSettings.playerResultsSeconds],
-    ["holdfact",gameSettings.factSeconds],["holdleader",gameSettings.leaderboardSeconds]
+    ["holdfact",gameSettings.factSeconds],["holdleader",gameSettings.leaderboardSeconds],
+    ["devtime",gameSettings.answerTime],["devroundq",gameSettings.questionsPerRound],
+    ["devholdpct",gameSettings.percentSeconds],["devholdplayers",gameSettings.playerResultsSeconds],
+    ["devholdfact",gameSettings.factSeconds],["devholdleader",gameSettings.leaderboardSeconds]
   ];
   pairs.forEach(([id,val])=>{let e=$(id);if(e)e.value=val});
-  let checks=[...document.querySelectorAll("input[name=livecat]")];
-  if(checks.length&&gameSettings.categories.length){
-    checks.forEach(x=>x.checked=gameSettings.categories.includes(x.value));
-    validateLive();
+  for(let group of ["livecat","devcat"]){
+    let checks=[...document.querySelectorAll('input[name="'+group+'"]')];
+    if(checks.length&&gameSettings.categories.length){
+      checks.forEach(x=>x.checked=gameSettings.categories.includes(x.value));
+    }
   }
+  validateLive();
+  validateDev();
 }
-function persistSettingsFromUI(){
-  let cats=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);
+function persistSettingsFromUI(source=mode==="dev"?"dev":"live"){
+  let dev=source==="dev";
+  let ids=dev
+    ? {time:"devtime",round:"devroundq",pct:"devholdpct",players:"devholdplayers",fact:"devholdfact",leader:"devholdleader",cats:"devcat"}
+    : {time:"livetime",round:"roundq",pct:"holdpct",players:"holdplayers",fact:"holdfact",leader:"holdleader",cats:"livecat"};
+  let cats=[...document.querySelectorAll('input[name="'+ids.cats+'"]:checked')].map(x=>x.value);
   gameSettings=cleanSettings({
-    answerTime:$("livetime")?.value??gameSettings.answerTime,
-    questionsPerRound:$("roundq")?.value??gameSettings.questionsPerRound,
-    percentSeconds:$("holdpct")?.value??gameSettings.percentSeconds,
-    playerResultsSeconds:$("holdplayers")?.value??gameSettings.playerResultsSeconds,
-    factSeconds:$("holdfact")?.value??gameSettings.factSeconds,
-    leaderboardSeconds:$("holdleader")?.value??gameSettings.leaderboardSeconds,
-    categories:cats.length?cats:gameSettings.categories
+    answerTime:$(ids.time)?.value??gameSettings.answerTime,
+    questionsPerRound:$(ids.round)?.value??gameSettings.questionsPerRound,
+    percentSeconds:$(ids.pct)?.value??gameSettings.percentSeconds,
+    playerResultsSeconds:$(ids.players)?.value??gameSettings.playerResultsSeconds,
+    factSeconds:$(ids.fact)?.value??gameSettings.factSeconds,
+    leaderboardSeconds:$(ids.leader)?.value??gameSettings.leaderboardSeconds,
+    categories:cats
   });
   saveLocalSettings();
   scheduleCloudSave();
+  applySettingsToUI();
 }
 async function loadCloudState(){
   try{
@@ -138,9 +168,14 @@ async function saveCloudState(){
 }
 function signed(n){return (n>0?"+":"")+n}
 function globalRanking(){
-  return [...allTimePlayers.entries()]
+  let source=mode==="dev"?devAllTimePlayers:allTimePlayers;
+  return [...source.entries()]
     .map(([key,p])=>({key,points:Number(p.points)||0,name:p.name||"PLAYER",avatar:p.avatar||""}))
     .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name));
+}
+function fallbackLabel(name){
+  let m=String(name||"").match(/^PLAYER\s+([1-4])$/i);
+  return m?m[1]:String(name||"?").slice(0,1).toUpperCase();
 }
 function captureGlobalRanks(){
   previousGlobalRanks=new Map(globalRanking().map((p,n)=>[p.key,n+1]));
@@ -238,19 +273,21 @@ function makePlayerChip(p,index=0){
     avatarWrap=img;
   }else{
     avatarWrap.className="playerfallback";
-    avatarWrap.textContent=(p.name||"?").slice(0,1).toUpperCase();
-    fetchProfileAvatar(p.name).then(url=>{
-      if(!url||!avatarWrap.isConnected)return;
-      let img=document.createElement("img");
-      img.className="playeravatar";
-      img.src=url;
-      img.alt="";
-      img.referrerPolicy="no-referrer";
-      avatarWrap.replaceWith(img);
-      p.avatar=url;
-      let saved=allTimePlayers.get(p.key);
-      if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
-    });
+    avatarWrap.textContent=fallbackLabel(p.name);
+    if(mode==="live"){
+      fetchProfileAvatar(p.name).then(url=>{
+        if(!url||!avatarWrap.isConnected)return;
+        let img=document.createElement("img");
+        img.className="playeravatar";
+        img.src=url;
+        img.alt="";
+        img.referrerPolicy="no-referrer";
+        avatarWrap.replaceWith(img);
+        p.avatar=url;
+        let saved=allTimePlayers.get(p.key);
+        if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
+      });
+    }
   }
   chip.appendChild(avatarWrap);
 
@@ -307,24 +344,25 @@ function fillPlayerGrid(id,players){
   }
 }
 function scoreQuestion(players,correctLetter){
+  let scoreStore=mode==="dev"?devAllTimePlayers:allTimePlayers;
   let scored=players.map((p,n)=>{
     let key=p.key||("dev-"+n),delta=p.answer===correctLetter?1:-1;
     let roundBefore=roundScores.get(key)||0;
     let roundPoints=roundBefore+delta;
     roundScores.set(key,roundPoints);
 
-    let old=allTimePlayers.get(key)||{points:0,name:p.name||"PLAYER",avatar:p.avatar||""};
+    let old=scoreStore.get(key)||{points:0,name:p.name||"PLAYER",avatar:p.avatar||""};
     let allTimeBefore=Number(old.points)||0;
     let updated={
       points:allTimeBefore+delta,
       name:p.name||old.name||"PLAYER",
       avatar:p.avatar||old.avatar||""
     };
-    allTimePlayers.set(key,updated);
+    scoreStore.set(key,updated);
 
     return {...p,key,delta,roundBefore,roundPoints,allTimeBefore,allTimePoints:updated.points,correct:delta>0};
   });
-  saveAllTime();
+  if(mode==="live")saveAllTime();
   return scored;
 }
 function renderRoundResults(players,correctLetter,correctText){
@@ -345,17 +383,19 @@ function makeLeaderboardAvatar(p,place){
   }else{
     avatar=document.createElement("div");
     avatar.className="lbfallback";
-    avatar.textContent=(p.name||"?").slice(0,1).toUpperCase();
-    fetchProfileAvatar(p.name).then(url=>{
-      if(!url||!avatar.isConnected)return;
-      let img=document.createElement("img");
-      img.className="lbavatar";
-      img.src=url;img.alt="";img.referrerPolicy="no-referrer";
-      avatar.replaceWith(img);
-      p.avatar=url;
-      let saved=allTimePlayers.get(p.key);
-      if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
-    });
+    avatar.textContent=fallbackLabel(p.name);
+    if(mode==="live"){
+      fetchProfileAvatar(p.name).then(url=>{
+        if(!url||!avatar.isConnected)return;
+        let img=document.createElement("img");
+        img.className="lbavatar";
+        img.src=url;img.alt="";img.referrerPolicy="no-referrer";
+        avatar.replaceWith(img);
+        p.avatar=url;
+        let saved=allTimePlayers.get(p.key);
+        if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
+      });
+    }
   }
   wrap.appendChild(avatar);
   if(place<=3){
@@ -368,7 +408,8 @@ function makeLeaderboardAvatar(p,place){
 }
 function renderGlobalLeaderboard(){
   let ranking=globalRanking(),list=$("leaderlist");
-  $("leadersub").textContent="ROUND "+currentRound+" COMPLETE · ALL-TIME RANKING";
+  $("leadertitle").textContent=mode==="dev"?"🛠 TEST LEADERBOARD":"🏆 GLOBAL LEADERBOARD";
+  $("leadersub").textContent="ROUND "+currentRound+" COMPLETE · "+(mode==="dev"?"SIMULATED RANKING":"ALL-TIME RANKING");
   list.innerHTML="";
   ranking.slice(0,8).forEach((p,n)=>{
     let place=n+1,oldPlace=previousGlobalRanks.get(p.key);
@@ -403,14 +444,62 @@ function renderGlobalLeaderboard(){
 function handleLivePayload(payload){if(payload&&Array.isArray(payload.messages))payload.messages.forEach(handleLiveMessage);else if(payload&&payload.type)handleLiveMessage(payload)}
 async function connectTikTok(){clearTimeout(liveReconnectTimer);try{if(liveWs)liveWs.close()}catch(e){};setLiveStatus("CONNECTING");try{let r=await fetch(LIVE_BRIDGE+"/token",{cache:"no-store"}),j=await r.json();if(!r.ok||!j.ok||!j.token)throw new Error(j.message||("HTTP "+r.status));let p=new URLSearchParams({uniqueId:LIVE_UNIQUE_ID,jwtKey:j.token,"features.bundleEvents":"true","features.rawMessages":"false","features.normalizeUniqueId":"true","features.schemaVersion":"v2"});liveWs=new WebSocket("wss://ws.eulerstream.com?"+p.toString());liveWs.addEventListener("open",()=>setLiveStatus("CONNECTED","ok"));liveWs.addEventListener("message",ev=>{try{handleLivePayload(JSON.parse(ev.data))}catch(e){}});liveWs.addEventListener("close",ev=>{liveWs=null;if(mode!=="live")return;if(ev.code===4404){setLiveStatus("NOT LIVE","bad");return}if(ev.code===4005){setLiveStatus("STREAM ENDED","bad");return}setLiveStatus("RECONNECTING","bad");liveReconnectTimer=setTimeout(connectTikTok,3000)});liveWs.addEventListener("error",()=>setLiveStatus("ERROR","bad"))}catch(e){setLiveStatus("ERROR","bad");liveReconnectTimer=setTimeout(connectTikTok,5000)}}
 function shuffleAnswers(q){let a=q.answers.map(x=>typeof x==="string"?{country:x}:x);for(let n=a.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[a[n],a[j]]=[a[j],a[n]]}return a}
-function startMode(m){mode=m;$("modegate").classList.add("hide");if($("livestatus"))$("livestatus").classList.toggle("show",m==="live");if(m==="dev"){const cats=[...new Set(ALLQ.map(q=>q.category))];$("devcats").innerHTML=cats.map(x=>"<button class='catbtn' onclick=\"chooseDevCategory('"+x+"')\">"+x.toUpperCase()+"</button>").join("");$("devpanel").classList.add("show");}else{const cats=[...new Set(ALLQ.map(q=>q.category))];$("livechecks").innerHTML=cats.map((x,n)=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive();persistSettingsFromUI()'>"+x.toUpperCase()+"</label>").join("");$("livepanel").classList.add("show");applySettingsToUI();validateLive()}}
-function validateLive(){const any=[...document.querySelectorAll("input[name=livecat]")].some(x=>x.checked);$("startlive").disabled=!any}
-function launchLive(){persistSettingsFromUI();answerTime=gameSettings.answerTime;questionsPerRound=gameSettings.questionsPerRound;const chosen=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);if(!chosen.length)return;Q=ALLQ.filter(q=>chosen.includes(q.category));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("livepanel").classList.remove("show");connectTikTok();category()}
+function startMode(m){
+  mode=m;
+  $("modegate").classList.add("hide");
+  if($("livestatus"))$("livestatus").classList.toggle("show",m==="live");
+  const cats=[...new Set(ALLQ.map(q=>q.category))];
+
+  if(m==="dev"){
+    $("devchecks").innerHTML=cats.map(x=>"<label class='checkrow'><input type='checkbox' name='devcat' value='"+x+"' checked onchange='validateDev();persistSettingsFromUI(\"dev\")'>"+x.toUpperCase()+"</label>").join("");
+    $("devpanel").classList.add("show");
+    applySettingsToUI();
+    validateDev();
+  }else{
+    $("livechecks").innerHTML=cats.map(x=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive();persistSettingsFromUI(\"live\")'>"+x.toUpperCase()+"</label>").join("");
+    $("livepanel").classList.add("show");
+    applySettingsToUI();
+    validateLive();
+  }
+}
+function validateLive(){
+  const any=[...document.querySelectorAll("input[name=livecat]")].some(x=>x.checked);
+  if($("startlive"))$("startlive").disabled=!any;
+}
+function validateDev(){
+  const any=[...document.querySelectorAll("input[name=devcat]")].some(x=>x.checked);
+  if($("startdev"))$("startdev").disabled=!any;
+}
+function launchLive(){
+  persistSettingsFromUI("live");
+  answerTime=gameSettings.answerTime;
+  questionsPerRound=gameSettings.questionsPerRound;
+  const chosen=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);
+  if(!chosen.length)return;
+  Q=ALLQ.filter(q=>chosen.includes(q.category));
+  shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();
+  captureGlobalRanks();
+  $("livepanel").classList.remove("show");
+  connectTikTok();
+  category();
+}
+function launchDev(){
+  persistSettingsFromUI("dev");
+  answerTime=gameSettings.answerTime;
+  questionsPerRound=gameSettings.questionsPerRound;
+  const chosen=[...document.querySelectorAll("input[name=devcat]:checked")].map(x=>x.value);
+  if(!chosen.length)return;
+  Q=ALLQ.filter(q=>chosen.includes(q.category));
+  shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();
+  devAllTimePlayers.clear();
+  previousGlobalRanks.clear();
+  $("devpanel").classList.remove("show");
+  category();
+}
 function shuffleQ(){for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}}
-function chooseDevCategory(cat){answerTime=30;Q=ALLQ.filter(q=>q.category===cat);questionsPerRound=Math.min(20,Math.max(1,Q.length));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("devpanel").classList.remove("show");category()}
 function category(){state="cat";show("cat");let q=Q[i],cats=[...new Set(ALLQ.map(x=>x.category.toUpperCase()))],seq=[];$("difficulty").classList.remove("show");$("ready").classList.remove("show");for(let r=0;r<7;r++)seq.push(...cats);let target=seq.length;seq.push((q.category||"FLAGS").toUpperCase(),...cats,...cats);$("items").innerHTML=seq.map(x=>"<div>"+x+"</div>").join("");$("items").style.transition="none";$("items").style.transform="translateY(0)";requestAnimationFrame(()=>requestAnimationFrame(()=>{$("items").style.transition="transform 3.7s cubic-bezier(.08,.70,.06,1)";$("items").style.transform="translateY("+(-(target-2)*5.4)+"vh)"}));setTimeout(()=>{$("items").children[target].classList.add("selected");tone(920,.14,.03)},3800);setTimeout(()=>difficulty(q),4400)}
 function difficulty(q){let ix=rankIndex[q.difficulty];$("rail").innerHTML=ranks.map((r,n)=>"<div class='rank' id='r"+n+"'><span>"+r[0]+"</span>"+r[1]+"</div>").join("");$("difficulty").classList.add("show");let seq=[0,1,2,3,4,3,2,1,2,3,4,ix],n=0,iv=setInterval(()=>{document.querySelectorAll(".rank").forEach(e=>e.classList.remove("hot"));$("r"+seq[n]).classList.add("hot");tone(430+n*15,.025,.005);if(++n>=seq.length){clearInterval(iv);document.querySelectorAll(".rank").forEach((e,j)=>{e.classList.remove("hot");if(j!==ix)e.style.opacity=".28"});$("r"+ix).classList.add("final");tone(1000,.14,.03);setTimeout(()=>$("ready").classList.add("show"),500);setTimeout(question,2700)}},140)}
-function question(){resetAnswers();state="q";show("question");$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
+function question(){resetAnswers();state="q";show("question");$("answerprompt").innerHTML=mode==="dev"?"🛠 USE <b>PLAYER 1–4</b> BUTTONS BELOW":"💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS";$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
 else if(q.type==="landmark_image")v.innerHTML="<div class='mediafade'><img class='blur' src='"+q.asset.image+"'><img class='main' src='"+q.asset.image+"'></div>";
 else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";$("answers").innerHTML=a.map((x,n)=>"<div class='ans'><div class='pctbar'></div><div class='letter'>"+"ABCD"[n]+"</div>"+(q.type==="country_to_flag"?"<img src='"+flag(x.code)+"'>":"")+"<span>"+(q.type==="country_to_flag"?"":x.country)+"</span><div class='pct'>0%</div></div>").join("");start=performance.now();last=-1;raf=requestAnimationFrame(tick)}
 function tick(now){let t=Math.min(1,(now-start)/(answerTime*1000)),r=Math.pow(1-t,1.85);$("bar").style.width=r*100+"%";$("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";let s=Math.floor((now-start)/1000);if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal()}
@@ -439,7 +528,8 @@ function reveal(){
   let q=Q[i],idx=q._shown.findIndex(x=>x.country===q.correct),correctLetter="ABCD"[idx],cards=[...$("answers").children];
   let submitted=mode==="live"
     ? [...liveAnswers.values()]
-    : (devPlayerAnswered?[{key:"dev-player",answer:window.devLastAnswer,name:"DEV PLAYER",avatar:""}]:[]);
+    : [...devAnswers.values()];
+  if($("devsim"))$("devsim").classList.remove("show");
 
   let counts={A:0,B:0,C:0,D:0};
   submitted.forEach(x=>{if(counts[x.answer]!==undefined)counts[x.answer]++});
