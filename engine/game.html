@@ -268,6 +268,13 @@ function previewCountryCode(label){
   let target=String(label||"").trim().toLowerCase();
   if(!target)return "";
 
+  const knownCountryCodes={
+    "france":"fr","italy":"it","belgium":"be","germany":"de","spain":"es","greece":"gr","croatia":"hr",
+    "egypt":"eg","jordan":"jo","türkiye":"tr","turkiye":"tr","turkey":"tr","israel":"il","thailand":"th",
+    "cambodia":"kh","laos":"la","myanmar":"mm","fiji":"fj","samoa":"ws","nepal":"np","sri lanka":"lk"
+  };
+  if(knownCountryCodes[target])return knownCountryCodes[target];
+
   for(let q of ALLQ){
     if(q.type==="flag_to_country"&&String(q.correct||"").trim().toLowerCase()===target&&q.asset?.code){
       return String(q.asset.code).toLowerCase();
