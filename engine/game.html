@@ -292,7 +292,7 @@ function handleGiftMessage(msg){
   else giftComboCounts.set(comboKey,repeat);
   if(delta<=0)return;
 
-  let diamonds=Number(d.gift?.diamondCount??d.diamondCount??0);
+  let diamonds=Number(d.giftDetails?.diamondCount??d.gift?.diamondCount??d.diamondCount??0);
   if(!Number.isFinite(diamonds)||diamonds<=0)return;
 
   let amount=Math.round(diamonds*delta);
