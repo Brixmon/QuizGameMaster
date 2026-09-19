@@ -379,7 +379,7 @@ function renderGlobalLeaderboard(){
     info.append(name,round);row.appendChild(info);
 
     let score=document.createElement("div");score.className="lbscore";
-    let points=document.createElement("b");points.textContent=signed(p.points)+" PTS";
+    let points=document.createElement("b");let roundDelta=roundScores.get(p.key)||0,oldPoints=p.points-roundDelta;points.textContent=signed(oldPoints)+" PTS";
     let move=document.createElement("div");move.className="move";
     if(!oldPlace){move.classList.add("new");move.textContent="NEW";}
     else if(oldPlace>place){move.classList.add("up");move.textContent="▲ "+(oldPlace-place);}
@@ -388,7 +388,7 @@ function renderGlobalLeaderboard(){
     score.append(points,move);row.appendChild(score);
     list.appendChild(row);
 
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{row.style.transform="translateY(0)";row.style.opacity="1"}));
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{row.style.transform="translateY(0)";row.style.opacity="1";setTimeout(()=>{animateSignedNumber(points,oldPoints,p.points,1200," PTS");if(n<3&&roundDelta!==0)scoreTone(roundDelta>0?1:-1,n*140)},350+n*90)}));
   });
 }
 function handleLivePayload(payload){if(payload&&Array.isArray(payload.messages))payload.messages.forEach(handleLiveMessage);else if(payload&&payload.type)handleLiveMessage(payload)}
@@ -450,11 +450,15 @@ function reveal(){
   let scored=scoreQuestion(submitted,correctLetter);
   let roundEnds=questionInRound>=questionsPerRound;
 
+  let tRound=gameSettings.percentSeconds*1000;
+  let tFact=tRound+gameSettings.playerResultsSeconds*1000;
+  let tAfterFact=tFact+gameSettings.factSeconds*1000;
+
   setTimeout(()=>{
     state="round";
     renderRoundResults(scored,correctLetter,q.correct);
     show("round");
-  },3800);
+  },tRound);
 
   setTimeout(()=>{
     state="r";
@@ -465,17 +469,17 @@ function reveal(){
     $("fact").textContent=q.fact;
     let fp=$("factpic");
     fp.innerHTML=q.asset&&q.asset.fact_image?"<div class='mediafade'><img class='blur' src='"+q.asset.fact_image+"'><img class='main' src='"+q.asset.fact_image+"'></div>":"✨";
-  },9300);
+  },tFact);
 
   if(roundEnds){
     setTimeout(()=>{
       state="leaderboard";
       renderGlobalLeaderboard();
       show("leaderboard");
-    },16300);
-    setTimeout(continueAfterLeaderboard,24300);
+    },tAfterFact);
+    setTimeout(continueAfterLeaderboard,tAfterFact+gameSettings.leaderboardSeconds*1000);
   }else{
-    setTimeout(continueAfterQuestion,16300);
+    setTimeout(continueAfterQuestion,tAfterFact);
   }
 }
 document.body.onclick=()=>{audio||=new(window.AudioContext||window.webkitAudioContext)()};
