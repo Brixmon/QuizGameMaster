@@ -23,16 +23,27 @@ let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Ma
 let devAnswers=new Map(),devAllTimePlayers=new Map();
 let roundScores=new Map(),roundPlayers=new Map(),previousRoundRanks=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
 let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
-let designPreviewTimer=null,designPreviewDonors=false;
+let designPreviewTimer=null,designPreviewDonors=false,devQuestionLayout="classic";
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
-function show(x){["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y))}
+function show(x){
+  ["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y));
+  if($("designpreview"))$("designpreview").classList.toggle("show",x==="questionnew");
+  if(x!=="questionnew"){
+    clearInterval(designPreviewTimer);
+    designPreviewTimer=null;
+    if($("designpreview"))$("designpreview").classList.remove("gameplay");
+  }
+}
 let answersIn=0;
 function resetAnswers(){
   answersIn=0;
   liveAnswers.clear();
   devAnswers.clear();
   if($("answercount"))$("answercount").textContent="0";
-  if($("devsim"))$("devsim").classList.toggle("show",mode==="dev");
+  if($("devsim")){
+    $("devsim").classList.toggle("show",mode==="dev");
+    $("devsim").classList.toggle("newlayout",mode==="dev"&&devQuestionLayout==="new");
+  }
   document.querySelectorAll(".devsim .chatbtn").forEach(b=>b.classList.remove("active"));
 }
 function countAnswer(){answersIn++;if($("answercount"))$("answercount").textContent=answersIn}
