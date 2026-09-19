@@ -738,7 +738,13 @@ function renderGlobalLeaderboard(){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{row.style.transform="translateY(0)";row.style.opacity="1";setTimeout(()=>{animateSignedNumber(points,oldPoints,p.points,1200," PTS");if(n<3&&roundDelta!==0)scoreTone(roundDelta>0?1:-1,n*140)},350+n*90)}));
   });
 }
-function handleLivePayload(payload){if(payload&&Array.isArray(payload.messages))payload.messages.forEach(handleLiveMessage);else if(payload&&payload.type)handleLiveMessage(payload)}
+function handleLivePayload(payload){
+  let messages=payload&&Array.isArray(payload.messages)?payload.messages:(payload&&payload.type?[payload]:[]);
+  messages.forEach(msg=>{
+    handleLiveMessage(msg);
+    handleGiftMessage(msg);
+  });
+}
 async function connectTikTok(){clearTimeout(liveReconnectTimer);try{if(liveWs)liveWs.close()}catch(e){};setLiveStatus("CONNECTING");try{let r=await fetch(LIVE_BRIDGE+"/token",{cache:"no-store"}),j=await r.json();if(!r.ok||!j.ok||!j.token)throw new Error(j.message||("HTTP "+r.status));let p=new URLSearchParams({uniqueId:LIVE_UNIQUE_ID,jwtKey:j.token,"features.bundleEvents":"true","features.rawMessages":"false","features.normalizeUniqueId":"true","features.schemaVersion":"v2"});liveWs=new WebSocket("wss://ws.eulerstream.com?"+p.toString());liveWs.addEventListener("open",()=>setLiveStatus("CONNECTED","ok"));liveWs.addEventListener("message",ev=>{try{handleLivePayload(JSON.parse(ev.data))}catch(e){}});liveWs.addEventListener("close",ev=>{liveWs=null;if(mode!=="live")return;if(ev.code===4404){setLiveStatus("NOT LIVE","bad");return}if(ev.code===4005){setLiveStatus("STREAM ENDED","bad");return}setLiveStatus("RECONNECTING","bad");liveReconnectTimer=setTimeout(connectTikTok,3000)});liveWs.addEventListener("error",()=>setLiveStatus("ERROR","bad"))}catch(e){setLiveStatus("ERROR","bad");liveReconnectTimer=setTimeout(connectTikTok,5000)}}
 function shuffleAnswers(q){let a=q.answers.map(x=>typeof x==="string"?{country:x}:x);for(let n=a.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[a[n],a[j]]=[a[j],a[n]]}return a}
 function startMode(m){
@@ -796,10 +802,10 @@ function launchDev(){
 function shuffleQ(){for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}}
 function category(){state="cat";show("cat");let q=Q[i],cats=[...new Set(ALLQ.map(x=>x.category.toUpperCase()))],seq=[];$("difficulty").classList.remove("show");$("ready").classList.remove("show");for(let r=0;r<7;r++)seq.push(...cats);let target=seq.length;seq.push((q.category||"FLAGS").toUpperCase(),...cats,...cats);$("items").innerHTML=seq.map(x=>"<div>"+x+"</div>").join("");$("items").style.transition="none";$("items").style.transform="translateY(0)";requestAnimationFrame(()=>requestAnimationFrame(()=>{$("items").style.transition="transform 3.7s cubic-bezier(.08,.70,.06,1)";$("items").style.transform="translateY("+(-(target-2)*5.4)+"vh)"}));setTimeout(()=>{$("items").children[target].classList.add("selected");tone(920,.14,.03)},3800);setTimeout(()=>difficulty(q),4400)}
 function difficulty(q){let ix=rankIndex[q.difficulty];$("rail").innerHTML=ranks.map((r,n)=>"<div class='rank' id='r"+n+"'><span>"+r[0]+"</span>"+r[1]+"</div>").join("");$("difficulty").classList.add("show");let seq=[0,1,2,3,4,3,2,1,2,3,4,ix],n=0,iv=setInterval(()=>{document.querySelectorAll(".rank").forEach(e=>e.classList.remove("hot"));$("r"+seq[n]).classList.add("hot");tone(430+n*15,.025,.005);if(++n>=seq.length){clearInterval(iv);document.querySelectorAll(".rank").forEach((e,j)=>{e.classList.remove("hot");if(j!==ix)e.style.opacity=".28"});$("r"+ix).classList.add("final");tone(1000,.14,.03);setTimeout(()=>$("ready").classList.add("show"),500);setTimeout(question,2700)}},140)}
-function question(){resetAnswers();state="q";show("question");$("answerprompt").innerHTML=mode==="dev"?"🛠 USE <b>PLAYER 1–4</b> BUTTONS BELOW":"💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS";$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
+function question(){resetAnswers();state="q";show("question");$("answerprompt").innerHTML=mode==="dev"?"🛠 USE <b>PLAYER 1–4</b> BUTTONS BELOW":"💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS";$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);renderQuestionChrome(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
 else if(q.type==="landmark_image")v.innerHTML="<div class='mediafade'><img class='blur' src='"+q.asset.image+"'><img class='main' src='"+q.asset.image+"'></div>";
 else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";$("answers").innerHTML=a.map((x,n)=>"<div class='ans'><div class='pctbar'></div><div class='letter'>"+"ABCD"[n]+"</div>"+(q.type==="country_to_flag"?"<img src='"+flag(x.code)+"'>":"")+"<span>"+(q.type==="country_to_flag"?"":x.country)+"</span><div class='pct'>0%</div></div>").join("");start=performance.now();last=-1;raf=requestAnimationFrame(tick)}
-function tick(now){let t=Math.min(1,(now-start)/(answerTime*1000)),r=Math.pow(1-t,1.85);$("bar").style.width=r*100+"%";$("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";let s=Math.floor((now-start)/1000);if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal()}
+function tick(now){let elapsed=(now-start)/1000,t=Math.min(1,elapsed/answerTime),r=Math.pow(1-t,1.85);$("bar").style.width=r*100+"%";$("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";$("seconds").textContent=Math.max(0,Math.ceil(answerTime-elapsed));let s=Math.floor(elapsed);if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal()}
 function nextQuestionIndex(){
   i++;
   if(i>=Q.length){shuffleQ();i=0}
@@ -823,6 +829,7 @@ function reveal(){
   if(state!=="q")return;
   state="mark";
   cancelAnimationFrame(raf);
+  clearInterval(questionSpotlightTimer);
 
   let q=Q[i],idx=q._shown.findIndex(x=>x.country===q.correct),correctLetter="ABCD"[idx],cards=[...$("answers").children];
   let submitted=mode==="live"
