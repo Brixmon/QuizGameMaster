@@ -1,0 +1,56 @@
+{
+  "category": "landmarks",
+  "version": 1,
+  "assets": [
+    {
+      "id": "eiffel-tower",
+      "question_image": "assets/landmarks/eiffel-tower/eiffel-tower-question.webp",
+      "fact_image": "assets/landmarks/eiffel-tower/eiffel-tower-fact-thermal-expansion.webp"
+    },
+    {
+      "id": "colosseum",
+      "question_image": "assets/landmarks/colosseum/colosseum-question.webp",
+      "fact_image": "assets/landmarks/colosseum/colosseum-fact-underground-lifts.webp"
+    },
+    {
+      "id": "leaning-tower-of-pisa",
+      "question_image": "assets/landmarks/leaning-tower-of-pisa/leaning-tower-of-pisa-question.webp",
+      "fact_image": "assets/landmarks/leaning-tower-of-pisa/leaning-tower-of-pisa-fact-bell-tower.webp"
+    },
+    {
+      "id": "christ-the-redeemer",
+      "question_image": "assets/landmarks/christ-the-redeemer/christ-the-redeemer-question.webp",
+      "fact_image": "assets/landmarks/christ-the-redeemer/christ-the-redeemer-fact-700m-corcovado.webp"
+    },
+    {
+      "id": "petra",
+      "question_image": "assets/landmarks/petra/petra-question.webp",
+      "fact_image": "assets/landmarks/petra/petra-fact-water-system.webp"
+    },
+    {
+      "id": "sagrada-familia",
+      "question_image": "assets/landmarks/sagrada-familia/sagrada-familia-question.webp",
+      "fact_image": "assets/landmarks/sagrada-familia/sagrada-familia-fact-1882-gaudi.webp"
+    },
+    {
+      "id": "sydney-opera-house",
+      "question_image": "assets/landmarks/sydney-opera-house/sydney-opera-house-question.webp",
+      "fact_image": "assets/landmarks/sydney-opera-house/sydney-opera-house-fact-1056006-tiles.webp"
+    },
+    {
+      "id": "angkor-wat",
+      "question_image": "assets/landmarks/angkor-wat/angkor-wat-question.webp",
+      "fact_image": "assets/landmarks/angkor-wat/angkor-wat-fact-largest-religious-structure.webp"
+    },
+    {
+      "id": "moai",
+      "question_image": "assets/landmarks/moai/moai-question.webp",
+      "fact_image": "assets/landmarks/moai/moai-fact-nearly-900.webp"
+    },
+    {
+      "id": "jetavanaramaya",
+      "question_image": "assets/landmarks/jetavanaramaya/jetavanaramaya-question.webp",
+      "fact_image": "assets/landmarks/jetavanaramaya/jetavanaramaya-fact-93-million-bricks.webp"
+    }
+  ]
+}
