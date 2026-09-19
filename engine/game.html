@@ -350,6 +350,26 @@ function renderNewQuestion(q,a){
   last=-1;
   raf=requestAnimationFrame(tick);
 }
+function renderNewFact(q,correctLetter,scored){
+  show("factnew");
+  let img=q.asset?.fact_image||q.asset?.image||"";
+  if(!img&&q.type==="flag_to_country"&&q.asset?.code)img=flag(q.asset.code);
+  if(img){$("fp-image").src=img;$("fp-image").style.display="block"}else{$("fp-image").style.display="none"}
+  $("fp-category").textContent=String(q.category||"GEOGRAPHY").toUpperCase();
+  let ix=rankIndex[q.difficulty]??2;
+  $("fp-difficulty").textContent=ranks[ix][0]+" "+ranks[ix][1];
+  $("fp-correct").innerHTML="✓ CORRECT ANSWER · <b>"+previewEsc(correctLetter)+"</b>";
+  $("fp-answer").textContent=String(q.correct||"").toUpperCase();
+  let code=previewCountryCode(q.correct);
+  $("fp-countryline").innerHTML=code?"<img class='fp-countryflag' src='"+flag(code)+"' alt=''><span>"+previewEsc(String(q.correct).toUpperCase())+"</span>":"<span>"+previewEsc(String(q.category||"").toUpperCase())+"</span>";
+  $("fp-facttag").textContent=(q.fact_tag?String(q.fact_tag).toUpperCase()+" FACT":"DID YOU KNOW?");
+  $("fp-facttext").textContent=q.fact||"";
+  let rows=[...roundPlayers.entries()].map(([key,p])=>({name:p.name||"PLAYER",avatar:p.avatar||"",points:roundScores.get(key)||0})).sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name)).slice(0,5);
+  if(!rows.length)rows=previewRoundRows();
+  $("fp-topbody").innerHTML=rows.map((p,n)=>"<div class='fp-toprow'><div>"+(n+1)+"</div><div class='fp-avatarwrap'><img class='fp-avatar' src='"+previewEsc(previewAvatarUrl(p,n))+"' alt=''>"+(previewRankMark(n)?"<span class='fp-rankmark'>"+previewRankMark(n)+"</span>":"")+"</div><div class='fp-name'>@"+previewEsc(previewShortNick(p.name))+"</div><div class='fp-points'>"+previewEsc(p.points)+"</div></div>").join("");
+  let winners=(scored||[]).filter(p=>p.correct).slice(0,3);
+  $("fp-winrow").innerHTML=winners.length?winners.map((p,n)=>"<div class='fp-winner'><div class='fp-winavatarwrap'><img class='fp-winavatar' src='"+previewEsc(previewAvatarUrl(p,n))+"' alt=''><span class='fp-winmark'>"+(n+1)+"</span></div><div class='fp-winname'>@"+previewEsc(previewShortNick(p.name))+"</div><div class='fp-windelta'>+1</div></div>").join(""):"<div class='fp-nowinners'>NO CORRECT ANSWERS THIS QUESTION</div>";
+}
 function openNewDesignPreview(){
   if(mode!=="dev")return;
   let q=ALLQ.find(x=>x.type==="landmark_image"&&x.asset&&x.asset.image)||ALLQ.find(x=>x.asset&&x.asset.image)||ALLQ[0];
