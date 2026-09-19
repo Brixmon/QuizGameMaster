@@ -508,6 +508,7 @@ function openNewDesignPreview(){
 
   $("devpanel").classList.remove("show");
   $("designpreview").classList.add("show");
+  setMusicScene("questionnew");
 
   let img=q.asset?.image||q.asset?.fact_image||"";
   if(img){
