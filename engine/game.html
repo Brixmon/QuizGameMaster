@@ -104,8 +104,13 @@ async function loadCloudState(){
     if(j.settings)gameSettings=cleanSettings({...gameSettings,...j.settings});
     let remotePlayers=j.players&&typeof j.players==="object"?j.players:null;
     if(remotePlayers){
-      allTimePlayers=new Map(Object.entries(remotePlayers));
-      saveAllTimeLocalOnly();
+      let entries=Object.entries(remotePlayers);
+      if(entries.length || !allTimePlayers.size){
+        allTimePlayers=new Map(entries);
+        saveAllTimeLocalOnly();
+      }else{
+        scheduleCloudSave();
+      }
     }
     saveLocalSettings();
     cloudReady=true;
