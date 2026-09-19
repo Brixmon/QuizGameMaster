@@ -1020,13 +1020,17 @@ function reveal(){
 
   setTimeout(()=>{
     state="r";
-    show("reveal");
-    $("correctlabel").textContent="✓ CORRECT ANSWER · "+correctLetter;
-    $("country").textContent=q.correct.toUpperCase();
-    $("facttag").textContent=q.fact_tag+" FACT";
-    $("fact").textContent=q.fact;
-    let fp=$("factpic");
-    fp.innerHTML=q.asset&&q.asset.fact_image?"<div class='mediafade'><img class='blur' src='"+q.asset.fact_image+"'><img class='main' src='"+q.asset.fact_image+"'></div>":"✨";
+    if(mode==="dev"&&devQuestionLayout==="new"){
+      renderNewFact(q,correctLetter,scored);
+    }else{
+      show("reveal");
+      $("correctlabel").textContent="✓ CORRECT ANSWER · "+correctLetter;
+      $("country").textContent=q.correct.toUpperCase();
+      $("facttag").textContent=q.fact_tag+" FACT";
+      $("fact").textContent=q.fact;
+      let fp=$("factpic");
+      fp.innerHTML=q.asset&&q.asset.fact_image?"<div class='mediafade'><img class='blur' src='"+q.asset.fact_image+"'><img class='main' src='"+q.asset.fact_image+"'></div>":"✨";
+    }
   },tFact);
 
   if(roundEnds){
