@@ -44,7 +44,7 @@ let Q=[],ALLQ=[],i=0,state="menu",start,raf,last=-1,audio,mode=null,answerTime=3
 const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",LIVE_UNIQUE_ID="the_quizgame_master";
 const DEFAULT_SETTINGS={answerTime:30,questionsPerRound:20,percentSeconds:4,playerResultsSeconds:5.5,factSeconds:7,leaderboardSeconds:12,categories:[]};
 let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false;
-let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Map();
+let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Map(),giftComboCounts=new Map(),questionSpotlightTimer=null,questionSpotlightMode="round";
 let devAnswers=new Map(),devAllTimePlayers=new Map();
 let roundScores=new Map(),roundPlayers=new Map(),previousRoundRanks=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
 let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
@@ -170,6 +170,7 @@ async function loadCloudState(){
     }
     saveLocalSettings();
     cloudReady=true;
+    pruneOldDonors();
     applySettingsToUI();
   }catch(e){}
 }
@@ -193,10 +194,31 @@ async function saveCloudState(){
   }catch(e){cloudReady=false}
 }
 function signed(n){return (n>0?"+":"")+n}
+const DONOR_PREFIX="__donor__:";
+function localDayKey(){
+  let d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return y+"-"+m+"-"+day;
+}
+function donorPrefixToday(){return DONOR_PREFIX+localDayKey()+":"}
+function pruneOldDonors(){
+  let keep=donorPrefixToday(),changed=false;
+  for(let key of [...allTimePlayers.keys()]){
+    if(key.startsWith(DONOR_PREFIX)&&!key.startsWith(keep)){allTimePlayers.delete(key);changed=true}
+  }
+  if(changed)saveAllTime();
+}
 function globalRanking(){
   let source=mode==="dev"?devAllTimePlayers:allTimePlayers;
   return [...source.entries()]
+    .filter(([key])=>!String(key).startsWith(DONOR_PREFIX))
     .map(([key,p])=>({key,points:Number(p.points)||0,name:p.name||"PLAYER",avatar:p.avatar||""}))
+    .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name));
+}
+function topDonorsToday(){
+  let prefix=donorPrefixToday();
+  return [...allTimePlayers.entries()]
+    .filter(([key])=>String(key).startsWith(prefix))
+    .map(([key,p])=>({key,points:Number(p.points)||0,name:p.name||"SUPPORTER",avatar:p.avatar||""}))
     .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name));
 }
 function fallbackLabel(name){
@@ -257,6 +279,94 @@ async function fetchProfileAvatar(name){
   }
 }
 function handleLiveMessage(msg){if(mode!=="live"||state!=="q"||!msg||msg.type!=="WebcastChatMessage")return;let d=msg.data||msg,answer=String(d.comment??d.content??d.text??"").trim().toUpperCase();if(!["A","B","C","D"].includes(answer))return;let key=liveUserKey(d.user);if(!key)return;if(!liveAnswers.has(key))countAnswer();liveAnswers.set(key,{key,answer,name:liveUserName(d.user),avatar:liveUserAvatar(d.user)})}
+function handleGiftMessage(msg){
+  if(mode!=="live"||!msg||msg.type!=="WebcastGiftMessage")return;
+  let d=msg.data||msg,user=d.user,key=liveUserKey(user);
+  if(!key)return;
+
+  let repeat=Math.max(1,Number(d.repeatCount)||1);
+  let comboKey=String(d.groupId||d.comboId||"")+":"+String(d.giftId||d.gift?.id||"")+":"+key;
+  let prev=giftComboCounts.get(comboKey)||0;
+  let delta=Math.max(0,repeat-prev);
+  if(Number(d.repeatEnd)===1||d.repeatEnd===true)giftComboCounts.delete(comboKey);
+  else giftComboCounts.set(comboKey,repeat);
+  if(delta<=0)return;
+
+  let diamonds=Number(d.gift?.diamondCount??d.diamondCount??0);
+  if(!Number.isFinite(diamonds)||diamonds<=0)return;
+
+  let amount=Math.round(diamonds*delta);
+  let donorKey=donorPrefixToday()+key;
+  let old=allTimePlayers.get(donorKey)||{points:0,name:liveUserName(user),avatar:liveUserAvatar(user)};
+  allTimePlayers.set(donorKey,{
+    points:(Number(old.points)||0)+amount,
+    name:liveUserName(user)||old.name||"SUPPORTER",
+    avatar:liveUserAvatar(user)||old.avatar||""
+  });
+  saveAllTime();
+  if(state==="q"&&questionSpotlightMode==="donors")renderQuestionSpotlight();
+}
+function miniAvatarHtml(p,cls){
+  if(p.avatar)return "<img class='"+cls+"avatar' src='"+p.avatar+"' alt='' referrerpolicy='no-referrer'>";
+  return "<div class='"+cls+"fallback'>"+fallbackLabel(p.name)+"</div>";
+}
+function roundTopFive(){
+  return [...roundPlayers.entries()]
+    .map(([key,p])=>({key,name:p.name||"PLAYER",avatar:p.avatar||"",points:roundScores.get(key)||0}))
+    .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name))
+    .slice(0,5);
+}
+function renderQuestionSpotlight(){
+  let donors=topDonorsToday(),useDonors=questionSpotlightMode==="donors"&&donors.length;
+  let rows=useDonors?donors.slice(0,5):roundTopFive();
+  $("qsideicon").textContent=useDonors?"💎":"🏆";
+  $("qsidetitle").textContent=useDonors?"TODAY TOP DONATORS":"ROUND TOP 5";
+
+  if(!rows.length){
+    $("qsidebody").innerHTML="<div style='font-size:.76vh;color:#8ea5b5;text-align:center;padding:.9vh 0'>"+(useDonors?"NO GIFTS YET":"WAITING FOR SCORES")+"</div>";
+    return;
+  }
+
+  $("qsidebody").innerHTML=rows.map((p,n)=>
+    "<div class='qminirow'><div class='qminiplace'>"+(n+1)+"</div>"+
+    miniAvatarHtml(p,"qmini")+
+    "<div class='qmininame'>@"+p.name+"</div>"+
+    "<div class='qminipoints'>"+(useDonors?"💎 "+p.points:signed(p.points))+"</div></div>"
+  ).join("");
+}
+function startQuestionSpotlight(){
+  clearInterval(questionSpotlightTimer);
+  questionSpotlightMode="round";
+  renderQuestionSpotlight();
+  questionSpotlightTimer=setInterval(()=>{
+    let donors=topDonorsToday();
+    if(!donors.length){questionSpotlightMode="round";renderQuestionSpotlight();return}
+    questionSpotlightMode=questionSpotlightMode==="round"?"donors":"round";
+    renderQuestionSpotlight();
+  },5500);
+}
+function renderTicker(){
+  let top=globalRanking().slice(0,5),track=$("tickertrack");
+  if(!track)return;
+  if(!top.length){
+    track.innerHTML="<div class='tickeritem'>NO GLOBAL SCORES YET</div>";
+    return;
+  }
+  let items=top.map((p,n)=>"<div class='tickeritem'>"+miniAvatarHtml(p,"tick")+"<b>#"+(n+1)+"</b><span>@"+p.name+"</span><strong>"+signed(p.points)+"</strong></div>").join("");
+  track.innerHTML=items+items;
+}
+function renderQuestionChrome(q){
+  let cat=String(q.category||"GEOGRAPHY").toUpperCase();
+  $("qcategory").textContent=cat;
+  let diff=String(q.difficulty||"rookie").toLowerCase();
+  let ix=rankIndex[diff]??1;
+  $("qdifficulty").textContent=ranks[ix][0]+" "+ranks[ix][1];
+  $("rewardbadge").textContent="⭐ +1 POINT";
+  $("question").classList.remove("theme-flags","theme-landmarks");
+  $("question").classList.add(String(q.category).toLowerCase().includes("landmark")?"theme-landmarks":"theme-flags");
+  renderTicker();
+  startQuestionSpotlight();
+}
 function animatePercent(el,target,duration=1500){
   let t0=performance.now();
   function frame(now){
