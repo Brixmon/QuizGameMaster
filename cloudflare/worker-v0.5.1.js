@@ -107,6 +107,7 @@ async function readState(env) {
       status: 200,
       body: {
         ok: true,
+        hasState: false,
         settings: DEFAULT_SETTINGS,
         players: {},
         updatedAt: null
@@ -121,6 +122,7 @@ async function readState(env) {
       status: 200,
       body: {
         ok: true,
+        hasState: true,
         settings: sanitizeSettings(parsed.settings),
         players: sanitizePlayers(parsed.players),
         updatedAt: parsed.updatedAt || null
