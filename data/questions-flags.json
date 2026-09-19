@@ -1,0 +1,232 @@
+{
+  "version": "1.0",
+  "category": "FLAGS",
+  "questions": [
+    {
+      "id": "flags_001",
+      "difficulty": "newbie",
+      "type": "flag_to_country",
+      "question": "Which country does this flag belong to?",
+      "asset": {
+        "kind": "flag",
+        "code": "jp"
+      },
+      "answers": [
+        "China",
+        "Japan",
+        "Vietnam",
+        "South Korea"
+      ],
+      "correct": "Japan",
+      "fact": "Japan has more than 5 million vending machines — you can buy almost anything from one.",
+      "fact_tag": "WEIRD"
+    },
+    {
+      "id": "flags_002",
+      "difficulty": "newbie",
+      "type": "country_to_flag",
+      "question": "Which flag belongs to Brazil?",
+      "subject": "Brazil",
+      "answers": [
+        {
+          "country": "Argentina",
+          "code": "ar"
+        },
+        {
+          "country": "Brazil",
+          "code": "br"
+        },
+        {
+          "country": "Colombia",
+          "code": "co"
+        },
+        {
+          "country": "Mexico",
+          "code": "mx"
+        }
+      ],
+      "correct": "Brazil",
+      "fact": "Brazil is so huge that its easternmost point is closer to Africa than to its western border.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "flags_003",
+      "difficulty": "rookie",
+      "type": "flag_to_country",
+      "question": "Which country does this flag belong to?",
+      "asset": {
+        "kind": "flag",
+        "code": "ch"
+      },
+      "answers": [
+        "Denmark",
+        "Austria",
+        "Switzerland",
+        "Norway"
+      ],
+      "correct": "Switzerland",
+      "fact": "Switzerland accidentally crossed into Liechtenstein during a 2007 military exercise. Liechtenstein treated it as a minor mishap.",
+      "fact_tag": "HISTORY"
+    },
+    {
+      "id": "flags_004",
+      "difficulty": "rookie",
+      "type": "country_to_flag",
+      "question": "Which flag belongs to India?",
+      "subject": "India",
+      "answers": [
+        {
+          "country": "India",
+          "code": "in"
+        },
+        {
+          "country": "Niger",
+          "code": "ne"
+        },
+        {
+          "country": "Ireland",
+          "code": "ie"
+        },
+        {
+          "country": "Ivory Coast",
+          "code": "ci"
+        }
+      ],
+      "correct": "India",
+      "fact": "India has a floating post office on Dal Lake in Srinagar.",
+      "fact_tag": "WEIRD"
+    },
+    {
+      "id": "flags_005",
+      "difficulty": "pro",
+      "type": "flag_to_country",
+      "question": "Which country does this flag belong to?",
+      "asset": {
+        "kind": "flag",
+        "code": "pt"
+      },
+      "answers": [
+        "Spain",
+        "Italy",
+        "Mexico",
+        "Portugal"
+      ],
+      "correct": "Portugal",
+      "fact": "Portugal and England have the world's oldest diplomatic alliance still in force.",
+      "fact_tag": "HISTORY"
+    },
+    {
+      "id": "flags_006",
+      "difficulty": "pro",
+      "type": "country_to_flag",
+      "question": "Which flag belongs to Iceland?",
+      "subject": "Iceland",
+      "answers": [
+        {
+          "country": "Finland",
+          "code": "fi"
+        },
+        {
+          "country": "Iceland",
+          "code": "is"
+        },
+        {
+          "country": "Norway",
+          "code": "no"
+        },
+        {
+          "country": "Faroe Islands",
+          "code": "fo"
+        }
+      ],
+      "correct": "Iceland",
+      "fact": "Iceland has no established mosquito population.",
+      "fact_tag": "WEIRD"
+    },
+    {
+      "id": "flags_007",
+      "difficulty": "pro",
+      "type": "flag_to_country",
+      "question": "Which country does this flag belong to?",
+      "asset": {
+        "kind": "flag",
+        "code": "ph"
+      },
+      "answers": [
+        "Philippines",
+        "Malaysia",
+        "Cuba",
+        "Puerto Rico"
+      ],
+      "correct": "Philippines",
+      "fact": "The Philippines has more than 7,000 islands, and the official count has changed as mapping improved.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "flags_008",
+      "difficulty": "ninja",
+      "type": "flag_to_country",
+      "question": "Which country does this flag belong to?",
+      "asset": {
+        "kind": "flag",
+        "code": "bt"
+      },
+      "answers": [
+        "Nepal",
+        "Mongolia",
+        "Bhutan",
+        "Sri Lanka"
+      ],
+      "correct": "Bhutan",
+      "fact": "Bhutan is famous for using Gross National Happiness as a development philosophy alongside economic measures.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "flags_009",
+      "difficulty": "ninja",
+      "type": "country_to_flag",
+      "question": "Which flag belongs to Mozambique?",
+      "subject": "Mozambique",
+      "answers": [
+        {
+          "country": "Zimbabwe",
+          "code": "zw"
+        },
+        {
+          "country": "Angola",
+          "code": "ao"
+        },
+        {
+          "country": "Mozambique",
+          "code": "mz"
+        },
+        {
+          "country": "Zambia",
+          "code": "zm"
+        }
+      ],
+      "correct": "Mozambique",
+      "fact": "Mozambique is the only national flag featuring a modern assault rifle.",
+      "fact_tag": "WEIRD"
+    },
+    {
+      "id": "flags_010",
+      "difficulty": "master",
+      "type": "flag_to_country",
+      "question": "Which country does this flag belong to?",
+      "asset": {
+        "kind": "flag",
+        "code": "ki"
+      },
+      "answers": [
+        "Tuvalu",
+        "Kiribati",
+        "Nauru",
+        "Marshall Islands"
+      ],
+      "correct": "Kiribati",
+      "fact": "Kiribati is the only country with territory in all four hemispheres.",
+      "fact_tag": "WOW"
+    }
+  ]
+}
