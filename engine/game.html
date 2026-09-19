@@ -16,9 +16,11 @@ const $=x=>document.getElementById(x), flag=c=>"https://flagcdn.com/w320/"+c+".p
 const ranks=[["🌱","NEWBIE"],["🎯","ROOKIE"],["⚡","PRO"],["🥷","NINJA"],["👑","MASTER"]], rankIndex={newbie:0,rookie:1,pro:2,ninja:3,master:4};
 let Q=[],ALLQ=[],i=0,state="menu",start,raf,last=-1,audio,mode=null,answerTime=30;
 const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",LIVE_UNIQUE_ID="the_quizgame_master";
+const DEFAULT_SETTINGS={answerTime:30,questionsPerRound:20,percentSeconds:4,playerResultsSeconds:5.5,factSeconds:7,leaderboardSeconds:12,categories:[]};
+let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false;
 let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Map();
 let roundScores=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
-let currentRound=1,questionInRound=1,questionsPerRound=20;
+let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
 function show(x){["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y))}
 let answersIn=0,devPlayerAnswered=false;
@@ -26,6 +28,28 @@ function resetAnswers(){answersIn=0;devPlayerAnswered=false;liveAnswers.clear();
 function countAnswer(){answersIn++;if($("answercount"))$("answercount").textContent=answersIn}
 function simulateAnswer(letter){if(mode!=="dev"||state!=="q")return;if(!devPlayerAnswered){devPlayerAnswered=true;countAnswer()}window.devLastAnswer=letter}
 function setLiveStatus(text,kind=""){let e=$("livestatus");if(!e)return;e.textContent="TIKTOK: "+text;e.className="livestatus show "+kind}
+function clampNumber(v,min,max,fallback){
+  let n=Number(v);
+  return Number.isFinite(n)?Math.max(min,Math.min(max,n)):fallback;
+}
+function cleanSettings(s={}){
+  return {
+    answerTime:clampNumber(s.answerTime,5,120,DEFAULT_SETTINGS.answerTime),
+    questionsPerRound:Math.round(clampNumber(s.questionsPerRound,1,100,DEFAULT_SETTINGS.questionsPerRound)),
+    percentSeconds:clampNumber(s.percentSeconds,2,30,DEFAULT_SETTINGS.percentSeconds),
+    playerResultsSeconds:clampNumber(s.playerResultsSeconds,2,30,DEFAULT_SETTINGS.playerResultsSeconds),
+    factSeconds:clampNumber(s.factSeconds,2,30,DEFAULT_SETTINGS.factSeconds),
+    leaderboardSeconds:clampNumber(s.leaderboardSeconds,3,60,DEFAULT_SETTINGS.leaderboardSeconds),
+    categories:Array.isArray(s.categories)?s.categories.filter(x=>typeof x==="string").slice(0,20):[]
+  };
+}
+function loadLocalSettings(){
+  try{return cleanSettings(JSON.parse(localStorage.getItem("qgm_settings_v1")||"{}"))}
+  catch(e){return {...DEFAULT_SETTINGS}}
+}
+function saveLocalSettings(){
+  try{localStorage.setItem("qgm_settings_v1",JSON.stringify(gameSettings))}catch(e){}
+}
 function loadAllTime(){
   try{
     let raw=localStorage.getItem("qgm_alltime_v1");
@@ -36,6 +60,72 @@ function loadAllTime(){
 }
 function saveAllTime(){
   try{localStorage.setItem("qgm_alltime_v1",JSON.stringify(Object.fromEntries(allTimePlayers)))}catch(e){}
+  scheduleCloudSave();
+}
+function applySettingsToUI(){
+  let pairs=[
+    ["livetime",gameSettings.answerTime],["roundq",gameSettings.questionsPerRound],
+    ["holdpct",gameSettings.percentSeconds],["holdplayers",gameSettings.playerResultsSeconds],
+    ["holdfact",gameSettings.factSeconds],["holdleader",gameSettings.leaderboardSeconds]
+  ];
+  pairs.forEach(([id,val])=>{let e=$(id);if(e)e.value=val});
+  let checks=[...document.querySelectorAll("input[name=livecat]")];
+  if(checks.length&&gameSettings.categories.length){
+    checks.forEach(x=>x.checked=gameSettings.categories.includes(x.value));
+    validateLive();
+  }
+}
+function persistSettingsFromUI(){
+  let cats=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);
+  gameSettings=cleanSettings({
+    answerTime:$("livetime")?.value??gameSettings.answerTime,
+    questionsPerRound:$("roundq")?.value??gameSettings.questionsPerRound,
+    percentSeconds:$("holdpct")?.value??gameSettings.percentSeconds,
+    playerResultsSeconds:$("holdplayers")?.value??gameSettings.playerResultsSeconds,
+    factSeconds:$("holdfact")?.value??gameSettings.factSeconds,
+    leaderboardSeconds:$("holdleader")?.value??gameSettings.leaderboardSeconds,
+    categories:cats.length?cats:gameSettings.categories
+  });
+  saveLocalSettings();
+  scheduleCloudSave();
+}
+async function loadCloudState(){
+  try{
+    let r=await fetch(LIVE_BRIDGE+"/game/state",{cache:"no-store"});
+    if(!r.ok)throw new Error("cloud "+r.status);
+    let j=await r.json();
+    if(!j||!j.ok)throw new Error("cloud unavailable");
+    if(j.settings)gameSettings=cleanSettings({...gameSettings,...j.settings});
+    let remotePlayers=j.players&&typeof j.players==="object"?j.players:null;
+    if(remotePlayers&&Object.keys(remotePlayers).length){
+      allTimePlayers=new Map(Object.entries(remotePlayers));
+      saveAllTimeLocalOnly();
+    }else if(allTimePlayers.size){
+      scheduleCloudSave();
+    }
+    saveLocalSettings();
+    cloudReady=true;
+    applySettingsToUI();
+  }catch(e){}
+}
+function saveAllTimeLocalOnly(){
+  try{localStorage.setItem("qgm_alltime_v1",JSON.stringify(Object.fromEntries(allTimePlayers)))}catch(e){}
+}
+function scheduleCloudSave(){
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer=setTimeout(saveCloudState,350);
+}
+async function saveCloudState(){
+  saveLocalSettings();
+  saveAllTimeLocalOnly();
+  try{
+    let r=await fetch(LIVE_BRIDGE+"/game/state",{
+      method:"PUT",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({settings:gameSettings,players:Object.fromEntries(allTimePlayers)})
+    });
+    cloudReady=r.ok;
+  }catch(e){cloudReady=false}
 }
 function signed(n){return (n>0?"+":"")+n}
 function globalRanking(){
@@ -86,7 +176,7 @@ async function fetchProfileAvatar(name){
   if(!name||name==="unknown")return "";
   if(avatarCache.has(name))return avatarCache.get(name);
   try{
-    let r=await fetch("https://api.eulerstream.com/tiktok/users/"+encodeURIComponent(name)+"/basic",{cache:"force-cache"});
+    let r=await fetch(LIVE_BRIDGE+"/profile?uniqueId="+encodeURIComponent(name),{cache:"force-cache"});
     if(!r.ok)throw new Error("profile "+r.status);
     let j=await r.json(),u=imageUrlFromValue(j&&j.user?j.user:j);
     avatarCache.set(name,u||"");
@@ -260,9 +350,9 @@ function renderGlobalLeaderboard(){
 function handleLivePayload(payload){if(payload&&Array.isArray(payload.messages))payload.messages.forEach(handleLiveMessage);else if(payload&&payload.type)handleLiveMessage(payload)}
 async function connectTikTok(){clearTimeout(liveReconnectTimer);try{if(liveWs)liveWs.close()}catch(e){};setLiveStatus("CONNECTING");try{let r=await fetch(LIVE_BRIDGE+"/token",{cache:"no-store"}),j=await r.json();if(!r.ok||!j.ok||!j.token)throw new Error(j.message||("HTTP "+r.status));let p=new URLSearchParams({uniqueId:LIVE_UNIQUE_ID,jwtKey:j.token,"features.bundleEvents":"true","features.rawMessages":"false","features.normalizeUniqueId":"true","features.schemaVersion":"v2"});liveWs=new WebSocket("wss://ws.eulerstream.com?"+p.toString());liveWs.addEventListener("open",()=>setLiveStatus("CONNECTED","ok"));liveWs.addEventListener("message",ev=>{try{handleLivePayload(JSON.parse(ev.data))}catch(e){}});liveWs.addEventListener("close",ev=>{liveWs=null;if(mode!=="live")return;if(ev.code===4404){setLiveStatus("NOT LIVE","bad");return}if(ev.code===4005){setLiveStatus("STREAM ENDED","bad");return}setLiveStatus("RECONNECTING","bad");liveReconnectTimer=setTimeout(connectTikTok,3000)});liveWs.addEventListener("error",()=>setLiveStatus("ERROR","bad"))}catch(e){setLiveStatus("ERROR","bad");liveReconnectTimer=setTimeout(connectTikTok,5000)}}
 function shuffleAnswers(q){let a=q.answers.map(x=>typeof x==="string"?{country:x}:x);for(let n=a.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[a[n],a[j]]=[a[j],a[n]]}return a}
-function startMode(m){mode=m;$("modegate").classList.add("hide");if($("livestatus"))$("livestatus").classList.toggle("show",m==="live");if(m==="dev"){const cats=[...new Set(ALLQ.map(q=>q.category))];$("devcats").innerHTML=cats.map(x=>"<button class='catbtn' onclick=\"chooseDevCategory('"+x+"')\">"+x.toUpperCase()+"</button>").join("");$("devpanel").classList.add("show");}else{const cats=[...new Set(ALLQ.map(q=>q.category))];$("livechecks").innerHTML=cats.map((x,n)=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive()'>"+x.toUpperCase()+"</label>").join("");$("livepanel").classList.add("show");validateLive()}}
+function startMode(m){mode=m;$("modegate").classList.add("hide");if($("livestatus"))$("livestatus").classList.toggle("show",m==="live");if(m==="dev"){const cats=[...new Set(ALLQ.map(q=>q.category))];$("devcats").innerHTML=cats.map(x=>"<button class='catbtn' onclick=\"chooseDevCategory('"+x+"')\">"+x.toUpperCase()+"</button>").join("");$("devpanel").classList.add("show");}else{const cats=[...new Set(ALLQ.map(q=>q.category))];$("livechecks").innerHTML=cats.map((x,n)=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive();persistSettingsFromUI()'>"+x.toUpperCase()+"</label>").join("");$("livepanel").classList.add("show");applySettingsToUI();validateLive()}}
 function validateLive(){const any=[...document.querySelectorAll("input[name=livecat]")].some(x=>x.checked);$("startlive").disabled=!any}
-function launchLive(){answerTime=Math.max(5,Math.min(120,parseInt($("livetime").value)||30));questionsPerRound=Math.max(1,Math.min(100,parseInt($("roundq").value)||20));const chosen=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);if(!chosen.length)return;Q=ALLQ.filter(q=>chosen.includes(q.category));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("livepanel").classList.remove("show");connectTikTok();category()}
+function launchLive(){persistSettingsFromUI();answerTime=gameSettings.answerTime;questionsPerRound=gameSettings.questionsPerRound;const chosen=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);if(!chosen.length)return;Q=ALLQ.filter(q=>chosen.includes(q.category));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("livepanel").classList.remove("show");connectTikTok();category()}
 function shuffleQ(){for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}}
 function chooseDevCategory(cat){answerTime=30;Q=ALLQ.filter(q=>q.category===cat);questionsPerRound=Math.min(20,Math.max(1,Q.length));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("devpanel").classList.remove("show");category()}
 function category(){state="cat";show("cat");let q=Q[i],cats=[...new Set(ALLQ.map(x=>x.category.toUpperCase()))],seq=[];$("difficulty").classList.remove("show");$("ready").classList.remove("show");for(let r=0;r<7;r++)seq.push(...cats);let target=seq.length;seq.push((q.category||"FLAGS").toUpperCase(),...cats,...cats);$("items").innerHTML=seq.map(x=>"<div>"+x+"</div>").join("");$("items").style.transition="none";$("items").style.transform="translateY(0)";requestAnimationFrame(()=>requestAnimationFrame(()=>{$("items").style.transition="transform 3.7s cubic-bezier(.08,.70,.06,1)";$("items").style.transform="translateY("+(-(target-2)*5.4)+"vh)"}));setTimeout(()=>{$("items").children[target].classList.add("selected");tone(920,.14,.03)},3800);setTimeout(()=>difficulty(q),4400)}
@@ -345,5 +435,5 @@ function reveal(){
   }
 }
 document.body.onclick=()=>{audio||=new(window.AudioContext||window.webkitAudioContext)()};
-Promise.all(["../data/questions-flags.json","../data/questions-landmarks.json"].map(x=>freshFetch(x).then(r=>r.json()))).then(ds=>{ALLQ=ds.flatMap(d=>d.questions.map(q=>({...q,category:d.category})));Q=[...ALLQ]}).catch(e=>{document.body.innerHTML="<pre style='color:white;padding:20px'>Could not load question data. Run via a web server, not file://\n"+e+"</pre>"});
+Promise.all(["../data/questions-flags.json","../data/questions-landmarks.json"].map(x=>freshFetch(x).then(r=>r.json()))).then(ds=>{ALLQ=ds.flatMap(d=>d.questions.map(q=>({...q,category:d.category})));Q=[...ALLQ];loadCloudState()}).catch(e=>{document.body.innerHTML="<pre style='color:white;padding:20px'>Could not load question data. Run via a web server, not file://\n"+e+"</pre>"});
 </script></body></html>
