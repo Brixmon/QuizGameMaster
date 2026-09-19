@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>QuizGameMaster TikTok Test</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:#0b1020;
+      color:#fff;
+      font-family:Arial,Helvetica,sans-serif;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:24px;
+    }
+    .wrap{width:min(760px,100%)}
+    h1{font-size:26px;margin:0 0 10px}
+    .sub{opacity:.75;margin-bottom:18px}
+    .card{
+      background:#141b31;
+      border:1px solid #2a355a;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:14px;
+    }
+    .status{font-weight:800;font-size:18px}
+    .ok{color:#72f2a1}
+    .bad{color:#ff7b7b}
+    .wait{color:#ffd36e}
+    .count{
+      font-size:54px;
+      line-height:1;
+      font-weight:900;
+      margin:8px 0 4px;
+    }
+    button{
+      width:100%;
+      border:0;
+      border-radius:12px;
+      padding:14px 16px;
+      font-size:18px;
+      font-weight:800;
+      background:#4f7cff;
+      color:white;
+      cursor:pointer;
+    }
+    pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      background:#090d18;
+      border-radius:12px;
+      padding:12px;
+      max-height:38vh;
+      overflow:auto;
+      margin:10px 0 0;
+      font-size:13px;
+    }
+    .small{font-size:13px;opacity:.7}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>QuizGameMaster — TikTok LIVE test</h1>
+  <div class="sub">@the_quizgame_master</div>
+
+  <div class="card">
+    <div id="status" class="status wait">Starting…</div>
+    <div class="small" id="detail">Requesting temporary EulerStream token.</div>
+  </div>
+
+  <div class="card">
+    <div>ANSWERS</div>
+    <div id="count" class="count">0</div>
+    <div id="last">Waiting for A / B / C / D comments…</div>
+  </div>
+
+  <button id="retry">Reconnect</button>
+
+  <div class="card">
+    <b>Event log</b>
+    <pre id="log"></pre>
+  </div>
+</div>
+
+<script>
+const BRIDGE = "https://quizgamemaster-bridge.vip-krasts.workers.dev";
+const UNIQUE_ID = "the_quizgame_master";
+
+let ws = null;
+let reconnectTimer = null;
+const answers = new Map();
+
+const $ = id => document.getElementById(id);
+
+function log(msg){
+  const line = "[" + new Date().toLocaleTimeString() + "] " + msg;
+  $("log").textContent = line + "\n" + $("log").textContent;
+}
+
+function setStatus(text, cls, detail=""){
+  $("status").textContent = text;
+  $("status").className = "status " + cls;
+  $("detail").textContent = detail;
+}
+
+function userKey(user){
+  if(!user) return "unknown-" + Math.random();
+  return String(
+    user.id ??
+    user.userId ??
+    user.secUid ??
+    user.displayId ??
+    user.uniqueId ??
+    user.nickname ??
+    ("unknown-" + Math.random())
+  );
+}
+
+function userName(user){
+  if(!user) return "unknown";
+  return user.displayId || user.uniqueId || user.nickname || user.id || "unknown";
+}
+
+function handleMessage(msg){
+  if(!msg || msg.type !== "WebcastChatMessage") return;
+
+  const data = msg.data || msg;
+  const comment = String(data.comment ?? data.content ?? data.text ?? "").trim().toUpperCase();
+
+  if(!["A","B","C","D"].includes(comment)) return;
+
+  const key = userKey(data.user);
+  const name = userName(data.user);
+  const isNew = !answers.has(key);
+
+  answers.set(key, comment);
+  $("count").textContent = answers.size;
+  $("last").textContent = name + " → " + comment + (isNew ? "  (+1)" : "  (changed answer)");
+
+  log("ANSWER: " + name + " -> " + comment + " | unique players: " + answers.size);
+}
+
+function handlePayload(payload){
+  if(payload && Array.isArray(payload.messages)){
+    payload.messages.forEach(handleMessage);
+    return;
+  }
+
+  if(payload && payload.type){
+    handleMessage(payload);
+  }
+}
+
+async function connect(){
+  clearTimeout(reconnectTimer);
+
+  try{ if(ws) ws.close(); }catch(e){}
+
+  setStatus("Getting token…", "wait", "Worker is creating a temporary JWT.");
+  log("Requesting JWT");
+
+  try{
+    const r = await fetch(BRIDGE + "/token", {cache:"no-store"});
+    const j = await r.json();
+
+    if(!r.ok || !j.ok || !j.token){
+      throw new Error(j.message || ("HTTP " + r.status));
+    }
+
+    setStatus("Connecting to TikTok LIVE…", "wait", "Opening EulerStream WebSocket.");
+
+    const params = new URLSearchParams({
+      uniqueId: UNIQUE_ID,
+      jwtKey: j.token,
+      "features.bundleEvents": "true",
+      "features.rawMessages": "false",
+      "features.normalizeUniqueId": "true",
+      "features.schemaVersion": "v2"
+    });
+
+    ws = new WebSocket("wss://ws.eulerstream.com?" + params.toString());
+
+    ws.addEventListener("open", () => {
+      setStatus("CONNECTED", "ok", "Listening for LIVE chat comments.");
+      log("WebSocket OPEN");
+    });
+
+    ws.addEventListener("message", ev => {
+      try{
+        const payload = JSON.parse(ev.data);
+        handlePayload(payload);
+      }catch(err){
+        log("JSON parse error");
+      }
+    });
+
+    ws.addEventListener("close", ev => {
+      const reasons = {
+        4005:"STREAM ENDED",
+        4006:"NO MESSAGES TIMEOUT",
+        4400:"INVALID OPTIONS",
+        4401:"INVALID AUTH",
+        4403:"NO PERMISSION",
+        4404:"NOT LIVE",
+        4429:"TOO MANY CONNECTIONS",
+        4500:"TIKTOK CONNECTION CLOSED",
+        4555:"MAX LIFETIME EXCEEDED",
+        4556:"WEBCAST FETCH ERROR",
+        4557:"ROOM INFO FETCH ERROR"
+      };
+
+      const reason = reasons[ev.code] || ("CLOSED " + ev.code);
+      log("WebSocket CLOSE: " + reason + (ev.reason ? " / " + ev.reason : ""));
+
+      if(ev.code === 4404 || ev.code === 4005){
+        setStatus(reason, "bad", "Start TikTok LIVE, then press Reconnect.");
+        return;
+      }
+
+      setStatus(reason, "bad", "Retrying with a fresh JWT in 3 seconds.");
+      reconnectTimer = setTimeout(connect, 3000);
+    });
+
+    ws.addEventListener("error", () => {
+      log("WebSocket ERROR");
+    });
+
+  }catch(err){
+    setStatus("CONNECTION FAILED", "bad", err.message);
+    log("ERROR: " + err.message);
+  }
+}
+
+$("retry").addEventListener("click", connect);
+connect();
+</script>
+</body>
+</html>
