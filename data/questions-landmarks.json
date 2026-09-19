@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "category": "landmarks",
+  "questions": [
+    {
+      "id": "landmark_eiffel_001",
+      "difficulty": "newbie",
+      "type": "landmark_image",
+      "question": "Which country is this landmark in?",
+      "asset": {
+        "image": "../assets/landmarks/eiffel-tower/eiffel-tower-question.webp",
+        "fact_image": "../assets/landmarks/eiffel-tower/eiffel-tower-fact-thermal-expansion.webp"
+      },
+      "answers": [
+        "France",
+        "Italy",
+        "Belgium",
+        "Germany"
+      ],
+      "correct": "France",
+      "fact": "On sunny days, the top of the Eiffel Tower can move about 15 cm as the iron heats unevenly.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_colosseum_001",
+      "difficulty": "newbie",
+      "type": "landmark_image",
+      "question": "Which city is this landmark in?",
+      "asset": {
+        "image": "../assets/landmarks/colosseum/colosseum-question.webp",
+        "fact_image": "../assets/landmarks/colosseum/colosseum-fact-underground-lifts.webp"
+      },
+      "answers": [
+        "Athens",
+        "Rome",
+        "Milan",
+        "Naples"
+      ],
+      "correct": "Rome",
+      "fact": "The Colosseum had underground lifts that could suddenly raise animals and performers into the arena.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_pisa_001",
+      "difficulty": "rookie",
+      "type": "landmark_image",
+      "question": "Which country is this landmark in?",
+      "asset": {
+        "image": "../assets/landmarks/leaning-tower-of-pisa/leaning-tower-of-pisa-question.webp",
+        "fact_image": "../assets/landmarks/leaning-tower-of-pisa/leaning-tower-of-pisa-fact-bell-tower.webp"
+      },
+      "answers": [
+        "Spain",
+        "Greece",
+        "Italy",
+        "Croatia"
+      ],
+      "correct": "Italy",
+      "fact": "It isn't a standalone tower — it's the bell tower of Pisa Cathedral.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_christ_redeemer_001",
+      "difficulty": "rookie",
+      "type": "landmark_image",
+      "question": "Which city is this landmark in?",
+      "asset": {
+        "image": "../assets/landmarks/christ-the-redeemer/christ-the-redeemer-question.webp",
+        "fact_image": "../assets/landmarks/christ-the-redeemer/christ-the-redeemer-fact-700m-corcovado.webp"
+      },
+      "answers": [
+        "Lima",
+        "São Paulo",
+        "Rio de Janeiro",
+        "Buenos Aires"
+      ],
+      "correct": "Rio de Janeiro",
+      "fact": "The statue stands on the summit of Mount Corcovado, overlooking Rio.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_petra_001",
+      "difficulty": "pro",
+      "type": "landmark_image",
+      "question": "Which country is this ancient city in?",
+      "asset": {
+        "image": "../assets/landmarks/petra/petra-question.webp",
+        "fact_image": "../assets/landmarks/petra/petra-fact-water-system.webp"
+      },
+      "answers": [
+        "Egypt",
+        "Jordan",
+        "Türkiye",
+        "Israel"
+      ],
+      "correct": "Jordan",
+      "fact": "Petra survived in the desert using an advanced system of channels, dams and water storage.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_sagrada_001",
+      "difficulty": "pro",
+      "type": "landmark_image",
+      "question": "Construction of this landmark began in which century?",
+      "asset": {
+        "image": "../assets/landmarks/sagrada-familia/sagrada-familia-question.webp",
+        "fact_image": "../assets/landmarks/sagrada-familia/sagrada-familia-fact-1882-gaudi.webp"
+      },
+      "answers": [
+        "17th century",
+        "18th century",
+        "19th century",
+        "20th century"
+      ],
+      "correct": "19th century",
+      "fact": "Construction began in 1882 — and Antoni Gaudí wasn't the original architect.",
+      "fact_tag": "HISTORY"
+    },
+    {
+      "id": "landmark_sydney_001",
+      "difficulty": "pro",
+      "type": "landmark_image",
+      "question": "About how many tiles cover its famous roofs?",
+      "asset": {
+        "image": "../assets/landmarks/sydney-opera-house/sydney-opera-house-question.webp",
+        "fact_image": "../assets/landmarks/sydney-opera-house/sydney-opera-house-fact-1056006-tiles.webp"
+      },
+      "answers": [
+        "100,000",
+        "500,000",
+        "1 million",
+        "5 million"
+      ],
+      "correct": "1 million",
+      "fact": "Its roofs are covered with exactly 1,056,006 tiles made in Sweden.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_angkor_001",
+      "difficulty": "ninja",
+      "type": "landmark_image",
+      "question": "Which country is this landmark in?",
+      "asset": {
+        "image": "../assets/landmarks/angkor-wat/angkor-wat-question.webp",
+        "fact_image": "../assets/landmarks/angkor-wat/angkor-wat-fact-largest-religious-structure.webp"
+      },
+      "answers": [
+        "Thailand",
+        "Cambodia",
+        "Laos",
+        "Myanmar"
+      ],
+      "correct": "Cambodia",
+      "fact": "Angkor Wat is the world's largest religious structure by area.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_moai_001",
+      "difficulty": "ninja",
+      "type": "landmark_image",
+      "question": "On which island are these famous statues found?",
+      "asset": {
+        "image": "../assets/landmarks/moai/moai-question.webp",
+        "fact_image": "../assets/landmarks/moai/moai-fact-nearly-900.webp"
+      },
+      "answers": [
+        "Tahiti",
+        "Easter Island",
+        "Fiji",
+        "Samoa"
+      ],
+      "correct": "Easter Island",
+      "fact": "Nearly 900 monumental Moai statues have been recorded on Easter Island.",
+      "fact_tag": "WOW"
+    },
+    {
+      "id": "landmark_jetavanaramaya_001",
+      "difficulty": "master",
+      "type": "landmark_image",
+      "question": "Which country is this ancient monument in?",
+      "asset": {
+        "image": "../assets/landmarks/jetavanaramaya/jetavanaramaya-question.webp",
+        "fact_image": "../assets/landmarks/jetavanaramaya/jetavanaramaya-fact-93-million-bricks.webp"
+      },
+      "answers": [
+        "India",
+        "Nepal",
+        "Sri Lanka",
+        "Myanmar"
+      ],
+      "correct": "Sri Lanka",
+      "fact": "It was originally about 122 metres tall and was built using roughly 93 million bricks.",
+      "fact_tag": "WOW"
+    }
+  ]
+}
