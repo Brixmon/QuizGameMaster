@@ -95,13 +95,17 @@ async function loadCloudState(){
     if(!r.ok)throw new Error("cloud "+r.status);
     let j=await r.json();
     if(!j||!j.ok)throw new Error("cloud unavailable");
+    if(j.hasState===false){
+      cloudReady=true;
+      scheduleCloudSave();
+      applySettingsToUI();
+      return;
+    }
     if(j.settings)gameSettings=cleanSettings({...gameSettings,...j.settings});
     let remotePlayers=j.players&&typeof j.players==="object"?j.players:null;
-    if(remotePlayers&&Object.keys(remotePlayers).length){
+    if(remotePlayers){
       allTimePlayers=new Map(Object.entries(remotePlayers));
       saveAllTimeLocalOnly();
-    }else if(allTimePlayers.size){
-      scheduleCloudSave();
     }
     saveLocalSettings();
     cloudReady=true;
