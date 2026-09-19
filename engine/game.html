@@ -426,6 +426,7 @@ function renderRoundResults(players,correctLetter,correctText){
         key,
         name:p.name||"PLAYER",
         avatar:p.avatar||"",
+        roundBefore:now?now.roundBefore:(roundScores.get(key)||0),
         roundPoints:roundScores.get(key)||0,
         delta:now?now.delta:0,
         answered:!!now,
@@ -482,7 +483,7 @@ function renderRoundResults(players,correctLetter,correctText){
     let score=document.createElement("div");
     score.className="rrscore";
     let pts=document.createElement("b");
-    pts.textContent=signed(p.roundPoints)+" PTS";
+    pts.textContent=signed(p.roundBefore)+" PTS";
 
     let move=document.createElement("div");
     move.className="rrmove";
@@ -498,7 +499,12 @@ function renderRoundResults(players,correctLetter,correctText){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       row.style.transform="translateY(0)";
       row.style.opacity="1";
-      if(p.answered)setTimeout(()=>scoreTone(p.delta,0),220+n*80);
+      if(p.answered){
+        setTimeout(()=>{
+          animateSignedNumber(pts,p.roundBefore,p.roundPoints,900," PTS");
+          scoreTone(p.delta,0);
+        },260+n*85);
+      }
     }));
   });
 
