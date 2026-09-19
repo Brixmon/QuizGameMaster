@@ -8,6 +8,9 @@
 <div id="reveal" class="screen"><div class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
 </div><div class="safe"><div>TikTok chat / interface safe zone</div></div></div>
 <script>
+// Always fetch fresh game/data when opened from the fullscreen browser home page.
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
+const freshFetch=(url)=>fetch(url+(url.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store'});
 const $=x=>document.getElementById(x), flag=c=>"https://flagcdn.com/w320/"+c+".png";
 const ranks=[["🌱","NEWBIE"],["🎯","ROOKIE"],["⚡","PRO"],["🥷","NINJA"],["👑","MASTER"]], rankIndex={newbie:0,rookie:1,pro:2,ninja:3,master:4};
 let Q=[],i=0,state="cat",start,raf,last=-1,audio;
@@ -22,5 +25,5 @@ else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";$("ans
 function tick(now){let t=Math.min(1,(now-start)/30000),r=Math.pow(1-t,1.85);$("bar").style.width=r*100+"%";$("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";let s=Math.floor((now-start)/1000);if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal()}
 function reveal(){if(state!=="q")return;state="mark";cancelAnimationFrame(raf);let q=Q[i],idx=q._shown.findIndex(x=>x.country===q.correct),cards=[...$("answers").children];cards.forEach((e,n)=>e.classList.add(n===idx?"good":"bad"));tone(660,.07,.025);setTimeout(()=>tone(920,.12,.03),100);setTimeout(()=>{state="r";show("reveal");$("country").textContent=q.correct.toUpperCase();$("facttag").textContent=q.fact_tag+" FACT";$("fact").textContent=q.fact;let fp=$("factpic");fp.innerHTML=q.asset&&q.asset.fact_image?"<div class='mediafade'><img class='blur' src='"+q.asset.fact_image+"'><img class='main' src='"+q.asset.fact_image+"'></div>":"✨"},1500);setTimeout(()=>{i=(i+1)%Q.length;category()},7000)}
 document.body.onclick=()=>{audio||=new(window.AudioContext||window.webkitAudioContext)();if(state==="q")reveal()};
-Promise.all(["../data/questions-flags.json","../data/questions-landmarks.json"].map(x=>fetch(x).then(r=>r.json()))).then(ds=>{Q=ds.flatMap(d=>d.questions.map(q=>({...q,category:d.category})));for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}category()}).catch(e=>{document.body.innerHTML="<pre style='color:white;padding:20px'>Could not load question data. Run via a web server, not file://\n"+e+"</pre>"});
+Promise.all(["../data/questions-flags.json","../data/questions-landmarks.json"].map(x=>freshFetch(x).then(r=>r.json()))).then(ds=>{Q=ds.flatMap(d=>d.questions.map(q=>({...q,category:d.category})));for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}category()}).catch(e=>{document.body.innerHTML="<pre style='color:white;padding:20px'>Could not load question data. Run via a web server, not file://\n"+e+"</pre>"});
 </script></body></html>
