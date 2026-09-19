@@ -26,7 +26,7 @@ let devAnswers=new Map(),devAllTimePlayers=new Map();
 let roundScores=new Map(),roundPlayers=new Map(),previousRoundRanks=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
 let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
 let designPreviewTimer=null,designPreviewDonors=false,devQuestionLayout="classic";
-let musicPrefs=loadMusicPrefs(),musicMaster=null,musicFilter=null,musicPadNodes=[],musicTimer=null,musicBeat=0,musicPulseLevel=.008,musicPlaying=false,musicDuckTimer=null;
+let musicPrefs=loadMusicPrefs(),musicMaster=null,musicFilter=null,musicPadNodes=[],musicTimer=null,musicBeat=0,musicPulseLevel=.07,musicPlaying=false,musicDuckTimer=null;
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
 function loadMusicPrefs(){
   try{
@@ -63,8 +63,8 @@ function musicAir(){
   let len=Math.floor(audio.sampleRate*.08),buf=audio.createBuffer(1,len,audio.sampleRate),data=buf.getChannelData(0);
   for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len);
   let src=audio.createBufferSource(),hp=audio.createBiquadFilter(),g=audio.createGain(),now=audio.currentTime;
-  src.buffer=buf;hp.type="highpass";hp.frequency.value=5000;g.gain.value=.0013;
-  src.connect(hp);hp.connect(g);g.connect(musicFilter);src.start(now);
+  src.buffer=buf;hp.type="highpass";hp.frequency.value=5000;g.gain.value=.012;
+  src.connect(hp);hp.connect(g);g.connect(musicMaster);src.start(now);
 }
 function musicStep(){
   if(!musicPlaying)return;
@@ -76,11 +76,11 @@ function musicStep(){
 }
 function setMusicScene(scene){
   if(!musicPlaying||!audio||!musicFilter)return;
-  let target=760,level=.0075;
-  if(scene==="questionnew"){target=1250;level=.0105}
-  else if(scene==="factnew"){target=820;level=.0065}
-  else if(scene==="round"||scene==="leaderboard"){target=980;level=.0085}
-  else if(scene==="cat"){target=720;level=.0065}
+  let target=760,level=.065;
+  if(scene==="questionnew"){target=1250;level=.095}
+  else if(scene==="factnew"){target=820;level=.055}
+  else if(scene==="round"||scene==="leaderboard"){target=980;level=.075}
+  else if(scene==="cat"){target=720;level=.055}
   musicPulseLevel=level;
   musicFilter.frequency.cancelScheduledValues(audio.currentTime);
   musicFilter.frequency.setTargetAtTime(target,audio.currentTime,.45);
@@ -93,10 +93,12 @@ function startMusic(){
     musicMaster=audio.createGain();musicFilter=audio.createBiquadFilter();
     musicFilter.type="lowpass";musicFilter.frequency.value=780;musicFilter.Q.value=.65;
     musicMaster.gain.value=0;musicFilter.connect(musicMaster);musicMaster.connect(audio.destination);
-    const pads=[[73.42,"triangle",.013],[110,"sine",.009],[146.83,"sine",.005]];
-    musicPadNodes=pads.map(([freq,type,gain])=>{
-      let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.value=gain;o.connect(g);g.connect(musicFilter);o.start();return [o,g];
+    const pads=[[73.42,"triangle",.12],[110,"sine",.075],[146.83,"sine",.04]];
+    musicPadNodes=pads.map(([freq,type,gain],n)=>{
+      let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;o.detune.value=n===1?5:n===2?-4:0;g.gain.value=gain;o.connect(g);g.connect(musicFilter);o.start();return [o,g];
     });
+    let lfo=audio.createOscillator(),lfoGain=audio.createGain();
+    lfo.type="sine";lfo.frequency.value=.075;lfoGain.gain.value=110;lfo.connect(lfoGain);lfoGain.connect(musicFilter.frequency);lfo.start();musicPadNodes.push([lfo,lfoGain]);
     musicPlaying=true;musicBeat=0;musicStep();musicTimer=setInterval(musicStep,667);
     musicMaster.gain.setTargetAtTime(musicPrefs.volume,audio.currentTime,.35);
     setMusicScene("cat");
@@ -1078,7 +1080,7 @@ function tick(now){
     $("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";
   }
   if(musicPlaying&&mode==="dev"&&devQuestionLayout==="new"){
-    musicPulseLevel=elapsed>Math.max(0,answerTime-7)?.0165:.0105;
+    musicPulseLevel=elapsed>Math.max(0,answerTime-7)?.14:.095;
   }
   let s=Math.floor(elapsed);
   if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}
