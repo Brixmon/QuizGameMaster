@@ -1,0 +1,9 @@
+{
+  "landmark_id": "eiffel-tower",
+  "display_name": "Eiffel Tower",
+  "country": "France",
+  "assets": {
+    "question_image": "assets/landmarks/eiffel-tower/eiffel-tower_question.webp",
+    "fact_image": "assets/landmarks/eiffel-tower/eiffel-tower_fact-thermal-expansion.webp"
+  }
+}
