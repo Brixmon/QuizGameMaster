@@ -23,6 +23,7 @@ let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Ma
 let devAnswers=new Map(),devAllTimePlayers=new Map();
 let roundScores=new Map(),roundPlayers=new Map(),previousRoundRanks=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
 let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
+let designPreviewTimer=null,designPreviewDonors=false;
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
 function show(x){["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y))}
 let answersIn=0;
@@ -177,6 +178,94 @@ function globalRanking(){
 function fallbackLabel(name){
   let m=String(name||"").match(/^PLAYER\s+([1-4])$/i);
   return m?m[1]:String(name||"?").slice(0,1).toUpperCase();
+}
+function previewEsc(v){
+  return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+function previewRoundRows(){
+  let rows=[...roundPlayers.entries()].map(([key,p])=>({
+    name:p.name||"PLAYER",
+    points:roundScores.get(key)||0
+  })).sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name)).slice(0,5);
+  if(rows.length)return rows;
+  return [
+    {name:"PLAYER 1",points:8},{name:"PLAYER 2",points:6},{name:"PLAYER 3",points:5},
+    {name:"PLAYER 4",points:3},{name:"PLAYER 5",points:2}
+  ];
+}
+function previewDonorRows(){
+  return [
+    {name:"NOVA",points:1280},{name:"KAI",points:940},{name:"LUNA",points:610},
+    {name:"ZAY",points:320},{name:"MIMI",points:180}
+  ];
+}
+function renderPreviewSide(){
+  let rows=designPreviewDonors?previewDonorRows():previewRoundRows();
+  $("np-sideicon").textContent=designPreviewDonors?"💎":"🏆";
+  $("np-sidetitle").textContent=designPreviewDonors?"TODAY TOP DONATORS":"ROUND TOP 5";
+  $("np-sidebody").innerHTML=rows.map((p,n)=>
+    "<div class='np-toprow'><div class='np-place'>"+(n+1)+"</div><div class='np-avatar'>"+
+    previewEsc(fallbackLabel(p.name))+"</div><div class='np-name'>@"+previewEsc(p.name)+
+    "</div><div class='np-pts'>"+(designPreviewDonors?"💎 ":"")+previewEsc(p.points)+"</div></div>"
+  ).join("");
+}
+function renderPreviewTicker(){
+  let source=[...allTimePlayers.entries()]
+    .filter(([key])=>!String(key).startsWith("__donor__:"))
+    .map(([key,p])=>({name:p.name||"PLAYER",points:Number(p.points)||0}))
+    .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name))
+    .slice(0,5);
+  if(!source.length)source=[
+    {name:"RIO",points:24},{name:"KENJI",points:22},{name:"SARA",points:21},
+    {name:"NOVA",points:19},{name:"LUNA",points:17}
+  ];
+  let chunk=source.map((p,n)=>"<span class='np-titem'><b>#"+(n+1)+"</b> @"+previewEsc(p.name)+" · "+previewEsc(p.points)+" PTS</span>").join("");
+  $("np-track").innerHTML=chunk+chunk;
+}
+function openNewDesignPreview(){
+  if(mode!=="dev")return;
+  let q=ALLQ.find(x=>x.type==="landmark_image"&&x.asset&&x.asset.image)||ALLQ.find(x=>x.asset&&x.asset.image)||ALLQ[0];
+  if(!q)return;
+
+  $("devpanel").classList.remove("show");
+  $("designpreview").classList.add("show");
+
+  let img=q.asset?.image||q.asset?.fact_image||"";
+  if(img){
+    $("np-image").src=img;
+    $("np-image").style.display="block";
+  }else{
+    $("np-image").removeAttribute("src");
+    $("np-image").style.display="none";
+  }
+
+  $("np-category").textContent=String(q.category||"GEOGRAPHY").toUpperCase();
+  let ix=rankIndex[q.difficulty]??2;
+  $("np-difficulty").textContent=ranks[ix][0]+" "+ranks[ix][1];
+  $("np-question").textContent=q.question||"Sample question";
+  $("np-round").textContent="ROUND 1 · QUESTION 3/"+(gameSettings.questionsPerRound||20);
+
+  let answers=(q.answers||[]).slice(0,4).map(x=>typeof x==="string"?x:(x.country||x.name||"ANSWER"));
+  while(answers.length<4)answers.push(["FRANCE","ITALY","SPAIN","GERMANY"][answers.length]);
+  $("np-answers").innerHTML=answers.map((x,n)=>
+    "<div class='np-answer'><div class='np-letter'>"+"ABCD"[n]+"</div><span>"+previewEsc(x)+"</span></div>"
+  ).join("");
+
+  designPreviewDonors=false;
+  renderPreviewSide();
+  renderPreviewTicker();
+
+  clearInterval(designPreviewTimer);
+  designPreviewTimer=setInterval(()=>{
+    designPreviewDonors=!designPreviewDonors;
+    renderPreviewSide();
+  },4500);
+}
+function closeNewDesignPreview(){
+  clearInterval(designPreviewTimer);
+  designPreviewTimer=null;
+  $("designpreview").classList.remove("show");
+  $("devpanel").classList.add("show");
 }
 function captureGlobalRanks(){
   previousGlobalRanks=new Map(globalRanking().map((p,n)=>[p.key,n+1]));
