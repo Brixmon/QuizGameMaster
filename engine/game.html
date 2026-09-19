@@ -19,14 +19,33 @@ const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",LIVE_UN
 const DEFAULT_SETTINGS={answerTime:30,questionsPerRound:20,percentSeconds:4,playerResultsSeconds:5.5,factSeconds:7,leaderboardSeconds:12,categories:[]};
 let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false;
 let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Map();
+let devAnswers=new Map(),devAllTimePlayers=new Map();
 let roundScores=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
 let currentRound=1,questionInRound=1,questionsPerRound=gameSettings.questionsPerRound;
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
 function show(x){["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y))}
-let answersIn=0,devPlayerAnswered=false;
-function resetAnswers(){answersIn=0;devPlayerAnswered=false;liveAnswers.clear();if($("answercount"))$("answercount").textContent="0";if($("chatsim"))$("chatsim").classList.toggle("show",mode==="dev")}
+let answersIn=0;
+function resetAnswers(){
+  answersIn=0;
+  liveAnswers.clear();
+  devAnswers.clear();
+  if($("answercount"))$("answercount").textContent="0";
+  if($("devsim"))$("devsim").classList.toggle("show",mode==="dev");
+  document.querySelectorAll(".devsim .chatbtn").forEach(b=>b.classList.remove("active"));
+}
 function countAnswer(){answersIn++;if($("answercount"))$("answercount").textContent=answersIn}
-function simulateAnswer(letter){if(mode!=="dev"||state!=="q")return;if(!devPlayerAnswered){devPlayerAnswered=true;countAnswer()}window.devLastAnswer=letter}
+function simulateAnswer(player,letter){
+  if(mode!=="dev"||state!=="q")return;
+  player=Number(player);
+  if(player<1||player>4||!["A","B","C","D"].includes(letter))return;
+  let key="dev-player-"+player;
+  if(!devAnswers.has(key))countAnswer();
+  devAnswers.set(key,{key,answer:letter,name:"PLAYER "+player,avatar:""});
+  let row=document.querySelector('.devrow[data-player="'+player+'"]');
+  if(row){
+    row.querySelectorAll(".chatbtn").forEach(b=>b.classList.toggle("active",b.dataset.answer===letter));
+  }
+}
 function setLiveStatus(text,kind=""){let e=$("livestatus");if(!e)return;e.textContent="TIKTOK: "+text;e.className="livestatus show "+kind}
 function clampNumber(v,min,max,fallback){
   let n=Number(v);
@@ -66,28 +85,39 @@ function applySettingsToUI(){
   let pairs=[
     ["livetime",gameSettings.answerTime],["roundq",gameSettings.questionsPerRound],
     ["holdpct",gameSettings.percentSeconds],["holdplayers",gameSettings.playerResultsSeconds],
-    ["holdfact",gameSettings.factSeconds],["holdleader",gameSettings.leaderboardSeconds]
+    ["holdfact",gameSettings.factSeconds],["holdleader",gameSettings.leaderboardSeconds],
+    ["devtime",gameSettings.answerTime],["devroundq",gameSettings.questionsPerRound],
+    ["devholdpct",gameSettings.percentSeconds],["devholdplayers",gameSettings.playerResultsSeconds],
+    ["devholdfact",gameSettings.factSeconds],["devholdleader",gameSettings.leaderboardSeconds]
   ];
   pairs.forEach(([id,val])=>{let e=$(id);if(e)e.value=val});
-  let checks=[...document.querySelectorAll("input[name=livecat]")];
-  if(checks.length&&gameSettings.categories.length){
-    checks.forEach(x=>x.checked=gameSettings.categories.includes(x.value));
-    validateLive();
+  for(let group of ["livecat","devcat"]){
+    let checks=[...document.querySelectorAll('input[name="'+group+'"]')];
+    if(checks.length&&gameSettings.categories.length){
+      checks.forEach(x=>x.checked=gameSettings.categories.includes(x.value));
+    }
   }
+  validateLive();
+  validateDev();
 }
-function persistSettingsFromUI(){
-  let cats=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);
+function persistSettingsFromUI(source=mode==="dev"?"dev":"live"){
+  let dev=source==="dev";
+  let ids=dev
+    ? {time:"devtime",round:"devroundq",pct:"devholdpct",players:"devholdplayers",fact:"devholdfact",leader:"devholdleader",cats:"devcat"}
+    : {time:"livetime",round:"roundq",pct:"holdpct",players:"holdplayers",fact:"holdfact",leader:"holdleader",cats:"livecat"};
+  let cats=[...document.querySelectorAll('input[name="'+ids.cats+'"]:checked')].map(x=>x.value);
   gameSettings=cleanSettings({
-    answerTime:$("livetime")?.value??gameSettings.answerTime,
-    questionsPerRound:$("roundq")?.value??gameSettings.questionsPerRound,
-    percentSeconds:$("holdpct")?.value??gameSettings.percentSeconds,
-    playerResultsSeconds:$("holdplayers")?.value??gameSettings.playerResultsSeconds,
-    factSeconds:$("holdfact")?.value??gameSettings.factSeconds,
-    leaderboardSeconds:$("holdleader")?.value??gameSettings.leaderboardSeconds,
-    categories:cats.length?cats:gameSettings.categories
+    answerTime:$(ids.time)?.value??gameSettings.answerTime,
+    questionsPerRound:$(ids.round)?.value??gameSettings.questionsPerRound,
+    percentSeconds:$(ids.pct)?.value??gameSettings.percentSeconds,
+    playerResultsSeconds:$(ids.players)?.value??gameSettings.playerResultsSeconds,
+    factSeconds:$(ids.fact)?.value??gameSettings.factSeconds,
+    leaderboardSeconds:$(ids.leader)?.value??gameSettings.leaderboardSeconds,
+    categories:cats
   });
   saveLocalSettings();
   scheduleCloudSave();
+  applySettingsToUI();
 }
 async function loadCloudState(){
   try{
@@ -138,9 +168,14 @@ async function saveCloudState(){
 }
 function signed(n){return (n>0?"+":"")+n}
 function globalRanking(){
-  return [...allTimePlayers.entries()]
+  let source=mode==="dev"?devAllTimePlayers:allTimePlayers;
+  return [...source.entries()]
     .map(([key,p])=>({key,points:Number(p.points)||0,name:p.name||"PLAYER",avatar:p.avatar||""}))
     .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name));
+}
+function fallbackLabel(name){
+  let m=String(name||"").match(/^PLAYER\s+([1-4])$/i);
+  return m?m[1]:String(name||"?").slice(0,1).toUpperCase();
 }
 function captureGlobalRanks(){
   previousGlobalRanks=new Map(globalRanking().map((p,n)=>[p.key,n+1]));
