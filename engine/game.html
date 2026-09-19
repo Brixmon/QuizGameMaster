@@ -16,14 +16,36 @@ const $=x=>document.getElementById(x), flag=c=>"https://flagcdn.com/w320/"+c+".p
 const ranks=[["🌱","NEWBIE"],["🎯","ROOKIE"],["⚡","PRO"],["🥷","NINJA"],["👑","MASTER"]], rankIndex={newbie:0,rookie:1,pro:2,ninja:3,master:4};
 let Q=[],ALLQ=[],i=0,state="menu",start,raf,last=-1,audio,mode=null,answerTime=30;
 const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",LIVE_UNIQUE_ID="the_quizgame_master";
-let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),sessionScores=new Map(),avatarCache=new Map();
+let liveWs=null,liveReconnectTimer=null,liveAnswers=new Map(),avatarCache=new Map();
+let roundScores=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
+let currentRound=1,questionInRound=1,questionsPerRound=20;
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
-function show(x){["cat","question","round","reveal"].forEach(y=>$(y).classList.toggle("on",x===y))}
+function show(x){["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y))}
 let answersIn=0,devPlayerAnswered=false;
 function resetAnswers(){answersIn=0;devPlayerAnswered=false;liveAnswers.clear();if($("answercount"))$("answercount").textContent="0";if($("chatsim"))$("chatsim").classList.toggle("show",mode==="dev")}
 function countAnswer(){answersIn++;if($("answercount"))$("answercount").textContent=answersIn}
 function simulateAnswer(letter){if(mode!=="dev"||state!=="q")return;if(!devPlayerAnswered){devPlayerAnswered=true;countAnswer()}window.devLastAnswer=letter}
 function setLiveStatus(text,kind=""){let e=$("livestatus");if(!e)return;e.textContent="TIKTOK: "+text;e.className="livestatus show "+kind}
+function loadAllTime(){
+  try{
+    let raw=localStorage.getItem("qgm_alltime_v1");
+    if(!raw)return new Map();
+    let data=JSON.parse(raw);
+    return new Map(Object.entries(data||{}));
+  }catch(e){return new Map()}
+}
+function saveAllTime(){
+  try{localStorage.setItem("qgm_alltime_v1",JSON.stringify(Object.fromEntries(allTimePlayers)))}catch(e){}
+}
+function signed(n){return (n>0?"+":"")+n}
+function globalRanking(){
+  return [...allTimePlayers.entries()]
+    .map(([key,p])=>({key,points:Number(p.points)||0,name:p.name||"PLAYER",avatar:p.avatar||""}))
+    .sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name));
+}
+function captureGlobalRanks(){
+  previousGlobalRanks=new Map(globalRanking().map((p,n)=>[p.key,n+1]));
+}
 function liveUserKey(user){if(!user)return null;return String(user.id??user.userId??user.secUid??user.displayId??user.uniqueId??user.nickname??"")||null}
 function liveUserName(user){if(!user)return "unknown";return String(user.displayId??user.uniqueId??user.nickname??user.id??"unknown").replace(/^@/,"")}
 function imageUrlFromValue(v,depth=0){
@@ -120,7 +142,7 @@ function makePlayerChip(p){
   name.textContent="@"+p.name;
   let score=document.createElement("div");
   score.className="playerscore";
-  score.innerHTML=(p.delta>0?"+1":"−1")+" this round · TOTAL <b>"+(p.total>0?"+":"")+p.total+"</b>";
+  score.innerHTML="ANSWER <b>"+(p.delta>0?"+1":"−1")+"</b> · ROUND <b>"+signed(p.roundPoints)+"</b> · ALL-TIME <b>"+signed(p.allTimePoints)+"</b>";
   info.append(name,score);
   chip.appendChild(info);
   return chip;
@@ -143,17 +165,97 @@ function fillPlayerGrid(id,players){
     box.appendChild(more);
   }
 }
-function scoreRound(players,correctLetter){
-  return players.map((p,n)=>{
-    let key=p.key||("dev-"+n),delta=p.answer===correctLetter?1:-1,total=(sessionScores.get(key)||0)+delta;
-    sessionScores.set(key,total);
-    return {...p,key,delta,total,correct:delta>0};
+function scoreQuestion(players,correctLetter){
+  let scored=players.map((p,n)=>{
+    let key=p.key||("dev-"+n),delta=p.answer===correctLetter?1:-1;
+    let roundPoints=(roundScores.get(key)||0)+delta;
+    roundScores.set(key,roundPoints);
+
+    let old=allTimePlayers.get(key)||{points:0,name:p.name||"PLAYER",avatar:p.avatar||""};
+    let updated={
+      points:(Number(old.points)||0)+delta,
+      name:p.name||old.name||"PLAYER",
+      avatar:p.avatar||old.avatar||""
+    };
+    allTimePlayers.set(key,updated);
+
+    return {...p,key,delta,roundPoints,allTimePoints:updated.points,correct:delta>0};
   });
+  saveAllTime();
+  return scored;
 }
 function renderRoundResults(players,correctLetter,correctText){
   $("roundanswer").innerHTML="CORRECT: <b>"+correctLetter+"</b> · "+String(correctText).toUpperCase();
   fillPlayerGrid("roundwinners",players.filter(p=>p.correct));
   fillPlayerGrid("roundlosers",players.filter(p=>!p.correct));
+}
+function makeLeaderboardAvatar(p,place){
+  let wrap=document.createElement("div");
+  wrap.className="lbavatarwrap";
+  let avatar;
+  if(p.avatar){
+    avatar=document.createElement("img");
+    avatar.className="lbavatar";
+    avatar.src=p.avatar;
+    avatar.alt="";
+    avatar.referrerPolicy="no-referrer";
+  }else{
+    avatar=document.createElement("div");
+    avatar.className="lbfallback";
+    avatar.textContent=(p.name||"?").slice(0,1).toUpperCase();
+    fetchProfileAvatar(p.name).then(url=>{
+      if(!url||!avatar.isConnected)return;
+      let img=document.createElement("img");
+      img.className="lbavatar";
+      img.src=url;img.alt="";img.referrerPolicy="no-referrer";
+      avatar.replaceWith(img);
+      p.avatar=url;
+      let saved=allTimePlayers.get(p.key);
+      if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
+    });
+  }
+  wrap.appendChild(avatar);
+  if(place<=3){
+    let orn=document.createElement("div");
+    orn.className="rankornament";
+    orn.textContent=place===1?"👑":place===2?"🥈":"🥉";
+    wrap.appendChild(orn);
+  }
+  return wrap;
+}
+function renderGlobalLeaderboard(){
+  let ranking=globalRanking(),list=$("leaderlist");
+  $("leadersub").textContent="ROUND "+currentRound+" COMPLETE · ALL-TIME RANKING";
+  list.innerHTML="";
+  ranking.slice(0,8).forEach((p,n)=>{
+    let place=n+1,oldPlace=previousGlobalRanks.get(p.key);
+    let row=document.createElement("div");
+    row.className="lbrow "+(place===1?"top1":place===2?"top2":place===3?"top3":"");
+    let delta=oldPlace?oldPlace-place:0;
+    if(oldPlace&&delta!==0)row.style.transform="translateY("+(delta*5.8)+"vh)";
+    else if(!oldPlace)row.style.opacity="0";
+
+    let pos=document.createElement("div");pos.className="lbplace";pos.textContent="#"+place;
+    row.appendChild(pos);
+    row.appendChild(makeLeaderboardAvatar(p,place));
+
+    let info=document.createElement("div");info.className="lbinfo";
+    let name=document.createElement("div");name.className="lbname";name.textContent="@"+p.name;
+    let round=document.createElement("div");round.className="lbmeta";round.textContent="ROUND "+signed(roundScores.get(p.key)||0);
+    info.append(name,round);row.appendChild(info);
+
+    let score=document.createElement("div");score.className="lbscore";
+    let points=document.createElement("b");points.textContent=signed(p.points)+" PTS";
+    let move=document.createElement("div");move.className="move";
+    if(!oldPlace){move.classList.add("new");move.textContent="NEW";}
+    else if(oldPlace>place){move.classList.add("up");move.textContent="▲ "+(oldPlace-place);}
+    else if(oldPlace<place){move.classList.add("down");move.textContent="▼ "+(place-oldPlace);}
+    else{move.classList.add("same");move.textContent="—";}
+    score.append(points,move);row.appendChild(score);
+    list.appendChild(row);
+
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{row.style.transform="translateY(0)";row.style.opacity="1"}));
+  });
 }
 function handleLivePayload(payload){if(payload&&Array.isArray(payload.messages))payload.messages.forEach(handleLiveMessage);else if(payload&&payload.type)handleLiveMessage(payload)}
 async function connectTikTok(){clearTimeout(liveReconnectTimer);try{if(liveWs)liveWs.close()}catch(e){};setLiveStatus("CONNECTING");try{let r=await fetch(LIVE_BRIDGE+"/token",{cache:"no-store"}),j=await r.json();if(!r.ok||!j.ok||!j.token)throw new Error(j.message||("HTTP "+r.status));let p=new URLSearchParams({uniqueId:LIVE_UNIQUE_ID,jwtKey:j.token,"features.bundleEvents":"true","features.rawMessages":"false","features.normalizeUniqueId":"true","features.schemaVersion":"v2"});liveWs=new WebSocket("wss://ws.eulerstream.com?"+p.toString());liveWs.addEventListener("open",()=>setLiveStatus("CONNECTED","ok"));liveWs.addEventListener("message",ev=>{try{handleLivePayload(JSON.parse(ev.data))}catch(e){}});liveWs.addEventListener("close",ev=>{liveWs=null;if(mode!=="live")return;if(ev.code===4404){setLiveStatus("NOT LIVE","bad");return}if(ev.code===4005){setLiveStatus("STREAM ENDED","bad");return}setLiveStatus("RECONNECTING","bad");liveReconnectTimer=setTimeout(connectTikTok,3000)});liveWs.addEventListener("error",()=>setLiveStatus("ERROR","bad"))}catch(e){setLiveStatus("ERROR","bad");liveReconnectTimer=setTimeout(connectTikTok,5000)}}
