@@ -293,6 +293,14 @@ export default {
     }
 
     if (url.pathname === "/game/state" && request.method === "PUT") {
+      const origin = request.headers.get("Origin");
+      if (origin !== "https://brixmon.github.io") {
+        return Response.json(
+          { ok: false, message: "Write origin not allowed" },
+          { status: 403, headers: corsHeaders }
+        );
+      }
+
       try {
         const result = await writeState(request, env);
         return Response.json(result.body, {
