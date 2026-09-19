@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QuizGameMaster KV Test</title>
+<style>
+body{margin:0;background:#07111d;color:white;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100vh}
+.card{width:min(700px,92vw);background:#101c2c;border:1px solid #28405d;border-radius:18px;padding:24px}
+h1{margin:0 0 14px;font-size:28px}
+#status{font-size:22px;font-weight:900;margin:10px 0}
+.ok{color:#70f0a0}.bad{color:#ff8484}.wait{color:#ffd36e}
+pre{white-space:pre-wrap;background:#07101a;border-radius:12px;padding:14px;max-height:50vh;overflow:auto}
+button{width:100%;padding:14px;border:0;border-radius:12px;background:#4f7cff;color:white;font-weight:900;font-size:18px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>QuizGameMaster — Cloud KV test</h1>
+<div id="status" class="wait">Ready</div>
+<button id="run">RUN WRITE + READ TEST</button>
+<pre id="log"></pre>
+</div>
+<script>
+const BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
+const statusEl=document.getElementById("status");
+const logEl=document.getElementById("log");
+const runBtn=document.getElementById("run");
+
+function log(s){logEl.textContent+=s+"\n";logEl.scrollTop=logEl.scrollHeight}
+function setStatus(s,c){statusEl.textContent=s;statusEl.className=c}
+
+async function getState(){
+  const r=await fetch(BRIDGE+"/game/state",{cache:"no-store"});
+  const j=await r.json();
+  if(!r.ok||!j.ok) throw new Error(j.message||("GET "+r.status));
+  return j;
+}
+
+async function putState(settings,players){
+  const r=await fetch(BRIDGE+"/game/state",{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({settings,players})
+  });
+  const j=await r.json();
+  if(!r.ok||!j.ok) throw new Error(j.message||("PUT "+r.status));
+  return j;
+}
+
+runBtn.onclick=async()=>{
+  runBtn.disabled=true;
+  logEl.textContent="";
+  setStatus("Testing…","wait");
+  try{
+    const before=await getState();
+    log("1. READ OK · hasState="+before.hasState);
+
+    const settings=before.settings||{
+      answerTime:30,questionsPerRound:20,percentSeconds:4,
+      playerResultsSeconds:5.5,factSeconds:7,leaderboardSeconds:12,categories:[]
+    };
+    const originalPlayers=(before.players&&typeof before.players==="object")?before.players:{};
+
+    const testPlayers={...originalPlayers,__kv_test__:{points:12345,name:"KV_TEST",avatar:""}};
+    const write=await putState(settings,testPlayers);
+    log("2. WRITE OK · playerCount="+write.playerCount);
+
+    const verify=await getState();
+    if(!verify.players||!verify.players.__kv_test__||verify.players.__kv_test__.points!==12345){
+      throw new Error("Written test record was not returned by KV");
+    }
+    log("3. READ-BACK OK · test value=12345");
+
+    await putState(settings,originalPlayers);
+    log("4. CLEANUP OK");
+
+    setStatus("KV WRITE + READ: PASS","ok");
+  }catch(e){
+    log("ERROR: "+e.message);
+    setStatus("KV TEST FAILED","bad");
+  }finally{
+    runBtn.disabled=false;
+  }
+};
+</script>
+</body>
+</html>
