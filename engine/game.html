@@ -851,6 +851,7 @@ function validateDev(){
   if($("startdev"))$("startdev").disabled=!any;
 }
 function launchLive(){
+  devQuestionLayout="classic";
   persistSettingsFromUI("live");
   answerTime=gameSettings.answerTime;
   questionsPerRound=gameSettings.questionsPerRound;
@@ -863,26 +864,62 @@ function launchLive(){
   connectTikTok();
   category();
 }
-function launchDev(){
+function prepareDevGame(layout){
+  devQuestionLayout=layout;
   persistSettingsFromUI("dev");
   answerTime=gameSettings.answerTime;
   questionsPerRound=gameSettings.questionsPerRound;
   const chosen=[...document.querySelectorAll("input[name=devcat]:checked")].map(x=>x.value);
-  if(!chosen.length)return;
+  if(!chosen.length)return false;
   Q=ALLQ.filter(q=>chosen.includes(q.category));
   shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();roundPlayers.clear();previousRoundRanks.clear();
   devAllTimePlayers.clear();
   previousGlobalRanks.clear();
   $("devpanel").classList.remove("show");
   category();
+  return true;
 }
+function launchDev(){prepareDevGame("classic")}
+function launchDevNew(){prepareDevGame("new")}
 function shuffleQ(){for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}}
 function category(){state="cat";show("cat");let q=Q[i],cats=[...new Set(ALLQ.map(x=>x.category.toUpperCase()))],seq=[];$("difficulty").classList.remove("show");$("ready").classList.remove("show");for(let r=0;r<7;r++)seq.push(...cats);let target=seq.length;seq.push((q.category||"FLAGS").toUpperCase(),...cats,...cats);$("items").innerHTML=seq.map(x=>"<div>"+x+"</div>").join("");$("items").style.transition="none";$("items").style.transform="translateY(0)";requestAnimationFrame(()=>requestAnimationFrame(()=>{$("items").style.transition="transform 3.7s cubic-bezier(.08,.70,.06,1)";$("items").style.transform="translateY("+(-(target-2)*5.4)+"vh)"}));setTimeout(()=>{$("items").children[target].classList.add("selected");tone(920,.14,.03)},3800);setTimeout(()=>difficulty(q),4400)}
 function difficulty(q){let ix=rankIndex[q.difficulty];$("rail").innerHTML=ranks.map((r,n)=>"<div class='rank' id='r"+n+"'><span>"+r[0]+"</span>"+r[1]+"</div>").join("");$("difficulty").classList.add("show");let seq=[0,1,2,3,4,3,2,1,2,3,4,ix],n=0,iv=setInterval(()=>{document.querySelectorAll(".rank").forEach(e=>e.classList.remove("hot"));$("r"+seq[n]).classList.add("hot");tone(430+n*15,.025,.005);if(++n>=seq.length){clearInterval(iv);document.querySelectorAll(".rank").forEach((e,j)=>{e.classList.remove("hot");if(j!==ix)e.style.opacity=".28"});$("r"+ix).classList.add("final");tone(1000,.14,.03);setTimeout(()=>$("ready").classList.add("show"),500);setTimeout(question,2700)}},140)}
-function question(){resetAnswers();state="q";show("question");$("answerprompt").innerHTML=mode==="dev"?"🛠 USE <b>PLAYER 1–4</b> BUTTONS BELOW":"💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS";$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
-else if(q.type==="landmark_image")v.innerHTML="<div class='mediafade'><img class='blur' src='"+q.asset.image+"'><img class='main' src='"+q.asset.image+"'></div>";
-else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";$("answers").innerHTML=a.map((x,n)=>"<div class='ans'><div class='pctbar'></div><div class='letter'>"+"ABCD"[n]+"</div>"+(q.type==="country_to_flag"?"<img src='"+flag(x.code)+"'>":"")+"<span>"+(q.type==="country_to_flag"?"":x.country)+"</span><div class='pct'>0%</div></div>").join("");start=performance.now();last=-1;raf=requestAnimationFrame(tick)}
-function tick(now){let t=Math.min(1,(now-start)/(answerTime*1000)),r=Math.pow(1-t,1.85);$("bar").style.width=r*100+"%";$("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";let s=Math.floor((now-start)/1000);if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal()}
+function question(){
+  resetAnswers();
+  state="q";
+  let q=Q[i],a=shuffleAnswers(q);
+  q._shown=a;
+
+  if(mode==="dev"&&devQuestionLayout==="new"){
+    renderNewQuestion(q,a);
+    return;
+  }
+
+  show("question");
+  $("answerprompt").innerHTML=mode==="dev"?"🛠 USE <b>PLAYER 1–4</b> BUTTONS BELOW":"💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS";
+  $("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;
+  $("qt").textContent=q.question;
+  let v=$("visual");
+  v.classList.toggle("landscape",q.type==="landmark_image");
+  if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
+  else if(q.type==="landmark_image")v.innerHTML="<div class='mediafade'><img class='blur' src='"+q.asset.image+"'><img class='main' src='"+q.asset.image+"'></div>";
+  else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";
+  $("answers").innerHTML=a.map((x,n)=>"<div class='ans'><div class='pctbar'></div><div class='letter'>"+"ABCD"[n]+"</div>"+(q.type==="country_to_flag"?"<img src='"+flag(x.code)+"'>":"")+"<span>"+(q.type==="country_to_flag"?"":x.country)+"</span><div class='pct'>0%</div></div>").join("");
+  start=performance.now();last=-1;raf=requestAnimationFrame(tick);
+}
+function tick(now){
+  let elapsed=(now-start)/1000,t=Math.min(1,elapsed/answerTime),r=Math.pow(1-t,1.85);
+  if(mode==="dev"&&devQuestionLayout==="new"&&$("designpreview").classList.contains("show")){
+    $("np-barfill").style.width=r*100+"%";
+    $("np-seconds").textContent=Math.max(0,Math.ceil(answerTime-elapsed));
+  }else{
+    $("bar").style.width=r*100+"%";
+    $("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";
+  }
+  let s=Math.floor(elapsed);
+  if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}
+  if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal();
+}
 function nextQuestionIndex(){
   i++;
   if(i>=Q.length){shuffleQ();i=0}
