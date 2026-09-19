@@ -6,7 +6,7 @@
 </style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v0.5.2</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST</button></div><div class="stage">
 <div id="cat" class="screen on"><div class="ey">NEXT CATEGORY</div><div class="reel"><div id="items"></div><div class="focus"></div></div><div id="difficulty" class="difficulty"><div class="dl">DIFFICULTY LEVEL</div><div id="rail" class="rail"></div><div id="ready" class="ready">GET READY...</div></div></div>
 <div id="question" class="screen"><div id="roundhud" class="roundhud">ROUND 1 · QUESTION 1/20</div><div class="timer"><div id="bar" class="bar"></div></div><div id="qt" class="q"></div><div id="visual" class="visual"></div><div id="answerprompt" class="prompt">💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS</div><div class="answercount">ANSWERS: <b id="answercount">0</b></div><div id="answers" class="answers"></div></div>
-<div id="round" class="screen"><div class="roundtitle">ROUND RESULTS</div><div id="roundanswer" class="roundanswer"></div><div class="resultgroups"><div class="resultsection win"><div class="resulthead"><span>🏆 WINNERS</span><span class="delta">+1 POINT</span></div><div id="roundwinners" class="playergrid"></div></div><div class="resultsection lose"><div class="resulthead"><span>✕ WRONG ANSWERS</span><span class="delta">−1 POINT</span></div><div id="roundlosers" class="playergrid"></div></div></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
+<div id="round" class="screen"><div class="roundtitle">ROUND RESULTS</div><div id="roundanswer" class="roundanswer"></div><div class="resultgroups"><div class="resultsection win"><div class="resulthead"><span>🏆 WINNERS</span><span class="delta">+1 POINT</span></div><div id="roundwinners" class="playergrid"></div></div><div class="resultsection lose"><div class="resulthead"><span>✕ WRONG ANSWERS</span><span class="delta">−1 POINT</span></div><div id="roundlosers" class="playergrid"></div></div></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div id="leadertitle" class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
 </div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div class="version">QuizGameMaster · v0.5.2</div></div>
 <script>
 // Always fetch fresh game/data when opened from the fullscreen browser home page.
@@ -273,19 +273,21 @@ function makePlayerChip(p,index=0){
     avatarWrap=img;
   }else{
     avatarWrap.className="playerfallback";
-    avatarWrap.textContent=(p.name||"?").slice(0,1).toUpperCase();
-    fetchProfileAvatar(p.name).then(url=>{
-      if(!url||!avatarWrap.isConnected)return;
-      let img=document.createElement("img");
-      img.className="playeravatar";
-      img.src=url;
-      img.alt="";
-      img.referrerPolicy="no-referrer";
-      avatarWrap.replaceWith(img);
-      p.avatar=url;
-      let saved=allTimePlayers.get(p.key);
-      if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
-    });
+    avatarWrap.textContent=fallbackLabel(p.name);
+    if(mode==="live"){
+      fetchProfileAvatar(p.name).then(url=>{
+        if(!url||!avatarWrap.isConnected)return;
+        let img=document.createElement("img");
+        img.className="playeravatar";
+        img.src=url;
+        img.alt="";
+        img.referrerPolicy="no-referrer";
+        avatarWrap.replaceWith(img);
+        p.avatar=url;
+        let saved=allTimePlayers.get(p.key);
+        if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
+      });
+    }
   }
   chip.appendChild(avatarWrap);
 
@@ -342,24 +344,25 @@ function fillPlayerGrid(id,players){
   }
 }
 function scoreQuestion(players,correctLetter){
+  let scoreStore=mode==="dev"?devAllTimePlayers:allTimePlayers;
   let scored=players.map((p,n)=>{
     let key=p.key||("dev-"+n),delta=p.answer===correctLetter?1:-1;
     let roundBefore=roundScores.get(key)||0;
     let roundPoints=roundBefore+delta;
     roundScores.set(key,roundPoints);
 
-    let old=allTimePlayers.get(key)||{points:0,name:p.name||"PLAYER",avatar:p.avatar||""};
+    let old=scoreStore.get(key)||{points:0,name:p.name||"PLAYER",avatar:p.avatar||""};
     let allTimeBefore=Number(old.points)||0;
     let updated={
       points:allTimeBefore+delta,
       name:p.name||old.name||"PLAYER",
       avatar:p.avatar||old.avatar||""
     };
-    allTimePlayers.set(key,updated);
+    scoreStore.set(key,updated);
 
     return {...p,key,delta,roundBefore,roundPoints,allTimeBefore,allTimePoints:updated.points,correct:delta>0};
   });
-  saveAllTime();
+  if(mode==="live")saveAllTime();
   return scored;
 }
 function renderRoundResults(players,correctLetter,correctText){
@@ -380,17 +383,19 @@ function makeLeaderboardAvatar(p,place){
   }else{
     avatar=document.createElement("div");
     avatar.className="lbfallback";
-    avatar.textContent=(p.name||"?").slice(0,1).toUpperCase();
-    fetchProfileAvatar(p.name).then(url=>{
-      if(!url||!avatar.isConnected)return;
-      let img=document.createElement("img");
-      img.className="lbavatar";
-      img.src=url;img.alt="";img.referrerPolicy="no-referrer";
-      avatar.replaceWith(img);
-      p.avatar=url;
-      let saved=allTimePlayers.get(p.key);
-      if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
-    });
+    avatar.textContent=fallbackLabel(p.name);
+    if(mode==="live"){
+      fetchProfileAvatar(p.name).then(url=>{
+        if(!url||!avatar.isConnected)return;
+        let img=document.createElement("img");
+        img.className="lbavatar";
+        img.src=url;img.alt="";img.referrerPolicy="no-referrer";
+        avatar.replaceWith(img);
+        p.avatar=url;
+        let saved=allTimePlayers.get(p.key);
+        if(saved){saved.avatar=url;allTimePlayers.set(p.key,saved);saveAllTime()}
+      });
+    }
   }
   wrap.appendChild(avatar);
   if(place<=3){
@@ -403,7 +408,8 @@ function makeLeaderboardAvatar(p,place){
 }
 function renderGlobalLeaderboard(){
   let ranking=globalRanking(),list=$("leaderlist");
-  $("leadersub").textContent="ROUND "+currentRound+" COMPLETE · ALL-TIME RANKING";
+  $("leadertitle").textContent=mode==="dev"?"🛠 TEST LEADERBOARD":"🏆 GLOBAL LEADERBOARD";
+  $("leadersub").textContent="ROUND "+currentRound+" COMPLETE · "+(mode==="dev"?"SIMULATED RANKING":"ALL-TIME RANKING");
   list.innerHTML="";
   ranking.slice(0,8).forEach((p,n)=>{
     let place=n+1,oldPlace=previousGlobalRanks.get(p.key);
@@ -438,14 +444,62 @@ function renderGlobalLeaderboard(){
 function handleLivePayload(payload){if(payload&&Array.isArray(payload.messages))payload.messages.forEach(handleLiveMessage);else if(payload&&payload.type)handleLiveMessage(payload)}
 async function connectTikTok(){clearTimeout(liveReconnectTimer);try{if(liveWs)liveWs.close()}catch(e){};setLiveStatus("CONNECTING");try{let r=await fetch(LIVE_BRIDGE+"/token",{cache:"no-store"}),j=await r.json();if(!r.ok||!j.ok||!j.token)throw new Error(j.message||("HTTP "+r.status));let p=new URLSearchParams({uniqueId:LIVE_UNIQUE_ID,jwtKey:j.token,"features.bundleEvents":"true","features.rawMessages":"false","features.normalizeUniqueId":"true","features.schemaVersion":"v2"});liveWs=new WebSocket("wss://ws.eulerstream.com?"+p.toString());liveWs.addEventListener("open",()=>setLiveStatus("CONNECTED","ok"));liveWs.addEventListener("message",ev=>{try{handleLivePayload(JSON.parse(ev.data))}catch(e){}});liveWs.addEventListener("close",ev=>{liveWs=null;if(mode!=="live")return;if(ev.code===4404){setLiveStatus("NOT LIVE","bad");return}if(ev.code===4005){setLiveStatus("STREAM ENDED","bad");return}setLiveStatus("RECONNECTING","bad");liveReconnectTimer=setTimeout(connectTikTok,3000)});liveWs.addEventListener("error",()=>setLiveStatus("ERROR","bad"))}catch(e){setLiveStatus("ERROR","bad");liveReconnectTimer=setTimeout(connectTikTok,5000)}}
 function shuffleAnswers(q){let a=q.answers.map(x=>typeof x==="string"?{country:x}:x);for(let n=a.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[a[n],a[j]]=[a[j],a[n]]}return a}
-function startMode(m){mode=m;$("modegate").classList.add("hide");if($("livestatus"))$("livestatus").classList.toggle("show",m==="live");if(m==="dev"){const cats=[...new Set(ALLQ.map(q=>q.category))];$("devcats").innerHTML=cats.map(x=>"<button class='catbtn' onclick=\"chooseDevCategory('"+x+"')\">"+x.toUpperCase()+"</button>").join("");$("devpanel").classList.add("show");}else{const cats=[...new Set(ALLQ.map(q=>q.category))];$("livechecks").innerHTML=cats.map((x,n)=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive();persistSettingsFromUI()'>"+x.toUpperCase()+"</label>").join("");$("livepanel").classList.add("show");applySettingsToUI();validateLive()}}
-function validateLive(){const any=[...document.querySelectorAll("input[name=livecat]")].some(x=>x.checked);$("startlive").disabled=!any}
-function launchLive(){persistSettingsFromUI();answerTime=gameSettings.answerTime;questionsPerRound=gameSettings.questionsPerRound;const chosen=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);if(!chosen.length)return;Q=ALLQ.filter(q=>chosen.includes(q.category));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("livepanel").classList.remove("show");connectTikTok();category()}
+function startMode(m){
+  mode=m;
+  $("modegate").classList.add("hide");
+  if($("livestatus"))$("livestatus").classList.toggle("show",m==="live");
+  const cats=[...new Set(ALLQ.map(q=>q.category))];
+
+  if(m==="dev"){
+    $("devchecks").innerHTML=cats.map(x=>"<label class='checkrow'><input type='checkbox' name='devcat' value='"+x+"' checked onchange='validateDev();persistSettingsFromUI(\"dev\")'>"+x.toUpperCase()+"</label>").join("");
+    $("devpanel").classList.add("show");
+    applySettingsToUI();
+    validateDev();
+  }else{
+    $("livechecks").innerHTML=cats.map(x=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive();persistSettingsFromUI(\"live\")'>"+x.toUpperCase()+"</label>").join("");
+    $("livepanel").classList.add("show");
+    applySettingsToUI();
+    validateLive();
+  }
+}
+function validateLive(){
+  const any=[...document.querySelectorAll("input[name=livecat]")].some(x=>x.checked);
+  if($("startlive"))$("startlive").disabled=!any;
+}
+function validateDev(){
+  const any=[...document.querySelectorAll("input[name=devcat]")].some(x=>x.checked);
+  if($("startdev"))$("startdev").disabled=!any;
+}
+function launchLive(){
+  persistSettingsFromUI("live");
+  answerTime=gameSettings.answerTime;
+  questionsPerRound=gameSettings.questionsPerRound;
+  const chosen=[...document.querySelectorAll("input[name=livecat]:checked")].map(x=>x.value);
+  if(!chosen.length)return;
+  Q=ALLQ.filter(q=>chosen.includes(q.category));
+  shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();
+  captureGlobalRanks();
+  $("livepanel").classList.remove("show");
+  connectTikTok();
+  category();
+}
+function launchDev(){
+  persistSettingsFromUI("dev");
+  answerTime=gameSettings.answerTime;
+  questionsPerRound=gameSettings.questionsPerRound;
+  const chosen=[...document.querySelectorAll("input[name=devcat]:checked")].map(x=>x.value);
+  if(!chosen.length)return;
+  Q=ALLQ.filter(q=>chosen.includes(q.category));
+  shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();
+  devAllTimePlayers.clear();
+  previousGlobalRanks.clear();
+  $("devpanel").classList.remove("show");
+  category();
+}
 function shuffleQ(){for(let n=Q.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[Q[n],Q[j]]=[Q[j],Q[n]]}}
-function chooseDevCategory(cat){answerTime=30;Q=ALLQ.filter(q=>q.category===cat);questionsPerRound=Math.min(20,Math.max(1,Q.length));shuffleQ();i=0;currentRound=1;questionInRound=1;roundScores.clear();captureGlobalRanks();$("devpanel").classList.remove("show");category()}
 function category(){state="cat";show("cat");let q=Q[i],cats=[...new Set(ALLQ.map(x=>x.category.toUpperCase()))],seq=[];$("difficulty").classList.remove("show");$("ready").classList.remove("show");for(let r=0;r<7;r++)seq.push(...cats);let target=seq.length;seq.push((q.category||"FLAGS").toUpperCase(),...cats,...cats);$("items").innerHTML=seq.map(x=>"<div>"+x+"</div>").join("");$("items").style.transition="none";$("items").style.transform="translateY(0)";requestAnimationFrame(()=>requestAnimationFrame(()=>{$("items").style.transition="transform 3.7s cubic-bezier(.08,.70,.06,1)";$("items").style.transform="translateY("+(-(target-2)*5.4)+"vh)"}));setTimeout(()=>{$("items").children[target].classList.add("selected");tone(920,.14,.03)},3800);setTimeout(()=>difficulty(q),4400)}
 function difficulty(q){let ix=rankIndex[q.difficulty];$("rail").innerHTML=ranks.map((r,n)=>"<div class='rank' id='r"+n+"'><span>"+r[0]+"</span>"+r[1]+"</div>").join("");$("difficulty").classList.add("show");let seq=[0,1,2,3,4,3,2,1,2,3,4,ix],n=0,iv=setInterval(()=>{document.querySelectorAll(".rank").forEach(e=>e.classList.remove("hot"));$("r"+seq[n]).classList.add("hot");tone(430+n*15,.025,.005);if(++n>=seq.length){clearInterval(iv);document.querySelectorAll(".rank").forEach((e,j)=>{e.classList.remove("hot");if(j!==ix)e.style.opacity=".28"});$("r"+ix).classList.add("final");tone(1000,.14,.03);setTimeout(()=>$("ready").classList.add("show"),500);setTimeout(question,2700)}},140)}
-function question(){resetAnswers();state="q";show("question");$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
+function question(){resetAnswers();state="q";show("question");$("answerprompt").innerHTML=mode==="dev"?"🛠 USE <b>PLAYER 1–4</b> BUTTONS BELOW":"💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS";$("roundhud").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;let q=Q[i],a=shuffleAnswers(q);q._shown=a;$("qt").textContent=q.question;let v=$("visual");v.classList.toggle("landscape",q.type==="landmark_image");if(q.type==="flag_to_country")v.innerHTML="<img src='"+flag(q.asset.code)+"'>";
 else if(q.type==="landmark_image")v.innerHTML="<div class='mediafade'><img class='blur' src='"+q.asset.image+"'><img class='main' src='"+q.asset.image+"'></div>";
 else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";$("answers").innerHTML=a.map((x,n)=>"<div class='ans'><div class='pctbar'></div><div class='letter'>"+"ABCD"[n]+"</div>"+(q.type==="country_to_flag"?"<img src='"+flag(x.code)+"'>":"")+"<span>"+(q.type==="country_to_flag"?"":x.country)+"</span><div class='pct'>0%</div></div>").join("");start=performance.now();last=-1;raf=requestAnimationFrame(tick)}
 function tick(now){let t=Math.min(1,(now-start)/(answerTime*1000)),r=Math.pow(1-t,1.85);$("bar").style.width=r*100+"%";$("bar").style.background="hsl("+(120*(1-t))+" 86% 48%)";let s=Math.floor((now-start)/1000);if(s!==last){last=s;tone(500+300*t,.03,.003+.022*t*t)}if(t<1&&state==="q")raf=requestAnimationFrame(tick);else if(state==="q")reveal()}
@@ -474,7 +528,8 @@ function reveal(){
   let q=Q[i],idx=q._shown.findIndex(x=>x.country===q.correct),correctLetter="ABCD"[idx],cards=[...$("answers").children];
   let submitted=mode==="live"
     ? [...liveAnswers.values()]
-    : (devPlayerAnswered?[{key:"dev-player",answer:window.devLastAnswer,name:"DEV PLAYER",avatar:""}]:[]);
+    : [...devAnswers.values()];
+  if($("devsim"))$("devsim").classList.remove("show");
 
   let counts={A:0,B:0,C:0,D:0};
   submitted.forEach(x=>{if(counts[x.answer]!==undefined)counts[x.answer]++});
