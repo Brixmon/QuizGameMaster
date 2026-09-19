@@ -200,6 +200,12 @@ function previewRoundRows(){
     points:roundScores.get(key)||0
   })).sort((a,b)=>b.points-a.points||a.name.localeCompare(b.name)).slice(0,5);
   if(rows.length)return rows;
+  if(devQuestionLayout==="new"){
+    return [
+      {name:"PLAYER 1",points:0},{name:"PLAYER 2",points:0},
+      {name:"PLAYER 3",points:0},{name:"PLAYER 4",points:0}
+    ];
+  }
   return [
     {name:"PLAYER 1",points:8},{name:"PLAYER 2",points:6},{name:"PLAYER 3",points:5},
     {name:"PLAYER 4",points:3},{name:"PLAYER 5",points:2}
@@ -273,6 +279,68 @@ function previewCountryCode(label){
     }
   }
   return "";
+}
+function renderNewQuestion(q,a){
+  show("questionnew");
+  $("designpreview").classList.add("gameplay");
+
+  let hero=$("np-hero"),img=$("np-image"),subject=$("np-subjecthero");
+  hero.classList.remove("contain");
+  img.style.display="none";
+  subject.style.display="none";
+  subject.textContent="";
+
+  if(q.type==="landmark_image"&&q.asset?.image){
+    img.src=q.asset.image;
+    img.style.display="block";
+  }else if(q.type==="flag_to_country"&&q.asset?.code){
+    hero.classList.add("contain");
+    img.src=flag(q.asset.code);
+    img.style.display="block";
+  }else if(q.type==="country_to_flag"){
+    subject.textContent=String(q.subject||q.correct||"").toUpperCase();
+    subject.style.display="flex";
+  }else if(q.asset?.image){
+    img.src=q.asset.image;
+    img.style.display="block";
+  }else{
+    subject.textContent=String(q.subject||q.category||"QUIZ").toUpperCase();
+    subject.style.display="flex";
+  }
+
+  $("np-category").textContent=String(q.category||"GEOGRAPHY").toUpperCase();
+  let ix=rankIndex[q.difficulty]??2;
+  $("np-difficulty").textContent=ranks[ix][0]+" "+ranks[ix][1];
+  $("np-question").textContent=q.question||"";
+  $("np-round").textContent="ROUND "+currentRound+" · QUESTION "+questionInRound+"/"+questionsPerRound;
+  $("np-seconds").textContent=answerTime;
+  $("np-barfill").style.width="100%";
+
+  $("np-answers").innerHTML=a.map((x,n)=>{
+    let label=String(x.country||x.name||"");
+    let code=x.code?String(x.code).toLowerCase():previewCountryCode(label);
+    let body="";
+    if(q.type==="country_to_flag"&&code){
+      body="<img class='np-flagchoice' src='"+flag(code)+"' alt=''>";
+    }else{
+      body=(code?"<img class='np-answerflag' src='"+flag(code)+"' alt=''>":"")+"<span>"+previewEsc(label)+"</span>";
+    }
+    return "<div class='np-answer'><div class='np-pctbar'></div><div class='np-letter'>"+"ABCD"[n]+
+      "</div>"+body+"<div class='np-pct'>0%</div></div>";
+  }).join("");
+
+  designPreviewDonors=false;
+  renderPreviewSide();
+  renderPreviewTicker();
+  clearInterval(designPreviewTimer);
+  designPreviewTimer=setInterval(()=>{
+    designPreviewDonors=!designPreviewDonors;
+    renderPreviewSide();
+  },4500);
+
+  start=performance.now();
+  last=-1;
+  raf=requestAnimationFrame(tick);
 }
 function openNewDesignPreview(){
   if(mode!=="dev")return;
