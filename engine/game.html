@@ -943,8 +943,13 @@ function reveal(){
   if(state!=="q")return;
   state="mark";
   cancelAnimationFrame(raf);
+  clearInterval(designPreviewTimer);
+  designPreviewTimer=null;
 
-  let q=Q[i],idx=q._shown.findIndex(x=>x.country===q.correct),correctLetter="ABCD"[idx],cards=[...$("answers").children];
+  let q=Q[i],idx=q._shown.findIndex(x=>x.country===q.correct),correctLetter="ABCD"[idx];
+  let newLayout=mode==="dev"&&devQuestionLayout==="new";
+  let cards=[...$(newLayout?"np-answers":"answers").children];
+
   let submitted=mode==="live"
     ? [...liveAnswers.values()]
     : [...devAnswers.values()];
@@ -957,9 +962,16 @@ function reveal(){
   cards.forEach((e,n)=>{
     let letter="ABCD"[n],pct=total?Math.round(counts[letter]*100/total):0;
     e.classList.add("showpct");
-    animatePercent(e.querySelector(".pct"),pct,1800);
-    requestAnimationFrame(()=>{e.querySelector(".pctbar").style.width=pct+"%"});
-    e.classList.add(n===idx?"good":"bad");
+
+    if(newLayout){
+      animatePercent(e.querySelector(".np-pct"),pct,1800);
+      requestAnimationFrame(()=>{e.querySelector(".np-pctbar").style.width=pct+"%"});
+      e.classList.add(n===idx?"npgood":"npbad");
+    }else{
+      animatePercent(e.querySelector(".pct"),pct,1800);
+      requestAnimationFrame(()=>{e.querySelector(".pctbar").style.width=pct+"%"});
+      e.classList.add(n===idx?"good":"bad");
+    }
   });
 
   tone(660,.07,.025);
