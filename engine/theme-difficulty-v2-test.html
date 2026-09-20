@@ -193,12 +193,11 @@ function runTheme(){
   resetView();
   let targetIndex=buildThemeTrack(),track=$("themetrack");
   let cards=[...track.children],cardW=cards[0].getBoundingClientRect().width,gap=parseFloat(getComputedStyle(track).gap)||0;
-  let zone=$("theme").getBoundingClientRect(),desired=zone.width/2;
   track.style.transition="none";track.style.transform="translateX(0)";
   cards.forEach(c=>c.classList.remove("selected","locked"));
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     let centerOffset=targetIndex*(cardW+gap)+cardW/2;
-    let x=desired-centerOffset;
+    let x=-centerOffset;
     track.style.transition="transform 3.25s cubic-bezier(.08,.72,.08,1)";
     track.style.transform="translateX("+x+"px)";
   }));
