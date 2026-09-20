@@ -64,7 +64,7 @@ linear-gradient(180deg,#061521 0%,#020810 62%,#010509 100%)}
 @keyframes gpOverOut{to{opacity:0;transform:scale(1.08);filter:blur(8px)}}
 @keyframes gpRankingIn{to{opacity:1;transform:scale(1)}}
 @keyframes gpPodPop{0%{opacity:0;transform:translateY(1.5vh) scale(.86)}70%{opacity:1;transform:translateY(-.08vh) scale(1.04)}100%{opacity:1;transform:none}}@keyframes gpCrownFloat{from{transform:translateX(-50%) rotate(-6deg) translateY(.06vh)}to{transform:translateX(-50%) rotate(-3deg) translateY(-.12vh)}}
-</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v0.6.45</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="factenabled" type="checkbox" checked onchange="persistSettingsFromUI('live')"></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="devfactenabled" type="checkbox" checked onchange="persistSettingsFromUI('dev')"></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><div class="settingslabel">AUDIO</div><div class="musicset"><label class="musicrow"><span>BACKGROUND MUSIC</span><input id="devmusic" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="audiosub">MELODIES · SELECT + PREVIEW</div><div class="musictracks"><div class="musictrack"><input type="checkbox" name="musictrack" value="mossy-path" checked onchange="updateMusicSettings()"><span>MOSSY PATH</span><button class="trackpreview" type="button" data-track="mossy-path" onclick="previewMusicTrack('mossy-path',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="crystal-cave" checked onchange="updateMusicSettings()"><span>CRYSTAL CAVE</span><button class="trackpreview" type="button" data-track="crystal-cave" onclick="previewMusicTrack('crystal-cave',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="river-steps" checked onchange="updateMusicSettings()"><span>RIVER STEPS</span><button class="trackpreview" type="button" data-track="river-steps" onclick="previewMusicTrack('river-steps',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="glass-garden" checked onchange="updateMusicSettings()"><span>GLASS GARDEN</span><button class="trackpreview" type="button" data-track="glass-garden" onclick="previewMusicTrack('glass-garden',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="moonwell" checked onchange="updateMusicSettings()"><span>MOONWELL</span><button class="trackpreview" type="button" data-track="moonwell" onclick="previewMusicTrack('moonwell',this)">▶</button></div></div><label class="musicrow"><span>CHANGE EACH ROUND</span><input id="devmusicrotate" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>MUSIC VOLUME</span><div class="musicvol"><input id="devmusicvol" type="range" min="0" max="100" step="1" value="9" oninput="updateMusicSettings()"><span id="devmusicval" class="musicval">9%</span></div></div><div class="musicrow"><span>EFFECTS VOLUME</span><div class="musicvol"><input id="deveffectvol" type="range" min="0" max="100" step="5" value="80" oninput="updateMusicSettings()"><span id="deveffectval" class="musicval">80%</span></div></div></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST · CLASSIC</button><button class="previewbtn play" onclick="launchDevNew()">✨ START 4-PLAYER TEST · NEW DESIGN</button><div class="layoutlab"><div class="layoutlabtitle">LAYOUT LAB</div><div class="layoutlabrow"><button class="layoutlabbtn" onclick="openNewDesignPreview()">👁 QUESTION</button><button class="layoutlabbtn" onclick="openFactLayoutPreview()">💡 FACT</button><button class="layoutlabbtn" onclick="openLeaderboardPreview()">⚡ STANDINGS</button><button class="layoutlabbtn" onclick="openGlobalRankingPreview()">🌐 GLOBAL TOP 50</button></div></div></div><div id="designpreview" class="designpreview"><div class="np-bg"></div><button class="np-back" onclick="closeNewDesignPreview()">← BACK TO DEVELOPMENT</button><div class="np-wrap"><div id="np-hero" class="np-hero"><img id="np-image" alt=""><div id="np-subjecthero" class="np-subjecthero"></div><div class="np-heroShade"></div><div class="np-meta"><div id="np-category" class="np-chip">GEOGRAPHY</div><div id="np-difficulty" class="np-chip diff">⚡ PRO</div></div><div id="np-answercount" class="np-answercount"><span>ANSWERS</span><b id="np-answercount-num">0</b></div><div class="np-side"><div class="np-sidehead"><span id="np-sideicon">🏆</span><b id="np-sidetitle">ROUND TOP 5</b></div><div id="np-sidebody"></div></div></div><div class="np-ticker"><div class="np-tlabel">🌐 GLOBAL RANKING</div><div class="np-twin"><div id="np-track" class="np-track"></div></div></div><div class="np-body"><div class="np-headrow"><div id="np-round" class="np-round">ROUND 1 · QUESTION 3/20</div><div id="np-reward" class="np-reward">★ +1</div></div><div id="np-question" class="np-q"></div><div class="np-callout">💬 TYPE YOUR ANSWER IN CHAT: <b>A · B · C · D</b></div><div class="np-timerrow"><div id="np-seconds" class="np-seconds">18</div><div class="np-bar"><div id="np-barfill"></div></div></div><div id="np-answers" class="np-answers"></div><div class="np-note">DESIGN PREVIEW ONLY · LIVE GAME IS STILL THE STABLE LAYOUT</div></div></div></div><div id="factpreview" class="factpreview"><button class="fp-back" onclick="closeFactLayoutPreview()">← BACK TO DEVELOPMENT</button><div class="fp-wrap"><div class="fp-hero"><img id="fp-image" class="fp-heroimg" alt=""><div class="fp-heroShade"></div><div class="fp-meta"><div id="fp-category" class="fp-chip">LANDMARKS</div><div id="fp-difficulty" class="fp-chip diff">⚡ PRO</div></div><div class="fp-top"><div class="fp-tophead"><span>🏆</span><b>ROUND TOP 5</b></div><div id="fp-topbody"></div></div></div><div class="fp-body"><div id="fp-correct" class="fp-correct">✓ CORRECT ANSWER · <b>B</b></div><div id="fp-answer" class="fp-answer">EIFFEL TOWER</div><div id="fp-countryline" class="fp-countryline"></div><div class="fp-factcard"><div class="fp-facthead"><span class="fp-bulb">💡</span><span id="fp-facttag">DID YOU KNOW?</span></div><div id="fp-facttext" class="fp-facttext"></div></div><div class="fp-winners"><div class="fp-winhead"><span>⚡ FIRST CORRECT ANSWERS</span><span id="fp-questionreward">+1 ★</span></div><div id="fp-winrow" class="fp-winrow"></div></div></div></div></div><div id="globalpreview" class="globalpreview">
+</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v0.6.46</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="factenabled" type="checkbox" checked onchange="persistSettingsFromUI('live')"></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="devfactenabled" type="checkbox" checked onchange="persistSettingsFromUI('dev')"></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><div class="settingslabel">AUDIO</div><div class="musicset"><label class="musicrow"><span>BACKGROUND MUSIC</span><input id="devmusic" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="audiosub">MELODIES · SELECT + PREVIEW</div><div class="musictracks"><div class="musictrack"><input type="checkbox" name="musictrack" value="mossy-path" checked onchange="updateMusicSettings()"><span>MOSSY PATH</span><button class="trackpreview" type="button" data-track="mossy-path" onclick="previewMusicTrack('mossy-path',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="crystal-cave" checked onchange="updateMusicSettings()"><span>CRYSTAL CAVE</span><button class="trackpreview" type="button" data-track="crystal-cave" onclick="previewMusicTrack('crystal-cave',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="river-steps" checked onchange="updateMusicSettings()"><span>RIVER STEPS</span><button class="trackpreview" type="button" data-track="river-steps" onclick="previewMusicTrack('river-steps',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="glass-garden" checked onchange="updateMusicSettings()"><span>GLASS GARDEN</span><button class="trackpreview" type="button" data-track="glass-garden" onclick="previewMusicTrack('glass-garden',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="moonwell" checked onchange="updateMusicSettings()"><span>MOONWELL</span><button class="trackpreview" type="button" data-track="moonwell" onclick="previewMusicTrack('moonwell',this)">▶</button></div></div><label class="musicrow"><span>CHANGE EACH ROUND</span><input id="devmusicrotate" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>MUSIC VOLUME</span><div class="musicvol"><input id="devmusicvol" type="range" min="0" max="100" step="1" value="9" oninput="updateMusicSettings()"><span id="devmusicval" class="musicval">9%</span></div></div><div class="musicrow"><span>EFFECTS VOLUME</span><div class="musicvol"><input id="deveffectvol" type="range" min="0" max="100" step="5" value="80" oninput="updateMusicSettings()"><span id="deveffectval" class="musicval">80%</span></div></div></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST · CLASSIC</button><button class="previewbtn play" onclick="launchDevNew()">✨ START 4-PLAYER TEST · NEW DESIGN</button><div class="layoutlab"><div class="layoutlabtitle">LAYOUT LAB</div><div class="layoutlabrow"><button class="layoutlabbtn" onclick="openNewDesignPreview()">👁 QUESTION</button><button class="layoutlabbtn" onclick="openFactLayoutPreview()">💡 FACT</button><button class="layoutlabbtn" onclick="openLeaderboardPreview()">⚡ STANDINGS</button><button class="layoutlabbtn" onclick="openGlobalRankingPreview()">🌐 GLOBAL TOP 50</button></div></div></div><div id="designpreview" class="designpreview"><div class="np-bg"></div><button class="np-back" onclick="closeNewDesignPreview()">← BACK TO DEVELOPMENT</button><div class="np-wrap"><div id="np-hero" class="np-hero"><img id="np-image" alt=""><div id="np-subjecthero" class="np-subjecthero"></div><div class="np-heroShade"></div><div class="np-meta"><div id="np-category" class="np-chip">GEOGRAPHY</div><div id="np-difficulty" class="np-chip diff">⚡ PRO</div></div><div id="np-answercount" class="np-answercount"><span>ANSWERS</span><b id="np-answercount-num">0</b></div><div class="np-side"><div class="np-sidehead"><span id="np-sideicon">🏆</span><b id="np-sidetitle">ROUND TOP 5</b></div><div id="np-sidebody"></div></div></div><div class="np-ticker"><div class="np-tlabel">🌐 GLOBAL RANKING</div><div class="np-twin"><div id="np-track" class="np-track"></div></div></div><div class="np-body"><div class="np-headrow"><div id="np-round" class="np-round">ROUND 1 · QUESTION 3/20</div><div id="np-reward" class="np-reward">★ +1</div></div><div id="np-question" class="np-q"></div><div class="np-callout">💬 TYPE YOUR ANSWER IN CHAT: <b>A · B · C · D</b></div><div class="np-timerrow"><div id="np-seconds" class="np-seconds">18</div><div class="np-bar"><div id="np-barfill"></div></div></div><div id="np-answers" class="np-answers"></div><div class="np-note">DESIGN PREVIEW ONLY · LIVE GAME IS STILL THE STABLE LAYOUT</div></div></div></div><div id="factpreview" class="factpreview"><button class="fp-back" onclick="closeFactLayoutPreview()">← BACK TO DEVELOPMENT</button><div class="fp-wrap"><div class="fp-hero"><img id="fp-image" class="fp-heroimg" alt=""><div class="fp-heroShade"></div><div class="fp-meta"><div id="fp-category" class="fp-chip">LANDMARKS</div><div id="fp-difficulty" class="fp-chip diff">⚡ PRO</div></div><div class="fp-top"><div class="fp-tophead"><span>🏆</span><b>ROUND TOP 5</b></div><div id="fp-topbody"></div></div></div><div class="fp-body"><div id="fp-correct" class="fp-correct">✓ CORRECT ANSWER · <b>B</b></div><div id="fp-answer" class="fp-answer">EIFFEL TOWER</div><div id="fp-countryline" class="fp-countryline"></div><div class="fp-factcard"><div class="fp-facthead"><span class="fp-bulb">💡</span><span id="fp-facttag">DID YOU KNOW?</span></div><div id="fp-facttext" class="fp-facttext"></div></div><div class="fp-winners"><div class="fp-winhead"><span>⚡ FIRST CORRECT ANSWERS</span><span id="fp-questionreward">+1 ★</span></div><div id="fp-winrow" class="fp-winrow"></div></div></div></div></div><div id="globalpreview" class="globalpreview">
 <button class="gp-back" onclick="closeGlobalRankingPreview()">← BACK TO DEVELOPMENT</button>
 <button class="gp-replay" onclick="replayGlobalRankingPreview()">↻ REPLAY</button>
 <div id="gp-roundover" class="gp-roundover">
@@ -96,7 +96,7 @@ linear-gradient(180deg,#061521 0%,#020810 62%,#010509 100%)}
 <div id="cat" class="screen on"><div class="ey">NEXT CATEGORY</div><div class="reel"><div id="items"></div><div class="focus"></div></div><div id="difficulty" class="difficulty"><div class="dl">DIFFICULTY LEVEL</div><div id="rail" class="rail"></div><div id="ready" class="ready">GET READY...</div></div></div>
 <div id="question" class="screen"><div id="roundhud" class="roundhud">ROUND 1 · QUESTION 1/20</div><div class="timer"><div id="bar" class="bar"></div></div><div id="qt" class="q"></div><div id="visual" class="visual"></div><div id="answerprompt" class="prompt">💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS</div><div class="answercount">ANSWERS: <b id="answercount">0</b></div><div id="answers" class="answers"></div></div>
 <div id="round" class="screen"><div class="roundtitle">⚡ ROUND STANDINGS</div><div id="roundsub" class="roundsub"></div><div id="roundanswer" class="roundanswer"></div><div id="roundstarstage" class="roundstarstage"><span class="roundstarhint">QUESTION ★ → PLAYER → ROUND TOTAL</span></div><div id="roundlist" class="roundlist"></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div id="leadertitle" class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
-</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div class="version">QuizGameMaster · v0.6.45</div></div>
+</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div class="version">QuizGameMaster · v0.6.46</div></div>
 <script>
 // Always fetch fresh game/data when opened from the fullscreen browser home page.
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
@@ -1155,6 +1155,113 @@ function runGlobalCrowdMotion(rows,motion,startDelay,runToken,onAwardCross){
     requestAnimationFrame(frame);
   },startDelay);
 }
+function crowdBeltTravelForRow(index,motion){
+  return Math.max(0,Math.min(motion.totalDistance,index*motion.spacing+(motion.startY-motion.awardY)));
+}
+function crowdBeltMove(list,fromTravel,toTravel,duration,runToken,done){
+  if(runToken!==leaderAnimRunToken||!list?.isConnected)return;
+  fromTravel=Number(fromTravel)||0;toTravel=Number(toTravel)||0;
+  duration=Math.max(260,Number(duration)||900);
+  if(Math.abs(fromTravel-toTravel)<1){
+    list.style.transform="translate3d(0,"+(-toTravel)+"px,0)";
+    if(done)done();
+    return;
+  }
+  let anim=list.animate([
+    {transform:"translate3d(0,"+(-fromTravel)+"px,0)"},
+    {transform:"translate3d(0,"+(-toTravel)+"px,0)"}
+  ],{duration,easing:"cubic-bezier(.22,.72,.18,1)",fill:"forwards"});
+  anim.onfinish=()=>{
+    if(runToken!==leaderAnimRunToken)return;
+    list.style.transform="translate3d(0,"+(-toTravel)+"px,0)";
+    try{anim.cancel()}catch(e){}
+    if(done)done();
+  };
+}
+function crowdRewindDuration(fromTravel,toTravel,motion){
+  let ratio=Math.abs(fromTravel-toTravel)/Math.max(1,motion.totalDistance);
+  return Math.round(Math.max(650,Math.min(1750,620+ratio*1250)));
+}
+function runCrowdBonusRewind(ordered,rows,motion,runToken,done){
+  let list=$("lp-list");
+  if(!list||runToken!==leaderAnimRunToken){if(done)done();return 0}
+
+  let mapped=ordered.map((p,n)=>({p,row:rows[n],pts:rows[n]?.querySelector(".rrscore b"),index:n}));
+  let awards=[];
+  let first=mapped.find(x=>x.row&&x.pts&&Number(x.p?.firstCorrectBonus)>0);
+  if(first)awards.push({...first,kind:"bonus",stars:1});
+
+  mapped.filter(x=>x.row&&x.pts&&Number(x.p?.streakBonus)>0).forEach(x=>{
+    awards.push({...x,kind:"streak",stars:Math.max(1,Math.round(Number(x.p.streakBonus)||1))});
+  });
+
+  if(!awards.length){
+    let backMs=crowdRewindDuration(motion.totalDistance,0,motion);
+    crowdBeltMove(list,motion.totalDistance,0,backMs,runToken,done);
+    return backMs;
+  }
+
+  let bonusFlight=Math.min(720,Math.max(460,leaderAnimSettings.inMs*.55));
+  let currentTravel=motion.totalDistance;
+  let elapsed=0;
+
+  function nextAward(ix){
+    if(runToken!==leaderAnimRunToken)return;
+    if(ix>=awards.length){
+      let backMs=crowdRewindDuration(currentTravel,0,motion);
+      crowdBeltMove(list,currentTravel,0,backMs,runToken,()=>{
+        if(runToken!==leaderAnimRunToken)return;
+        setRoundStarRoute("",false,"lp-starstage");
+        if(done)done();
+      });
+      return;
+    }
+
+    let a=awards[ix],target=crowdBeltTravelForRow(a.index,motion);
+    let moveMs=crowdRewindDuration(currentTravel,target,motion);
+    crowdBeltMove(list,currentTravel,target,moveMs,runToken,()=>{
+      if(runToken!==leaderAnimRunToken)return;
+      currentTravel=target;
+
+      if(a.kind==="streak"){
+        showStreakSource("lp-starstage",Number(a.p.streakCount)||3,a.stars);
+        tone(540,.07,.006);setTimeout(()=>tone(810,.09,.008),85);
+      }else{
+        showBonusSource("lp-starstage");
+        tone(620,.08,.007);setTimeout(()=>tone(920,.11,.009),90);
+      }
+
+      let hold=760;
+      setTimeout(()=>{
+        if(runToken!==leaderAnimRunToken)return;
+        let before=a.kind==="streak"?Number(a.p.firstCorrectBonus)||0:0;
+        for(let s=1;s<=a.stars;s++){
+          flyBonusStar(
+            a.row,a.p,a.pts,
+            (s-1)*leaderAnimSettings.pointGapMs,
+            "lp-starstage",runToken,bonusFlight,
+            1,before+s-1,a.kind
+          );
+        }
+
+        let awardMs=(a.stars-1)*leaderAnimSettings.pointGapMs+bonusFlight+leaderAnimSettings.counterMs+260;
+        setTimeout(()=>nextAward(ix+1),awardMs);
+      },hold);
+    });
+  }
+
+  nextAward(0);
+
+  // Return an estimate for callers that need total preview timing.
+  awards.forEach((a,ix)=>{
+    let target=crowdBeltTravelForRow(a.index,motion);
+    elapsed+=crowdRewindDuration(ix?crowdBeltTravelForRow(awards[ix-1].index,motion):motion.totalDistance,target,motion);
+    elapsed+=760+(a.stars-1)*leaderAnimSettings.pointGapMs+bonusFlight+leaderAnimSettings.counterMs+260;
+  });
+  let lastTarget=crowdBeltTravelForRow(awards[awards.length-1].index,motion);
+  elapsed+=crowdRewindDuration(lastTarget,0,motion);
+  return elapsed;
+}
 function showCrowdRoundTop5(players,runToken,done){
   if(runToken!==leaderAnimRunToken)return;
   let list=$("lp-list"),viewport=$("lp-crowdviewport"),stage=$("lp-starstage");
@@ -1202,7 +1309,8 @@ function showCrowdRoundTop5(players,runToken,done){
     name.textContent="@"+p.name;
     let delta=document.createElement("div");
     delta.className="rrdelta";
-    delta.innerHTML="<span>THIS QUESTION</span><b>"+(p.delta>0?"+":"")+(Number(p.delta)||0)+" ★</b>";
+    let questionTotal=(Number(p.delta)||0)+(Number(p.bonusPoints)||0);
+    delta.innerHTML="<span>THIS QUESTION</span><b>"+(questionTotal>0?"+":"")+questionTotal+" ★</b>";
     info.append(name,delta);
     row.appendChild(info);
 
@@ -1298,26 +1406,56 @@ function runCrowdLeaderboardPreview(players,rows){
     }
   });
 
-  let top5At=streamStart+motion.totalDuration+Math.max(crowdGreenFlight,leaderAnimSettings.redFlightMs)+250;
+  let bonusStartAt=streamStart+motion.totalDuration+Math.max(crowdGreenFlight,leaderAnimSettings.redFlightMs)+320;
   let settleMs=1080+1840;
+  let rewindEstimate=0;
+
+  // Estimate the rewind/bonus section for preview timing, then run the real
+  // sequence once the normal credits belt has finished.
+  let previewAwards=ordered.map((p,n)=>({p,index:n}))
+    .filter(x=>Number(x.p.firstCorrectBonus)>0||Number(x.p.streakBonus)>0);
+  if(previewAwards.length){
+    let current=motion.totalDistance,bonusFlight=Math.min(720,Math.max(460,leaderAnimSettings.inMs*.55));
+    previewAwards.forEach(x=>{
+      let target=crowdBeltTravelForRow(x.index,motion);
+      rewindEstimate+=crowdRewindDuration(current,target,motion);
+      current=target;
+      if(Number(x.p.firstCorrectBonus)>0)
+        rewindEstimate+=760+bonusFlight+leaderAnimSettings.counterMs+260;
+      if(Number(x.p.streakBonus)>0){
+        let stars=Math.max(1,Math.round(Number(x.p.streakBonus)||1));
+        rewindEstimate+=760+(stars-1)*leaderAnimSettings.pointGapMs+bonusFlight+leaderAnimSettings.counterMs+260;
+      }
+    });
+    rewindEstimate+=crowdRewindDuration(current,0,motion);
+  }else{
+    rewindEstimate=crowdRewindDuration(motion.totalDistance,0,motion);
+  }
+
   setTimeout(()=>{
     if(runToken!==leaderAnimRunToken)return;
-    showCrowdRoundTop5(players,runToken,()=>{
+    runCrowdBonusRewind(ordered,rows,motion,runToken,()=>{
       if(runToken!==leaderAnimRunToken)return;
       setTimeout(()=>{
         if(runToken!==leaderAnimRunToken)return;
-        let list=$("lp-list"),stage=$("lp-starstage");
-        if(list)list.innerHTML="";
-        if(stage){
-          stage.style.height="";
-          stage.innerHTML="<span class='roundstarhint'>ROUND TOP 5 COMPLETE</span>";
-        }
-      },leaderAnimSettings.top5HoldSec*1000);
+        showCrowdRoundTop5(players,runToken,()=>{
+          if(runToken!==leaderAnimRunToken)return;
+          setTimeout(()=>{
+            if(runToken!==leaderAnimRunToken)return;
+            let list=$("lp-list"),stage=$("lp-starstage");
+            if(list)list.innerHTML="";
+            if(stage){
+              stage.style.height="";
+              stage.innerHTML="<span class='roundstarhint'>ROUND TOP 5 COMPLETE</span>";
+            }
+          },leaderAnimSettings.top5HoldSec*1000);
+        });
+      },260);
     });
-  },top5At);
+  },bonusStartAt);
 
-  // TOP 5 HOLD is pure viewing time after the reorder has finished.
-  let total=top5At+settleMs+leaderAnimSettings.top5HoldSec*1000;
+  // TOP 5 HOLD is pure viewing time after rewind + bonuses + reorder.
+  let total=bonusStartAt+rewindEstimate+260+settleMs+leaderAnimSettings.top5HoldSec*1000;
   return total;
 }
 function replayLeaderboardPreview(){
