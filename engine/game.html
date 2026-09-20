@@ -407,7 +407,10 @@ function reconcileLivePresenceToViewerCount(viewers){
   let rows=livePresenceRows().sort((a,b)=>(Number(a.lastSeen)||0)-(Number(b.lastSeen)||0));
   while(livePresenceUsers.size>viewers&&rows.length){
     let stale=rows.shift();
-    if(stale?.key)livePresenceUsers.delete(stale.key);
+    if(stale?.key){
+      livePresenceUsers.delete(stale.key);
+      removeUnplayedPresenceFromRound(stale.key);
+    }
   }
 }
 function renderLiveOnlineBar(){
