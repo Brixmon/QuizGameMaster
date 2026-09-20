@@ -2074,7 +2074,6 @@ function removeLivePresenceUser(user){
   if(key)livePresenceUsers.delete(key);
   pushLiveOnlineCount();
 }
-function imageUrlFromValue
 function imageUrlFromValue(v,depth=0){
   if(!v||depth>4)return "";
   if(typeof v==="string")return /^https?:\/\//i.test(v)?v:"";
@@ -2181,7 +2180,6 @@ function handleLiveMessage(msg){
     submittedAt:Date.now()
   });
 }
-function animatePercent
 function animatePercent(el,target,duration=1500){
   let t0=performance.now();
   function frame(now){
@@ -2772,7 +2770,6 @@ function renderRoundCorrectAnswerInto(boxId,q,correctLetter,correctText){
   box.innerHTML="<div class='np-answer npgood'><div class='np-letter'>"+
     previewEsc(correctLetter)+"</div>"+body+"</div>";
 }
-function renderRoundCorrectAnswer(q,correctLetter,correctText)
 function renderRoundCorrectAnswer(q,correctLetter,correctText){
   renderRoundCorrectAnswerInto("roundanswer",q,correctLetter,correctText);
 }
@@ -2915,7 +2912,6 @@ function renderRoundResults(players,correctLetter,correctText){
   }));
 }
 
-function makeLeaderboardAvatar
 function makeLeaderboardAvatar(p,place){
   let wrap=document.createElement("div");
   wrap.className="lbavatarwrap";
