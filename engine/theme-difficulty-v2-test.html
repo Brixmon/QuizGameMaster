@@ -62,32 +62,61 @@ body{display:grid;place-items:center}
 .lockline b{display:block;color:#ffd45e;font-size:.78vh;letter-spacing:.17em}
 .lockline span{display:block;margin-top:.23vh;color:#91aabc;font-size:.59vh;font-weight:900;letter-spacing:.09em}
 @keyframes lockIn{from{opacity:0;transform:translate(-50%,.5vh)}to{opacity:1;transform:translate(-50%,0)}}
-.diffscreen{padding-top:1vh}
-.diffhead{text-align:center;margin-top:.3vh}
-.categorychip{display:inline-flex;align-items:center;gap:.4vh;margin-top:.72vh;padding:.42vh .75vh;border-radius:1vh;border:1px solid #5ee2ff4d;background:#061725d9;color:#bcecff;font-size:.67vh;font-weight:1000;letter-spacing:.1em}
-.categorychip .mini{font-size:1.15vh}
-.diffmeter{position:absolute;left:7%;right:7%;top:15.3vh;height:32vh;padding:.6vh}
-.diffrail{position:absolute;left:50%;top:1.3vh;bottom:1.3vh;width:.16vh;background:linear-gradient(#3ad7ff22,#ffd45e88,#3ad7ff22);transform:translateX(-50%)}
-.diffscan{position:absolute;left:5%;right:5%;height:5.05vh;border-radius:1.25vh;border:1px solid #ffd45e88;background:#ffd45e0f;box-shadow:0 0 1.4vh #ffd45e33;opacity:0;transform:translateY(0);z-index:1}
+.introscreen{display:flex;align-items:center;justify-content:center;text-align:center}
+.introcore{width:88%;transform:translateY(-1.4vh)}
+.introey{font-size:.8vh;font-weight:1000;letter-spacing:.2em;color:#7bdfff}
+.introround{margin-top:1.1vh;font-size:2.2vh;font-weight:1000;letter-spacing:.05em;color:#fff}
+.introq{margin-top:.7vh;font-size:5.9vh;font-weight:1000;line-height:.9;color:#fff;text-shadow:0 0 2.4vh #299cff33}
+.introq b{display:block;color:#ffd45e;font-size:2.1vh;margin-top:.7vh;letter-spacing:.08em}
+.introline{width:66%;height:.32vh;margin:2.1vh auto 0;border-radius:1vh;background:#ffffff10;overflow:hidden}
+.introline span{display:block;height:100%;width:30%;background:linear-gradient(90deg,#44d8ff,#ffd45e);box-shadow:0 0 1vh #44d8ff66}
+.introsub{margin-top:1.1vh;color:#8faabd;font-size:.7vh;font-weight:900;letter-spacing:.12em}
+.diffscreen{padding-top:.4vh}
+.diffhead{text-align:center;margin-top:.2vh}
+.diffgrid{position:absolute;left:2.5%;right:2.5%;top:10.1vh;height:35.2vh;display:grid;grid-template-columns:19.3vh 1fr;gap:1.25vh;align-items:center}
+.carryframe{position:relative;width:19.3vh;height:27.4vh;border-radius:2.25vh;border:1px solid #ffd45e88;box-shadow:inset 0 0 1.6vh #ffd45e12,0 0 1.9vh #ffd45e2c;display:grid;place-items:center}
+.carryframe:after{content:"CATEGORY LOCKED";position:absolute;left:50%;bottom:-1.8vh;transform:translateX(-50%);white-space:nowrap;color:#ffd45e;font-size:.58vh;font-weight:1000;letter-spacing:.14em}
+.carryframe .themecard{position:relative;flex:none;width:18.4vh;height:24.5vh;opacity:1;transform:scale(.94);margin:0}
+.carryframe .themecard.locked{transform:scale(.94);animation:none}
+.diffmeter{position:relative;height:32vh;padding:.5vh 0}
+.diffscan{position:absolute;left:-.35vh;right:-.35vh;height:5.05vh;border-radius:1.25vh;border:1px solid #68dcff88;background:#42cfff0d;box-shadow:0 0 1.3vh #299cff26;opacity:0;transform:translateY(0);z-index:1}
 .levels{position:relative;z-index:2;display:flex;flex-direction:column;gap:.72vh}
-.level{height:5.05vh;display:grid;grid-template-columns:4.2vh 1fr auto;align-items:center;gap:.7vh;padding:.5vh .85vh;border-radius:1.15vh;border:1px solid #ffffff12;background:#071724b8;color:#7f9bad;transition:.22s}
-.level .emoji{width:3.25vh;height:3.25vh;display:grid;place-items:center;border-radius:.85vh;background:#ffffff08;font-size:1.55vh}
-.level .name{font-size:.96vh;font-weight:1000;letter-spacing:.08em}
-.level .hint{font-size:.55vh;font-weight:900;color:#718b9c;letter-spacing:.1em;margin-top:.12vh}
-.level .reward{font-size:.92vh;font-weight:1000;color:#7995a7}
+.level{height:5.05vh;display:grid;grid-template-columns:3.55vh 1fr auto;align-items:center;gap:.55vh;padding:.45vh .65vh;border-radius:1.15vh;border:1px solid #ffffff12;background:#071724c7;color:#7f9bad;transition:.22s}
+.level .emoji{width:2.9vh;height:2.9vh;display:grid;place-items:center;border-radius:.78vh;background:#ffffff08;font-size:1.38vh}
+.level .name{font-size:.88vh;font-weight:1000;letter-spacing:.07em}
+.level .hint{font-size:.51vh;font-weight:900;color:#718b9c;letter-spacing:.09em;margin-top:.1vh}
+.level .reward{font-size:1.38vh;font-weight:1000;color:#8fa9ba;letter-spacing:.01em;text-shadow:0 0 .8vh transparent;transition:.2s}
 .level.hot{color:#fff;border-color:#68dcff77;background:#0a2a43e5;box-shadow:0 0 1vh #299cff20;transform:scale(1.018)}
-.level.hot .reward{color:#93e7ff}
+.level.hot .reward{color:#a9ecff;text-shadow:0 0 .8vh #299cff55}
 .level.final{color:#fff;border-color:#ffd45eaa;background:linear-gradient(90deg,#2c250dca,#0a2032ea);box-shadow:0 0 1.7vh #ffd45e44;transform:scale(1.035)}
-.level.final .reward{color:#ffd45e;font-size:1.13vh}
+.level.final .reward{color:#ffd45e;font-size:1.68vh;text-shadow:0 0 .9vh #ffd45e77}
 .level.final .emoji{background:#ffd45e16;border:1px solid #ffd45e55;box-shadow:0 0 .9vh #ffd45e22}
-.resultcard{position:absolute;left:14%;right:14%;top:49.4vh;height:8.7vh;border-radius:1.45vh;border:1px solid #ffd45e55;background:#06131fdc;opacity:0;transform:translateY(.8vh) scale(.96);display:flex;align-items:center;justify-content:center;gap:1vh}
+.resultcard{position:absolute;left:19%;right:8%;top:47vh;height:8.9vh;border-radius:1.45vh;border:1px solid #ffd45e55;background:#06131fdc;opacity:0;transform:translateY(.8vh) scale(.96);display:flex;align-items:center;justify-content:center;gap:1vh}
 .resultcard.show{animation:resultIn .62s cubic-bezier(.2,1.35,.3,1) forwards}
-.resultstar{font-size:3.4vh;color:#ffd45e;filter:drop-shadow(0 0 .9vh #ffd45e88)}
-.resultcopy b{display:block;font-size:1.1vh;color:#fff;letter-spacing:.1em}.resultcopy span{display:block;margin-top:.22vh;color:#ffd45e;font-size:.8vh;font-weight:1000;letter-spacing:.1em}
+.resultstar{font-size:5.4vh;color:#ffd45e;filter:drop-shadow(0 0 1.1vh #ffd45e99)}
+.resultcopy b{display:block;font-size:1.05vh;color:#fff;letter-spacing:.09em}.resultcopy span{display:block;margin-top:.22vh;color:#ffd45e;font-size:1.02vh;font-weight:1000;letter-spacing:.08em}
 @keyframes resultIn{to{opacity:1;transform:none}}
-.readyflash{position:absolute;left:0;right:0;top:59.7vh;text-align:center;opacity:0;font-size:1.65vh;font-weight:1000;letter-spacing:.08em}
+.readyflash{position:absolute;left:0;right:0;top:57.3vh;text-align:center;opacity:0;font-size:1.65vh;font-weight:1000;letter-spacing:.08em}
 .readyflash.show{animation:readyIn .5s ease forwards}
 @keyframes readyIn{0%{opacity:0;transform:scale(.75)}65%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+.summaryscreen{display:flex;align-items:center;justify-content:center}
+.summarywrap{width:91%;transform:translateY(-.6vh)}
+.summaryhead{text-align:center}
+.summarygrid{margin-top:2.2vh;display:grid;grid-template-columns:19.8vh 1fr;gap:1.35vh;align-items:center}
+.summarytheme{height:28.2vh;border-radius:2.3vh;border:1px solid #ffd45e88;box-shadow:inset 0 0 1.5vh #ffd45e10,0 0 2vh #ffd45e2b;display:grid;place-items:center}
+.summarytheme .themecard{position:relative;flex:none;width:18.4vh;height:24.5vh;opacity:1;transform:scale(.94);margin:0}
+.summarytheme .themecard.locked{transform:scale(.94);animation:none}
+.summarydiff{display:flex;flex-direction:column;gap:.9vh}
+.summarylevel{min-height:7.3vh;border-radius:1.25vh;border:1px solid #ffd45e99;background:linear-gradient(90deg,#2c250dcc,#0a2032f0);box-shadow:0 0 1.7vh #ffd45e33;padding:.8vh;display:flex;align-items:center;gap:.7vh}
+.summarylevel .bigemoji{font-size:2.4vh}.summarylevel .copy b{display:block;font-size:1.05vh;letter-spacing:.08em}.summarylevel .copy span{display:block;color:#a6bdca;font-size:.58vh;font-weight:900;letter-spacing:.1em;margin-top:.12vh}
+.summarystars{border-radius:1.25vh;border:1px solid #ffd45e55;background:#06131fe3;padding:1.15vh .7vh;text-align:center}
+.summarystars .lab{font-size:.58vh;color:#9ab1c0;font-weight:1000;letter-spacing:.13em}
+.summarystars .stars{margin-top:.45vh;color:#ffd45e;font-size:3.25vh;line-height:1;letter-spacing:.05em;filter:drop-shadow(0 0 .8vh #ffd45e66)}
+.summarystars .rewardtxt{margin-top:.5vh;color:#fff;font-size:.95vh;font-weight:1000;letter-spacing:.08em}
+.summaryready{text-align:center;margin-top:2.25vh;font-size:1.55vh;font-weight:1000;letter-spacing:.09em;color:#dff7ff}
+.summaryready b{color:#79e3ff}
+.summaryscreen.on .summarywrap{animation:summaryIn .55s ease both}
+@keyframes summaryIn{from{opacity:0;transform:translateY(.7vh) scale(.97)}to{opacity:1;transform:translateY(-.6vh) scale(1)}}
 .controls{position:absolute;z-index:50;left:4%;right:4%;bottom:1.1vh;display:flex;gap:.5vh;flex-wrap:wrap;justify-content:center}
 .controls button,.back{border:1px solid #62dfff42;background:#061522e8;color:#dff6ff;border-radius:.85vh;padding:.52vh .72vh;font-size:.64vh;font-weight:1000;letter-spacing:.06em}
 .controls button.active{border-color:#ffd45e88;color:#ffe58a;background:#ffd45e12}
@@ -101,7 +130,17 @@ body{display:grid;place-items:center}
   <a class="back" href="game.html">← BACK</a>
   <div class="brand">QUIZGAME MASTER · DESIGN LAB</div><div class="version">V2 TRANSITION TEST</div>
   <div class="stage">
-    <section id="theme" class="screen on">
+    <section id="intro" class="screen introscreen on">
+      <div class="introcore">
+        <div class="introey">NEXT QUESTION</div>
+        <div class="introround">ROUND 2</div>
+        <div class="introq">06<b>OF 20</b></div>
+        <div class="introline"><span></span></div>
+        <div class="introsub">CATEGORY DRAW STARTING</div>
+      </div>
+    </section>
+
+    <section id="theme" class="screen">
       <div class="head">
         <div class="kicker">NEXT CHALLENGE</div>
         <div class="title">CATEGORY DRAW</div>
@@ -117,18 +156,41 @@ body{display:grid;place-items:center}
 
     <section id="difficulty" class="screen diffscreen">
       <div class="diffhead">
-        <div class="kicker">CHALLENGE LOCKED</div>
+        <div class="kicker">CATEGORY LOCKED</div>
         <div id="difftitle" class="title">DIFFICULTY SCAN</div>
         <div class="sub">HOW MANY STARS IS THIS QUESTION WORTH?</div>
-        <div id="categorychip" class="categorychip"><span class="mini">🌍</span><span>FLAGS</span></div>
       </div>
-      <div class="diffmeter">
-        <div class="diffrail"></div>
-        <div id="diffscan" class="diffscan"></div>
-        <div id="levels" class="levels"></div>
+      <div class="diffgrid">
+        <div id="carryframe" class="carryframe"></div>
+        <div class="diffmeter">
+          <div id="diffscan" class="diffscan"></div>
+          <div id="levels" class="levels"></div>
+        </div>
       </div>
       <div id="resultcard" class="resultcard"><div class="resultstar">★</div><div class="resultcopy"><b id="resultname">PRO LOCKED</b><span id="resultreward">CORRECT ANSWER · +3 ★</span></div></div>
-      <div id="readyflash" class="readyflash">GET READY...</div>
+      <div id="readyflash" class="readyflash">CHALLENGE READY</div>
+    </section>
+
+    <section id="summary" class="screen summaryscreen">
+      <div class="summarywrap">
+        <div class="summaryhead">
+          <div class="kicker">CHALLENGE READY</div>
+          <div class="title">ROUND 2 · QUESTION 06/20</div>
+          <div class="sub">CATEGORY + DIFFICULTY LOCKED</div>
+        </div>
+        <div class="summarygrid">
+          <div id="summarytheme" class="summarytheme"></div>
+          <div class="summarydiff">
+            <div id="summarylevel" class="summarylevel"></div>
+            <div class="summarystars">
+              <div class="lab">QUESTION VALUE</div>
+              <div id="summarystars" class="stars">★★★</div>
+              <div id="summaryreward" class="rewardtxt">+3 ★</div>
+            </div>
+          </div>
+        </div>
+        <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
+      </div>
     </section>
   </div>
 
@@ -187,12 +249,25 @@ function buildLevels(){
 }
 function resetView(){
   clearTimers();
-  $("theme").classList.add("on");$("difficulty").classList.remove("on");
+  ["intro","theme","difficulty","summary"].forEach(id=>$(id).classList.remove("on"));
+  $("intro").classList.add("on");
   $("lockline").classList.remove("show");$("resultcard").classList.remove("show");$("readyflash").classList.remove("show");
+  $("carryframe").innerHTML="";$("summarytheme").innerHTML="";$("summarylevel").innerHTML="";
   buildLevels();
+  document.querySelectorAll(".level").forEach(r=>r.style.opacity="1");
+}
+function selectedThemeCardHtml(){
+  let t=THEMES[preset.theme];
+  return '<div class="themecard selected locked"><div class="icon">'+t.icon+'</div><div class="label">'+t.label+'</div><div class="desc">'+t.desc+'</div><div class="tag">'+t.tag+'</div></div>';
+}
+function startSequence(){
+  resetView();
+  tone(420,.08,.005,"triangle");
+  later(()=>tone(650,.1,.006,"triangle"),120);
+  later(()=>runTheme(),1750);
 }
 function runTheme(){
-  resetView();
+  $("intro").classList.remove("on");$("summary").classList.remove("on");$("difficulty").classList.remove("on");$("theme").classList.add("on");
   let targetIndex=buildThemeTrack(),track=$("themetrack");
   let cards=[...track.children],selected=cards[targetIndex],frame=$("focusbracket"),zone=$("theme").querySelector(".themezone");
   track.style.transition="none";track.style.transform="translateX(0)";
@@ -241,8 +316,7 @@ function runTheme(){
 }
 function runDifficulty(){
   $("theme").classList.remove("on");$("difficulty").classList.add("on");
-  let t=THEMES[preset.theme],chip=$("categorychip");
-  chip.innerHTML='<span class="mini">'+t.icon+'</span><span>'+t.label+'</span>';
+  $("carryframe").innerHTML=selectedThemeCardHtml();
   let target=LEVELS.findIndex(x=>x.id===preset.level);
   let rows=[...document.querySelectorAll(".level")],scan=$("diffscan");
   rows.forEach(r=>r.classList.remove("hot","final"));
@@ -273,16 +347,27 @@ function finishDifficulty(target){
   $("resultreward").textContent="CORRECT ANSWER · +"+l.reward+" ★";
   $("resultcard").classList.add("show");finalTone(l.reward);
   later(()=>$("readyflash").classList.add("show"),650);
+  later(()=>showSummary(target),1750);
 }
-function replay(){runTheme()}
+function showSummary(target){
+  let l=LEVELS[target];
+  $("difficulty").classList.remove("on");
+  $("summarytheme").innerHTML=selectedThemeCardHtml();
+  $("summarylevel").innerHTML='<div class="bigemoji">'+l.emoji+'</div><div class="copy"><b>'+l.name+' LOCKED</b><span>'+l.hint+' DIFFICULTY</span></div>';
+  $("summarystars").textContent="★".repeat(l.reward);
+  $("summaryreward").textContent="+"+l.reward+" ★ CORRECT ANSWER";
+  $("summary").classList.add("on");
+  lockTone();
+}
+function replay(){startSequence()}
 function playPreset(theme,level,btn){
   preset={theme,level};
   document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
   btn?.classList.add("active");
-  runTheme();
+  startSequence();
 }
 buildLevels();
-later(runTheme,350);
+later(startSequence,350);
 document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){}},{once:true});
 </script>
 </body></html>
