@@ -36,7 +36,7 @@ body{display:grid;place-items:center}
 .themezone:before,.themezone:after{content:"";position:absolute;top:0;bottom:0;width:14%;z-index:10;pointer-events:none}
 .themezone:before{left:0;background:linear-gradient(90deg,#06121f,transparent)}
 .themezone:after{right:0;background:linear-gradient(-90deg,#06121f,transparent)}
-.themetrack{position:absolute;top:5.1vh;left:50%;display:flex;gap:1.1vh;align-items:center;will-change:transform}
+.themetrack{position:absolute;top:5.1vh;left:0;display:flex;gap:1.1vh;align-items:center;will-change:transform}
 .themecard{position:relative;flex:0 0 18.4vh;height:24.5vh;border-radius:2vh;border:1px solid #ffffff18;background:
   linear-gradient(180deg,#0d304bdb,#071723ed);box-shadow:0 .8vh 2.2vh #0006;overflow:hidden;
   transform:scale(.82);opacity:.42;transition:border-color .35s,box-shadow .35s,filter .35s}
@@ -194,39 +194,50 @@ function resetView(){
 function runTheme(){
   resetView();
   let targetIndex=buildThemeTrack(),track=$("themetrack");
-  let cards=[...track.children],cardW=cards[0].getBoundingClientRect().width,gap=parseFloat(getComputedStyle(track).gap)||0;
+  let cards=[...track.children],selected=cards[targetIndex],frame=$("focusbracket"),zone=$("theme").querySelector(".themezone");
   track.style.transition="none";track.style.transform="translateX(0)";
   cards.forEach(c=>c.classList.remove("selected","locked","dimmed"));
-  $("focusbracket").classList.remove("locked");
+  frame.classList.remove("locked");
+
+  function targetTranslate(){
+    let zoneCenter=zone.clientWidth/2;
+    let selectedCenter=selected.offsetLeft+selected.offsetWidth/2;
+    return zoneCenter-selectedCenter;
+  }
+
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    let centerOffset=targetIndex*(cardW+gap)+cardW/2;
-    let x=-centerOffset;
     track.style.transition="transform 3.25s cubic-bezier(.08,.72,.08,1)";
-    track.style.transform="translateX("+x+"px)";
+    track.style.transform="translate3d("+targetTranslate()+"px,0,0)";
   }));
+
   let tick=0;
   for(let ms=300;ms<3000;ms+=250){
     later(()=>{sweepTone(tick++%8)},ms);
   }
-  later(()=>{
-    const selected=cards[targetIndex],frame=$("focusbracket");
-    const sr=selected.getBoundingClientRect(),fr=frame.getBoundingClientRect();
-    const correction=(fr.left+fr.width/2)-(sr.left+sr.width/2);
-    const current=new DOMMatrixReadOnly(getComputedStyle(track).transform);
-    const currentX=Number.isFinite(current.m41)?current.m41:0;
 
-    track.style.transition="transform .34s cubic-bezier(.2,.8,.25,1)";
-    track.style.transform="translateX("+(currentX+correction)+"px)";
+  function snapAndLock(){
+    let sr=selected.getBoundingClientRect(),fr=frame.getBoundingClientRect();
+    let delta=(fr.left+fr.width/2)-(sr.left+sr.width/2);
 
-    later(()=>{
-      cards.forEach((card,n)=>card.classList.toggle("dimmed",n!==targetIndex));
-      selected.classList.add("selected","locked");
-      frame.classList.add("locked");
-      $("lockline").classList.add("show");
-      lockTone();
-    },360);
-  },3220);
-  later(()=>runDifficulty(),4480);
+    if(Math.abs(delta)>1.5){
+      let computed=getComputedStyle(track).transform;
+      let m=computed&&computed!=="none"?new DOMMatrixReadOnly(computed):new DOMMatrixReadOnly();
+      let currentX=Number.isFinite(m.m41)?m.m41:0;
+      track.style.transition="transform .28s cubic-bezier(.2,.8,.25,1)";
+      track.style.transform="translate3d("+(currentX+delta)+"px,0,0)";
+      later(snapAndLock,320);
+      return;
+    }
+
+    cards.forEach((card,n)=>card.classList.toggle("dimmed",n!==targetIndex));
+    selected.classList.add("selected","locked");
+    frame.classList.add("locked");
+    $("lockline").classList.add("show");
+    lockTone();
+  }
+
+  later(snapAndLock,3360);
+  later(()=>runDifficulty(),4620);
 }
 function runDifficulty(){
   $("theme").classList.remove("on");$("difficulty").classList.add("on");
