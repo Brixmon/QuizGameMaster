@@ -22,8 +22,8 @@ body{display:grid;place-items:center}
 .orbit:after{inset:18%}
 .brand{position:absolute;top:1.5vh;left:1.7vh;font-size:.72vh;font-weight:1000;letter-spacing:.16em;color:#8cdcff88}
 .version{position:absolute;top:1.5vh;right:1.7vh;font-size:.68vh;font-weight:900;color:#ffffff55;letter-spacing:.08em}
-.stage{position:absolute;left:5%;right:5%;top:3.5%;bottom:39%;display:flex;align-items:center;justify-content:center}
-.safe{position:absolute;left:0;right:0;bottom:0;height:39%;border-top:1px dashed #ffffff10;color:#ffffff10;text-align:center;padding-top:1vh;font-size:.75vh;letter-spacing:.12em}
+.stage{position:absolute;left:5%;right:5%;top:3.5%;bottom:29%;display:flex;align-items:center;justify-content:center}
+.safe{position:absolute;left:0;right:0;bottom:0;height:29%;border-top:1px dashed #ffffff10;color:#ffffff10;text-align:center;padding-top:1vh;font-size:.75vh;letter-spacing:.12em}
 .screen{position:absolute;inset:0;opacity:0;pointer-events:none;transform:scale(.985);transition:opacity .38s ease,transform .38s ease}
 .screen.on{opacity:1;pointer-events:auto;transform:none}
 .kicker{text-align:center;color:#75dfff;font-size:.76vh;font-weight:1000;letter-spacing:.19em}
@@ -66,22 +66,21 @@ body{display:grid;place-items:center}
 .lockline span{display:block;margin-top:.23vh;color:#91aabc;font-size:.59vh;font-weight:900;letter-spacing:.09em}
 @keyframes lockIn{from{opacity:0;transform:translate(-50%,.5vh)}to{opacity:1;transform:translate(-50%,0)}}
 .introscreen{display:flex;align-items:center;justify-content:center;text-align:center}
-.introcore{width:88%;transform:translateY(-.7vh)}
-.introey{font-size:.8vh;font-weight:1000;letter-spacing:.2em;color:#7bdfff}
-.introround{margin-top:1.1vh;font-size:2.2vh;font-weight:1000;letter-spacing:.05em;color:#fff}
+.introcore{width:92%;transform:translateY(-.4vh);padding:2.2vh 1.45vh 2vh;border:1px solid #64dfff45;border-radius:2vh;background:linear-gradient(180deg,#0a2335dc,#06131fef);box-shadow:0 1.2vh 3.5vh #0007,0 0 2.4vh #299cff1f}
+.introey{font-size:1.02vh;font-weight:1000;letter-spacing:.23em;color:#80e5ff;text-shadow:0 0 1vh #45dfff55}
+.introround{margin-top:.75vh;font-size:2.75vh;font-weight:1000;letter-spacing:.055em;color:#fff;text-shadow:0 0 1.4vh #58d9ff2f}
 .introq{margin-top:.7vh;font-size:5.9vh;font-weight:1000;line-height:.9;color:#fff;text-shadow:0 0 2.4vh #299cff33}
 .introq b{display:block;color:#ffd45e;font-size:2.1vh;margin-top:.7vh;letter-spacing:.08em}
-.introprogress{position:relative;width:84%;height:5.7vh;margin:2.2vh auto .2vh}
-.introprogress-track{position:absolute;left:0;right:0;top:2.35vh;height:.24vh;background:#ffffff16;border-radius:1vh;display:flex;align-items:center;justify-content:space-between}
+.introprogress{position:relative;width:92%;height:7.1vh;margin:1.55vh auto .25vh}
+.introprogress-track{position:absolute;left:0;right:0;top:3.05vh;height:.34vh;background:#ffffff18;border-radius:1vh;display:flex;align-items:center;justify-content:space-between}
 .introprogress-track:before{content:"";position:absolute;left:0;right:0;top:0;bottom:0;border-radius:1vh;background:linear-gradient(90deg,#49dfff33,#ffd45e22)}
-.introstep{position:relative;z-index:2;width:.72vh;height:.72vh;border-radius:50%;background:#183348;border:1px solid #6f9bb744;box-shadow:0 0 .35vh #0008}
-.introstep.done{background:#43d9a0;border-color:#78f4c0;box-shadow:0 0 .7vh #43d9a055}
-.introstep.current{background:#ffd45e;border-color:#fff1a8;box-shadow:0 0 1.05vh #ffd45eaa;transform:scale(1.22)}
-.introprogress-arrow{position:absolute;z-index:5;left:0;top:-.05vh;transform:translateX(-50%);color:#ffd45e;font-size:1.8vh;line-height:1;text-shadow:0 0 1.1vh #ffd45eaa;will-change:left}
-.introprogress-label{margin-top:.2vh;color:#9ec1d4;font-size:.72vh;font-weight:1000;letter-spacing:.12em}
-.introline{width:66%;height:.32vh;margin:1.15vh auto 0;border-radius:1vh;background:#ffffff10;overflow:hidden}
-.introline span{display:block;height:100%;width:30%;background:linear-gradient(90deg,#44d8ff,#ffd45e);box-shadow:0 0 1vh #44d8ff66}
-.introsub{margin-top:1.1vh;color:#8faabd;font-size:.7vh;font-weight:900;letter-spacing:.12em}
+.introstep{position:relative;z-index:2;width:.9vh;height:.9vh;border-radius:50%;background:#183348;border:1px solid #6f9bb755;box-shadow:0 0 .35vh #0008}
+.introstep.done{background:#43d9a0;border-color:#78f4c0;box-shadow:0 0 .8vh #43d9a066}
+.introstep.current{background:#ffd45e;border-color:#fff1a8;box-shadow:0 0 1.35vh #ffd45ecc;transform:scale(1.38);animation:introCurrentPulse 1.15s ease-in-out infinite}
+@keyframes introCurrentPulse{50%{transform:scale(1.68);box-shadow:0 0 1.9vh #ffd45eee}}
+.introprogress-arrow{position:absolute;z-index:5;left:0;top:-.05vh;transform:translateX(-50%);color:#ffd45e;font-size:2.45vh;line-height:1;text-shadow:0 0 1.45vh #ffd45edd;will-change:left}
+.introprogress-label{margin-top:.1vh;color:#ffe27e;font-size:1.16vh;font-weight:1000;letter-spacing:.14em;text-shadow:0 0 1vh #ffd45e44}
+.introsub{margin-top:.95vh;color:#98b8ca;font-size:.78vh;font-weight:1000;letter-spacing:.14em}
 .diffscreen{padding-top:.4vh}
 .diffhead{text-align:center;margin-top:.2vh}
 .diffgrid{position:absolute;left:2.5%;right:2.5%;top:10.1vh;height:35.2vh;display:grid;grid-template-columns:19.3vh 1fr;gap:1.25vh;align-items:center}
@@ -145,7 +144,7 @@ body{display:grid;place-items:center}
 .note{position:absolute;bottom:4.6vh;left:0;right:0;text-align:center;color:#ffffff33;font-size:.55vh;font-weight:900;letter-spacing:.1em}
 body.embed .back,body.embed .controls,body.embed .note,body.embed .brand,body.embed .version{display:none!important}
 body.embed #app{max-width:none;width:100vw}
-body.embed .stage{top:2.5%;bottom:39%;left:5%;right:5%}
+body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
 </style>
 </head>
 <body>
@@ -159,8 +158,7 @@ body.embed .stage{top:2.5%;bottom:39%;left:5%;right:5%}
         <div class="introey">NEXT QUESTION</div>
         <div id="intro-round" class="introround">ROUND 2</div>
         <div class="introprogress"><div id="intro-progress-track" class="introprogress-track"></div><div id="intro-progress-arrow" class="introprogress-arrow">▼</div></div><div id="intro-progress-label" class="introprogress-label">QUESTION 06 / 20</div>
-        <div class="introline"><span></span></div>
-        <div class="introsub">CATEGORY DRAW STARTING</div>
+        <div class="introsub">NEXT · CATEGORY + DIFFICULTY DRAW</div>
       </div>
     </section>
 
@@ -217,7 +215,7 @@ body.embed .stage{top:2.5%;bottom:39%;left:5%;right:5%}
         </div>
         <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">0</b></div>
         <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
-        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.9</div>
+        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.10</div>
       </div>
     </section>
   </div>
@@ -281,7 +279,7 @@ function buildRoundProgress(){
   arrow.style.left=from+"%";
   requestAnimationFrame(()=>setTimeout(()=>{
     try{
-      let anim=arrow.animate([{left:from+"%"},{left:to+"%"}],{duration:980,easing:"cubic-bezier(.18,.82,.2,1)",fill:"forwards"});
+      let anim=arrow.animate([{left:from+"%"},{left:to+"%"}],{duration:1250,easing:"cubic-bezier(.18,.82,.2,1)",fill:"forwards"});
       anim.onfinish=()=>{arrow.style.left=to+"%";try{anim.cancel()}catch(e){}};
     }catch(e){arrow.style.left=to+"%"}
   },180));
@@ -381,7 +379,7 @@ function startSequence(){
   resetView();
   tone(420,.08,.005,"triangle");
   later(()=>tone(650,.1,.006,"triangle"),120);
-  later(()=>runTheme(),1750);
+  later(()=>runTheme(),3000);
 }
 function runTheme(){
   $("intro").classList.remove("on");$("summary").classList.remove("on");$("difficulty").classList.remove("on");$("theme").classList.add("on");
