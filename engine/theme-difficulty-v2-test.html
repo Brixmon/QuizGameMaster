@@ -121,10 +121,12 @@ body{display:grid;place-items:center}
 .summarystars .rewardtxt{margin-top:.5vh;color:#fff;font-size:.95vh;font-weight:1000;letter-spacing:.08em}
 .summaryready{text-align:center;margin-top:2.25vh;font-size:1.55vh;font-weight:1000;letter-spacing:.09em;color:#dff7ff}
 .summaryready b{color:#79e3ff}
-.summaryonline{margin:1.15vh auto 0;width:max-content;display:flex;align-items:center;gap:.55vh;padding:.55vh .95vh;border-radius:1.15vh;border:1px solid #64e8b755;background:#071a1ae6;box-shadow:0 0 1.2vh #45e6a422;color:#bfffe8;font-size:.74vh;font-weight:1000;letter-spacing:.1em}
-.summaryonline .dot{width:.68vh;height:.68vh;border-radius:50%;background:#59f0a7;box-shadow:0 0 .9vh #59f0a7;animation:onlinePulse 1.4s ease-in-out infinite}
-.summaryonline b{color:#fff;font-size:.95vh}
+.summaryonline{margin:1.35vh auto 0;min-width:22vh;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.8vh;padding:.85vh 1.15vh;border-radius:1.35vh;border:1px solid #64e8b788;background:linear-gradient(90deg,#071a1af2,#0a2a28e8);box-shadow:0 0 1.8vh #45e6a43b,inset 0 0 1.1vh #59f0a70d;color:#bfffe8;font-size:.78vh;font-weight:1000;letter-spacing:.11em}
+.summaryonline .dot{width:.82vh;height:.82vh;border-radius:50%;background:#59f0a7;box-shadow:0 0 1.1vh #59f0a7;animation:onlinePulse 1.2s ease-in-out infinite}
+.summaryonline b{color:#fff;font-size:2.35vh;line-height:1;text-shadow:0 0 1.2vh #59f0a766;min-width:2.1vh;text-align:right}
+.summaryonline.bump{animation:onlineCountHit .62s cubic-bezier(.2,1.45,.3,1)}
 @keyframes onlinePulse{50%{opacity:.45;transform:scale(.78)}}
+@keyframes onlineCountHit{0%{transform:scale(.96);box-shadow:0 0 .8vh #45e6a422}55%{transform:scale(1.06);box-shadow:0 0 2.4vh #59f0a777}100%{transform:scale(1);box-shadow:0 0 1.8vh #45e6a43b}}
 .summaryscreen.on .summarywrap{animation:summaryIn .55s ease both}
 @keyframes summaryIn{from{opacity:0;transform:translateY(.7vh) scale(.97)}to{opacity:1;transform:translateY(-.6vh) scale(1)}}
 .controls{position:absolute;z-index:50;left:4%;right:4%;bottom:1.1vh;display:flex;gap:.5vh;flex-wrap:wrap;justify-content:center}
@@ -204,7 +206,7 @@ body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
             </div>
           </div>
         </div>
-        <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">4</b></div>
+        <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">0</b></div>
         <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
       </div>
     </section>
@@ -251,7 +253,7 @@ function applyGameMeta(){
   $("intro-question").innerHTML=String(gameQuestion).padStart(2,"0")+"<b>OF "+gameTotal+"</b>";
   $("theme-roundpill").textContent="ROUND "+gameRound+" · QUESTION "+String(gameQuestion).padStart(2,"0")+"/"+gameTotal;
   $("summary-roundtitle").textContent="ROUND "+gameRound+" · QUESTION "+String(gameQuestion).padStart(2,"0")+"/"+gameTotal;
-  $("summaryonlinecount").textContent=gamePlayers;
+  $("summaryonlinecount").textContent="0";
 }
 function clearTimers(){timers.forEach(clearTimeout);timers=[]}
 function later(fn,ms){let t=setTimeout(fn,ms);timers.push(t);return t}
@@ -348,15 +350,26 @@ function runTheme(){
   let targetIndex=buildThemeTrack(),cards=[...$("themetrack").children],frame=$("focusbracket");
   frame.classList.remove("locked");$("lockline").classList.remove("show");
 
-  let duration=3450,startPhase=Math.PI*2*4.35,endPhase=0,startAt=performance.now(),lastTick=-1;
+  let spinMs=4100,settleMs=760,startPhase=Math.PI*2*4.55,overshoot=-0.16,startAt=performance.now(),lastTick=-1;
   function frameSpin(now){
-    let t=Math.min(1,(now-startAt)/duration);
-    let eased=1-Math.pow(1-t,4);
-    let phase=startPhase+(endPhase-startPhase)*eased;
+    let elapsed=now-startAt,phase,tickProgress;
+    if(elapsed<spinMs){
+      let t=Math.min(1,elapsed/spinMs);
+      // Fast initial rotation with a long, visible coast into the selection.
+      let eased=1-Math.pow(1-t,3.15);
+      phase=startPhase+(overshoot-startPhase)*eased;
+      tickProgress=eased;
+    }else{
+      let u=Math.min(1,(elapsed-spinMs)/settleMs);
+      // Small inertial overshoot, then gently roll back into the lock point.
+      let eased=1-Math.pow(1-u,2.3);
+      phase=overshoot*(1-eased);
+      tickProgress=1+u*.08;
+    }
     renderThemeWheel(phase,false);
-    let tick=Math.floor(eased*28);
-    if(tick!==lastTick&&t<.96){lastTick=tick;sweepTone(tick%8)}
-    if(t<1)requestAnimationFrame(frameSpin);
+    let tick=Math.floor(tickProgress*34);
+    if(tick!==lastTick&&elapsed<spinMs+settleMs*.82){lastTick=tick;sweepTone(tick%8)}
+    if(elapsed<spinMs+settleMs)requestAnimationFrame(frameSpin);
     else{
       renderThemeWheel(0,true);
       cards.forEach((card,n)=>{
@@ -369,7 +382,7 @@ function runTheme(){
     }
   }
   requestAnimationFrame(frameSpin);
-  later(()=>runDifficulty(),4650);
+  later(()=>runDifficulty(),5950);
 }
 function runDifficulty(){
   $("theme").classList.remove("on");$("difficulty").classList.add("on");
@@ -404,6 +417,23 @@ function finishDifficulty(target){
   later(()=>$("readyflash").classList.add("show"),650);
   later(()=>showSummary(target),1750);
 }
+function animateOnlineCounter(target){
+  let el=$("summaryonlinecount"),box=$("summaryonline");
+  if(!el)return;
+  target=Math.max(0,Math.round(Number(target)||0));
+  let t0=performance.now(),dur=950;
+  function step(now){
+    let p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*e);
+    if(p<1)requestAnimationFrame(step);
+    else{
+      el.textContent=target;
+      if(box){box.classList.remove("bump");void box.offsetWidth;box.classList.add("bump")}
+      tone(840,.07,.008,"triangle");later(()=>tone(1160,.1,.009,"sine"),70);
+    }
+  }
+  requestAnimationFrame(step);
+}
 function showSummary(target){
   let l=LEVELS[target];
   $("difficulty").classList.remove("on");
@@ -412,6 +442,8 @@ function showSummary(target){
   $("summarystars").textContent="★".repeat(l.reward);
   $("summaryreward").textContent="+"+l.reward+" ★ CORRECT ANSWER";
   $("summary").classList.add("on");
+  $("summaryonlinecount").textContent="0";
+  later(()=>animateOnlineCounter(gamePlayers),380);
   lockTone();
   if(embedded){
     later(()=>parent.postMessage({type:"qgm-v2-transition-complete"},"*"),2200);
