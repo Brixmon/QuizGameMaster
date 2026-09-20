@@ -371,8 +371,7 @@ function livePresenceRows(){
 }
 function currentOnlinePlayerCount(){
   if(mode==="dev")return 4;
-  let roomCountFresh=liveViewerCountAt>0&&(Date.now()-liveViewerCountAt)<30000;
-  return roomCountFresh?Math.max(0,Number(liveViewerCount)||0):livePresenceUsers.size;
+  return liveViewerCountAt>0?Math.max(0,Number(liveViewerCount)||0):0;
 }
 function reconcileLivePresenceToViewerCount(viewers){
   viewers=Math.max(0,Math.round(Number(viewers)||0));
@@ -386,9 +385,9 @@ function reconcileLivePresenceToViewerCount(viewers){
 function renderLiveOnlineBar(){
   let bar=$("liveonline"),track=$("liveonlinetrack"),win=$("liveonlinewin"),countEl=$("liveonlinecount");
   if(!bar||!track||!win||!countEl)return;
-  let rows=livePresenceRows(),count=currentOnlinePlayerCount();
-  countEl.textContent=String(count);
-  if(mode!=="live"||(count<=0&&!rows.length)){
+  let rows=livePresenceRows(),count=currentOnlinePlayerCount(),verified=liveViewerCountAt>0;
+  countEl.textContent=verified?String(count):"…";
+  if(mode!=="live"||(verified&&count<=0&&!rows.length)){
     bar.classList.remove("show","marquee");track.innerHTML="";return;
   }
   bar.classList.add("show");
@@ -2101,6 +2100,7 @@ function findLiveUserDeep(v,depth=0){
 }
 function knownLiveKeyForUser(user){
   let key=liveUserKey(user),name=liveUserName(user).toLowerCase();
+  if(key&&!String(key).startsWith("nick:"))return key;
   if(key&&liveKnownUsers.has(key))return key;
   if(name&&name!=="unknown"){
     for(let [knownKey,p] of liveKnownUsers){
