@@ -36,7 +36,7 @@ body{display:grid;place-items:center}
 .themezone:before,.themezone:after{content:"";position:absolute;top:0;bottom:0;width:10%;z-index:20;pointer-events:none}
 .themezone:before{left:0;background:linear-gradient(90deg,#06121f,transparent)}
 .themezone:after{right:0;background:linear-gradient(-90deg,#06121f,transparent)}
-.themewheelring{position:absolute;left:50%;top:17.2vh;width:38vh;height:27vh;transform:translate(-50%,-50%);border:1px solid #53dfff14;border-radius:50%;box-shadow:inset 0 0 2vh #299cff08;pointer-events:none}
+.themewheelring{position:absolute;left:50%;top:17.2vh;width:76vh;height:36vh;transform:translate(-50%,-50%);border:1px solid #53dfff14;border-radius:50%;box-shadow:inset 0 0 2vh #299cff08;pointer-events:none}
 .themewheelring:before,.themewheelring:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #53dfff0b}
 .themewheelring:before{width:86%;height:72%}.themewheelring:after{width:66%;height:50%}
 .themetrack{position:absolute;inset:0;will-change:transform;transform-style:preserve-3d}
@@ -121,6 +121,10 @@ body{display:grid;place-items:center}
 .summarystars .rewardtxt{margin-top:.5vh;color:#fff;font-size:.95vh;font-weight:1000;letter-spacing:.08em}
 .summaryready{text-align:center;margin-top:2.25vh;font-size:1.55vh;font-weight:1000;letter-spacing:.09em;color:#dff7ff}
 .summaryready b{color:#79e3ff}
+.summaryonline{margin:1.15vh auto 0;width:max-content;display:flex;align-items:center;gap:.55vh;padding:.55vh .95vh;border-radius:1.15vh;border:1px solid #64e8b755;background:#071a1ae6;box-shadow:0 0 1.2vh #45e6a422;color:#bfffe8;font-size:.74vh;font-weight:1000;letter-spacing:.1em}
+.summaryonline .dot{width:.68vh;height:.68vh;border-radius:50%;background:#59f0a7;box-shadow:0 0 .9vh #59f0a7;animation:onlinePulse 1.4s ease-in-out infinite}
+.summaryonline b{color:#fff;font-size:.95vh}
+@keyframes onlinePulse{50%{opacity:.45;transform:scale(.78)}}
 .summaryscreen.on .summarywrap{animation:summaryIn .55s ease both}
 @keyframes summaryIn{from{opacity:0;transform:translateY(.7vh) scale(.97)}to{opacity:1;transform:translateY(-.6vh) scale(1)}}
 .controls{position:absolute;z-index:50;left:4%;right:4%;bottom:1.1vh;display:flex;gap:.5vh;flex-wrap:wrap;justify-content:center}
@@ -200,6 +204,7 @@ body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
             </div>
           </div>
         </div>
+        <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">4</b></div>
         <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
       </div>
     </section>
@@ -233,6 +238,7 @@ const embedded=params.get("embed")==="1";
 const gameRound=Math.max(1,Number(params.get("round"))||2);
 const gameQuestion=Math.max(1,Number(params.get("question"))||6);
 const gameTotal=Math.max(1,Number(params.get("total"))||20);
+const gamePlayers=Math.max(0,Number(params.get("players"))||4);
 const requestedTheme=String(params.get("theme")||"flags").toLowerCase();
 const requestedLevel=String(params.get("level")||"pro").toLowerCase();
 let preset={
@@ -245,6 +251,7 @@ function applyGameMeta(){
   $("intro-question").innerHTML=String(gameQuestion).padStart(2,"0")+"<b>OF "+gameTotal+"</b>";
   $("theme-roundpill").textContent="ROUND "+gameRound+" · QUESTION "+String(gameQuestion).padStart(2,"0")+"/"+gameTotal;
   $("summary-roundtitle").textContent="ROUND "+gameRound+" · QUESTION "+String(gameQuestion).padStart(2,"0")+"/"+gameTotal;
+  $("summaryonlinecount").textContent=gamePlayers;
 }
 function clearTimers(){timers.forEach(clearTimeout);timers=[]}
 function later(fn,ms){let t=setTimeout(fn,ms);timers.push(t);return t}
@@ -261,7 +268,7 @@ function sweepTone(n){tone(420+n*55,.045,.0045,"triangle")}
 function lockTone(){tone(720,.08,.008,"triangle");later(()=>tone(1040,.11,.011,"sine"),75);later(()=>tone(1480,.15,.012,"sine"),150)}
 function finalTone(reward){tone(620+reward*70,.08,.008,"triangle");later(()=>tone(940+reward*75,.12,.012,"sine"),90);later(()=>tone(1280+reward*80,.18,.012,"sine"),190)}
 function buildThemeTrack(){
-  const count=10;
+  const count=14;
   let seq=Array.from({length:count},(_,n)=>n===0?preset.theme:(n%2?"landmarks":"flags"));
   $("themetrack").innerHTML=seq.map((id,n)=>{
     let t=THEMES[id];
@@ -272,7 +279,7 @@ function buildThemeTrack(){
 function renderThemeWheel(phase,lock=false){
   let cards=[...$("themetrack").children],count=cards.length;
   let zone=$("theme").querySelector(".themezone"),cx=zone.clientWidth/2,cy=17.3*innerHeight/100;
-  let rx=Math.min(zone.clientWidth*.39,190),ry=Math.min(zone.clientHeight*.16,54);
+  let rx=Math.max(zone.clientWidth*.72,310),ry=Math.min(zone.clientHeight*.19,66);
   cards.forEach((card,n)=>{
     let angle=(n/count)*Math.PI*2+phase;
     let depth=(Math.cos(angle)+1)/2;
