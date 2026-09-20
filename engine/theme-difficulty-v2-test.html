@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>QuizGameMaster · Theme + Difficulty V2 Test</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#020911;--panel:#071824;--cyan:#58d9ff;--cyan2:#299cff;--gold:#ffd45e;
+  --muted:#91aabc;--white:#f6fbff;--green:#72f2a1
+}
+html,body{margin:0;width:100%;height:100%;background:#01060b;color:var(--white);font-family:Arial,sans-serif;overflow:hidden}
+body{display:grid;place-items:center}
+#app{position:relative;width:min(100vw,520px);height:100vh;overflow:hidden;background:
+  radial-gradient(circle at 50% 18%,#17466c 0,#0a2236 32%,#04101b 58%,#02070d 100%)}
+.bggrid{position:absolute;inset:0;opacity:.22;background-image:
+  linear-gradient(#59cfff0d 1px,transparent 1px),linear-gradient(90deg,#59cfff0d 1px,transparent 1px);
+  background-size:3.4vh 3.4vh;mask-image:linear-gradient(#000,transparent 78%)}
+.orbit{position:absolute;left:50%;top:21%;width:48vh;height:48vh;border:1px solid #62dfff12;border-radius:50%;transform:translate(-50%,-50%)}
+.orbit:before,.orbit:after{content:"";position:absolute;border:1px solid #62dfff0d;border-radius:50%;inset:7%}
+.orbit:after{inset:18%}
+.brand{position:absolute;top:1.5vh;left:1.7vh;font-size:.72vh;font-weight:1000;letter-spacing:.16em;color:#8cdcff88}
+.version{position:absolute;top:1.5vh;right:1.7vh;font-size:.68vh;font-weight:900;color:#ffffff55;letter-spacing:.08em}
+.stage{position:absolute;left:5%;right:5%;top:3.5%;bottom:29%;display:flex;align-items:center;justify-content:center}
+.safe{position:absolute;left:0;right:0;bottom:0;height:29%;border-top:1px dashed #ffffff10;color:#ffffff10;text-align:center;padding-top:1vh;font-size:.75vh;letter-spacing:.12em}
+.screen{position:absolute;inset:0;opacity:0;pointer-events:none;transform:scale(.985);transition:opacity .38s ease,transform .38s ease}
+.screen.on{opacity:1;pointer-events:auto;transform:none}
+.kicker{text-align:center;color:#75dfff;font-size:.76vh;font-weight:1000;letter-spacing:.19em}
+.title{text-align:center;margin:.35vh 0 .25vh;font-size:2.55vh;line-height:1;font-weight:1000;letter-spacing:.025em}
+.sub{text-align:center;color:var(--muted);font-size:.74vh;font-weight:900;letter-spacing:.09em}
+.roundpill{display:inline-flex;align-items:center;gap:.36vh;padding:.33vh .65vh;border:1px solid #65dfff38;border-radius:1vh;background:#061725c8;color:#9fdfff;font-size:.63vh;font-weight:1000;letter-spacing:.09em}
+.head{position:absolute;top:1vh;left:0;right:0;text-align:center}
+.head .roundpill{margin-top:.7vh}
+.themezone{position:absolute;left:-5%;right:-5%;top:11.5vh;height:38vh;overflow:hidden}
+.themezone:before,.themezone:after{content:"";position:absolute;top:0;bottom:0;width:14%;z-index:10;pointer-events:none}
+.themezone:before{left:0;background:linear-gradient(90deg,#06121f,transparent)}
+.themezone:after{right:0;background:linear-gradient(-90deg,#06121f,transparent)}
+.themetrack{position:absolute;top:5.1vh;left:50%;display:flex;gap:1.1vh;align-items:center;will-change:transform}
+.themecard{position:relative;flex:0 0 18.4vh;height:24.5vh;border-radius:2vh;border:1px solid #ffffff18;background:
+  linear-gradient(180deg,#0d304bdb,#071723ed);box-shadow:0 .8vh 2.2vh #0006;overflow:hidden;
+  transform:scale(.82);opacity:.42;transition:border-color .35s,box-shadow .35s,filter .35s}
+.themecard:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,#48d8ff16,transparent 44%,#ffd45e0c)}
+.themecard .icon{position:absolute;left:50%;top:4vh;transform:translateX(-50%);width:8.2vh;height:8.2vh;border-radius:50%;display:grid;place-items:center;
+  font-size:4.6vh;background:#061522;border:1px solid #65dfff45;box-shadow:inset 0 0 2vh #299cff15,0 0 1.2vh #299cff0d}
+.themecard .label{position:absolute;left:1vh;right:1vh;top:14vh;text-align:center;font-size:1.52vh;font-weight:1000;letter-spacing:.06em}
+.themecard .desc{position:absolute;left:1vh;right:1vh;top:17.2vh;text-align:center;color:#89a8bb;font-size:.67vh;font-weight:900;letter-spacing:.08em;line-height:1.35}
+.themecard .tag{position:absolute;bottom:1.15vh;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.28vh .58vh;border-radius:.7vh;background:#42cfff0c;border:1px solid #4ddaff33;color:#77ddff;font-size:.58vh;font-weight:1000;letter-spacing:.12em}
+.themecard.selected{opacity:1;filter:none;border-color:#69e2ff88;box-shadow:0 0 1.7vh #299cff33,0 1vh 3vh #0007}
+.themecard.selected .icon{border-color:#8de9ff99;box-shadow:inset 0 0 2vh #299cff22,0 0 1.5vh #4adfff44}
+.themecard.locked{animation:themeLock .72s cubic-bezier(.2,1.5,.3,1);border-color:#ffd45eaa;box-shadow:0 0 1.7vh #ffd45e3f,0 1vh 3vh #0007}
+.themecard.locked .tag{color:#ffe58a;border-color:#ffd45e66;background:#ffd45e12}
+@keyframes themeLock{0%{transform:scale(.9)}55%{transform:scale(1.09)}100%{transform:scale(1)}}
+.focusbracket{position:absolute;z-index:11;left:50%;top:3.8vh;width:20.6vh;height:27vh;transform:translateX(-50%);pointer-events:none;border-radius:2.25vh}
+.focusbracket:before,.focusbracket:after{content:"";position:absolute;inset:0;border-radius:2.25vh}
+.focusbracket:before{border:1px solid #51dfff28}
+.focusbracket:after{inset:-.35vh;border:1px solid #51dfff10}
+.lockline{position:absolute;left:50%;top:34.4vh;transform:translateX(-50%);min-width:14vh;text-align:center;opacity:0}
+.lockline.show{animation:lockIn .48s ease forwards}
+.lockline b{display:block;color:#ffd45e;font-size:.78vh;letter-spacing:.17em}
+.lockline span{display:block;margin-top:.23vh;color:#91aabc;font-size:.59vh;font-weight:900;letter-spacing:.09em}
+@keyframes lockIn{from{opacity:0;transform:translate(-50%,.5vh)}to{opacity:1;transform:translate(-50%,0)}}
+.diffscreen{padding-top:1vh}
+.diffhead{text-align:center;margin-top:.3vh}
+.categorychip{display:inline-flex;align-items:center;gap:.4vh;margin-top:.72vh;padding:.42vh .75vh;border-radius:1vh;border:1px solid #5ee2ff4d;background:#061725d9;color:#bcecff;font-size:.67vh;font-weight:1000;letter-spacing:.1em}
+.categorychip .mini{font-size:1.15vh}
+.diffmeter{position:absolute;left:7%;right:7%;top:15.3vh;height:32vh;padding:.6vh}
+.diffrail{position:absolute;left:50%;top:1.3vh;bottom:1.3vh;width:.16vh;background:linear-gradient(#3ad7ff22,#ffd45e88,#3ad7ff22);transform:translateX(-50%)}
+.diffscan{position:absolute;left:5%;right:5%;height:5.05vh;border-radius:1.25vh;border:1px solid #ffd45e88;background:#ffd45e0f;box-shadow:0 0 1.4vh #ffd45e33;opacity:0;transform:translateY(0);z-index:1}
+.levels{position:relative;z-index:2;display:flex;flex-direction:column;gap:.72vh}
+.level{height:5.05vh;display:grid;grid-template-columns:4.2vh 1fr auto;align-items:center;gap:.7vh;padding:.5vh .85vh;border-radius:1.15vh;border:1px solid #ffffff12;background:#071724b8;color:#7f9bad;transition:.22s}
+.level .emoji{width:3.25vh;height:3.25vh;display:grid;place-items:center;border-radius:.85vh;background:#ffffff08;font-size:1.55vh}
+.level .name{font-size:.96vh;font-weight:1000;letter-spacing:.08em}
+.level .hint{font-size:.55vh;font-weight:900;color:#718b9c;letter-spacing:.1em;margin-top:.12vh}
+.level .reward{font-size:.92vh;font-weight:1000;color:#7995a7}
+.level.hot{color:#fff;border-color:#68dcff77;background:#0a2a43e5;box-shadow:0 0 1vh #299cff20;transform:scale(1.018)}
+.level.hot .reward{color:#93e7ff}
+.level.final{color:#fff;border-color:#ffd45eaa;background:linear-gradient(90deg,#2c250dca,#0a2032ea);box-shadow:0 0 1.7vh #ffd45e44;transform:scale(1.035)}
+.level.final .reward{color:#ffd45e;font-size:1.13vh}
+.level.final .emoji{background:#ffd45e16;border:1px solid #ffd45e55;box-shadow:0 0 .9vh #ffd45e22}
+.resultcard{position:absolute;left:14%;right:14%;top:49.4vh;height:8.7vh;border-radius:1.45vh;border:1px solid #ffd45e55;background:#06131fdc;opacity:0;transform:translateY(.8vh) scale(.96);display:flex;align-items:center;justify-content:center;gap:1vh}
+.resultcard.show{animation:resultIn .62s cubic-bezier(.2,1.35,.3,1) forwards}
+.resultstar{font-size:3.4vh;color:#ffd45e;filter:drop-shadow(0 0 .9vh #ffd45e88)}
+.resultcopy b{display:block;font-size:1.1vh;color:#fff;letter-spacing:.1em}.resultcopy span{display:block;margin-top:.22vh;color:#ffd45e;font-size:.8vh;font-weight:1000;letter-spacing:.1em}
+@keyframes resultIn{to{opacity:1;transform:none}}
+.readyflash{position:absolute;left:0;right:0;top:59.7vh;text-align:center;opacity:0;font-size:1.65vh;font-weight:1000;letter-spacing:.08em}
+.readyflash.show{animation:readyIn .5s ease forwards}
+@keyframes readyIn{0%{opacity:0;transform:scale(.75)}65%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+.controls{position:absolute;z-index:50;left:4%;right:4%;bottom:1.1vh;display:flex;gap:.5vh;flex-wrap:wrap;justify-content:center}
+.controls button,.back{border:1px solid #62dfff42;background:#061522e8;color:#dff6ff;border-radius:.85vh;padding:.52vh .72vh;font-size:.64vh;font-weight:1000;letter-spacing:.06em}
+.controls button.active{border-color:#ffd45e88;color:#ffe58a;background:#ffd45e12}
+.back{position:absolute;z-index:50;top:1.1vh;left:1.1vh;text-decoration:none}
+.note{position:absolute;bottom:4.6vh;left:0;right:0;text-align:center;color:#ffffff33;font-size:.55vh;font-weight:900;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="bggrid"></div><div class="orbit"></div>
+  <a class="back" href="game.html">← BACK</a>
+  <div class="brand">QUIZGAME MASTER · DESIGN LAB</div><div class="version">V2 TRANSITION TEST</div>
+  <div class="stage">
+    <section id="theme" class="screen on">
+      <div class="head">
+        <div class="kicker">NEXT CHALLENGE</div>
+        <div class="title">CATEGORY DRAW</div>
+        <div class="sub">THE NEXT QUESTION IS LOADING</div>
+        <div class="roundpill">ROUND 2 · QUESTION 06/20</div>
+      </div>
+      <div class="themezone">
+        <div id="themetrack" class="themetrack"></div>
+        <div class="focusbracket"></div>
+        <div id="lockline" class="lockline"><b>CATEGORY LOCKED</b><span>DIFFICULTY SCAN INCOMING</span></div>
+      </div>
+    </section>
+
+    <section id="difficulty" class="screen diffscreen">
+      <div class="diffhead">
+        <div class="kicker">CHALLENGE LOCKED</div>
+        <div id="difftitle" class="title">DIFFICULTY SCAN</div>
+        <div class="sub">HOW MANY STARS IS THIS QUESTION WORTH?</div>
+        <div id="categorychip" class="categorychip"><span class="mini">🌍</span><span>FLAGS</span></div>
+      </div>
+      <div class="diffmeter">
+        <div class="diffrail"></div>
+        <div id="diffscan" class="diffscan"></div>
+        <div id="levels" class="levels"></div>
+      </div>
+      <div id="resultcard" class="resultcard"><div class="resultstar">★</div><div class="resultcopy"><b id="resultname">PRO LOCKED</b><span id="resultreward">CORRECT ANSWER · +3 ★</span></div></div>
+      <div id="readyflash" class="readyflash">GET READY...</div>
+    </section>
+  </div>
+
+  <div class="safe"><div>TIKTOK CHAT / INTERFACE SAFE ZONE</div></div>
+  <div class="note">STANDALONE PROTOTYPE · DOES NOT CHANGE THE GAME</div>
+  <div class="controls">
+    <button onclick="playPreset('flags','newbie',this)">FLAGS · NEWBIE</button>
+    <button class="active" onclick="playPreset('flags','pro',this)">FLAGS · PRO</button>
+    <button onclick="playPreset('landmarks','ninja',this)">LANDMARKS · NINJA</button>
+    <button onclick="playPreset('landmarks','master',this)">LANDMARKS · MASTER</button>
+    <button onclick="replay()">↻ REPLAY</button>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const THEMES={
+  flags:{label:"FLAGS",icon:"🌍",desc:"IDENTIFY THE COUNTRY",tag:"WORLD FLAGS"},
+  landmarks:{label:"LANDMARKS",icon:"🏛️",desc:"NAME THE PLACE",tag:"ICONIC PLACES"}
+};
+const LEVELS=[
+  {id:"newbie",emoji:"🌱",name:"NEWBIE",hint:"WARM-UP",reward:1},
+  {id:"rookie",emoji:"🎯",name:"ROOKIE",hint:"EASY",reward:2},
+  {id:"pro",emoji:"⚡",name:"PRO",hint:"CHALLENGE",reward:3},
+  {id:"ninja",emoji:"🥷",name:"NINJA",hint:"HARD",reward:4},
+  {id:"master",emoji:"👑",name:"MASTER",hint:"ELITE",reward:5}
+];
+let preset={theme:"flags",level:"pro"},timers=[],audio=null;
+function clearTimers(){timers.forEach(clearTimeout);timers=[]}
+function later(fn,ms){let t=setTimeout(fn,ms);timers.push(t);return t}
+function tone(f,d=.08,v=.01,type="sine"){
+  try{
+    audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.();
+    let o=audio.createOscillator(),g=audio.createGain(),now=audio.currentTime;
+    o.type=type;o.frequency.setValueAtTime(f,now);
+    g.gain.setValueAtTime(v,now);g.gain.exponentialRampToValueAtTime(.0001,now+d);
+    o.connect(g);g.connect(audio.destination);o.start(now);o.stop(now+d);
+  }catch(e){}
+}
+function sweepTone(n){tone(420+n*55,.045,.0045,"triangle")}
+function lockTone(){tone(720,.08,.008,"triangle");later(()=>tone(1040,.11,.011,"sine"),75);later(()=>tone(1480,.15,.012,"sine"),150)}
+function finalTone(reward){tone(620+reward*70,.08,.008,"triangle");later(()=>tone(940+reward*75,.12,.012,"sine"),90);later(()=>tone(1280+reward*80,.18,.012,"sine"),190)}
+function buildThemeTrack(){
+  const base=["landmarks","flags","landmarks","flags","landmarks","flags","landmarks"];
+  let target=preset.theme;
+  let seq=[...base,target,...base.slice(0,3)];
+  $("themetrack").innerHTML=seq.map((id,n)=>{
+    let t=THEMES[id];
+    return '<div class="themecard" data-i="'+n+'" data-theme="'+id+'"><div class="icon">'+t.icon+'</div><div class="label">'+t.label+'</div><div class="desc">'+t.desc+'</div><div class="tag">'+t.tag+'</div></div>';
+  }).join("");
+  return base.length;
+}
+function buildLevels(){
+  $("levels").innerHTML=LEVELS.map((l,n)=>
+    '<div id="level-'+n+'" class="level"><div class="emoji">'+l.emoji+'</div><div><div class="name">'+l.name+'</div><div class="hint">'+l.hint+'</div></div><div class="reward">+'+l.reward+' ★</div></div>'
+  ).join("");
+}
+function resetView(){
+  clearTimers();
+  $("theme").classList.add("on");$("difficulty").classList.remove("on");
+  $("lockline").classList.remove("show");$("resultcard").classList.remove("show");$("readyflash").classList.remove("show");
+  buildLevels();
+}
+function runTheme(){
+  resetView();
+  let targetIndex=buildThemeTrack(),track=$("themetrack");
+  let cards=[...track.children],cardW=cards[0].getBoundingClientRect().width,gap=parseFloat(getComputedStyle(track).gap)||0;
+  let zone=$("theme").getBoundingClientRect(),desired=zone.width/2;
+  track.style.transition="none";track.style.transform="translateX(0)";
+  cards.forEach(c=>c.classList.remove("selected","locked"));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    let centerOffset=targetIndex*(cardW+gap)+cardW/2;
+    let x=desired-centerOffset;
+    track.style.transition="transform 3.25s cubic-bezier(.08,.72,.08,1)";
+    track.style.transform="translateX("+x+"px)";
+  }));
+  let tick=0;
+  for(let ms=300;ms<3000;ms+=250){
+    later(()=>{sweepTone(tick++%8)},ms);
+  }
+  later(()=>{
+    cards[targetIndex].classList.add("selected","locked");$("lockline").classList.add("show");lockTone();
+  },3320);
+  later(()=>runDifficulty(),4300);
+}
+function runDifficulty(){
+  $("theme").classList.remove("on");$("difficulty").classList.add("on");
+  let t=THEMES[preset.theme],chip=$("categorychip");
+  chip.innerHTML='<span class="mini">'+t.icon+'</span><span>'+t.label+'</span>';
+  let target=LEVELS.findIndex(x=>x.id===preset.level);
+  let rows=[...document.querySelectorAll(".level")],scan=$("diffscan");
+  rows.forEach(r=>r.classList.remove("hot","final"));
+  scan.style.opacity="1";
+  scan.style.transition="none";scan.style.transform="translateY(0)";
+  $("resultcard").classList.remove("show");$("readyflash").classList.remove("show");
+  const sequence=[0,1,2,3,4,3,2,1,2,3,4,target];
+  let step=0;
+  function hop(){
+    rows.forEach(r=>r.classList.remove("hot"));
+    let ix=sequence[step],row=rows[ix];
+    row.classList.add("hot");
+    scan.style.transition="transform .14s cubic-bezier(.2,.8,.25,1)";
+    scan.style.transform="translateY("+(ix*5.77)+"vh)";
+    sweepTone(ix);
+    step++;
+    if(step<sequence.length)later(hop,150);
+    else later(()=>finishDifficulty(target),170);
+  }
+  later(hop,330);
+}
+function finishDifficulty(target){
+  let rows=[...document.querySelectorAll(".level")],l=LEVELS[target];
+  rows.forEach((r,n)=>{r.classList.remove("hot");if(n!==target)r.style.opacity=".35"});
+  rows[target].style.opacity="1";rows[target].classList.add("final");
+  $("diffscan").style.opacity="0";
+  $("resultname").textContent=l.emoji+" "+l.name+" LOCKED";
+  $("resultreward").textContent="CORRECT ANSWER · +"+l.reward+" ★";
+  $("resultcard").classList.add("show");finalTone(l.reward);
+  later(()=>$("readyflash").classList.add("show"),650);
+}
+function replay(){runTheme()}
+function playPreset(theme,level,btn){
+  preset={theme,level};
+  document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
+  btn?.classList.add("active");
+  runTheme();
+}
+buildLevels();
+later(runTheme,350);
+document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){}},{once:true});
+</script>
+</body></html>
