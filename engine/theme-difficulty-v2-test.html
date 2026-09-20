@@ -32,14 +32,17 @@ body{display:grid;place-items:center}
 .roundpill{display:inline-flex;align-items:center;gap:.36vh;padding:.33vh .65vh;border:1px solid #65dfff38;border-radius:1vh;background:#061725c8;color:#9fdfff;font-size:.63vh;font-weight:1000;letter-spacing:.09em}
 .head{position:absolute;top:1vh;left:0;right:0;text-align:center}
 .head .roundpill{margin-top:.7vh}
-.themezone{position:absolute;left:-5%;right:-5%;top:11.5vh;height:38vh;overflow:hidden}
-.themezone:before,.themezone:after{content:"";position:absolute;top:0;bottom:0;width:14%;z-index:10;pointer-events:none}
+.themezone{position:absolute;left:-5%;right:-5%;top:11.5vh;height:38vh;overflow:hidden;perspective:1100px}
+.themezone:before,.themezone:after{content:"";position:absolute;top:0;bottom:0;width:10%;z-index:20;pointer-events:none}
 .themezone:before{left:0;background:linear-gradient(90deg,#06121f,transparent)}
 .themezone:after{right:0;background:linear-gradient(-90deg,#06121f,transparent)}
-.themetrack{position:absolute;top:5.1vh;left:0;display:flex;gap:1.1vh;align-items:center;will-change:transform}
-.themecard{position:relative;flex:0 0 18.4vh;height:24.5vh;border-radius:2vh;border:1px solid #ffffff18;background:
+.themewheelring{position:absolute;left:50%;top:17.2vh;width:38vh;height:27vh;transform:translate(-50%,-50%);border:1px solid #53dfff14;border-radius:50%;box-shadow:inset 0 0 2vh #299cff08;pointer-events:none}
+.themewheelring:before,.themewheelring:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #53dfff0b}
+.themewheelring:before{width:86%;height:72%}.themewheelring:after{width:66%;height:50%}
+.themetrack{position:absolute;inset:0;will-change:transform;transform-style:preserve-3d}
+.themecard{position:absolute;width:18.4vh;height:24.5vh;border-radius:2vh;border:1px solid #ffffff18;background:
   linear-gradient(180deg,#0d304bdb,#071723ed);box-shadow:0 .8vh 2.2vh #0006;overflow:hidden;
-  transform:scale(.82);opacity:.42;transition:border-color .35s,box-shadow .35s,filter .35s}
+  transform:translate(-50%,-50%) scale(.82);opacity:.42;transition:border-color .35s,box-shadow .35s,filter .35s;transform-origin:center}
 .themecard:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,#48d8ff16,transparent 44%,#ffd45e0c)}
 .themecard .icon{position:absolute;left:50%;top:4vh;transform:translateX(-50%);width:8.2vh;height:8.2vh;border-radius:50%;display:grid;place-items:center;
   font-size:4.6vh;background:#061522;border:1px solid #65dfff45;box-shadow:inset 0 0 2vh #299cff15,0 0 1.2vh #299cff0d}
@@ -48,7 +51,7 @@ body{display:grid;place-items:center}
 .themecard .tag{position:absolute;bottom:1.15vh;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.28vh .58vh;border-radius:.7vh;background:#42cfff0c;border:1px solid #4ddaff33;color:#77ddff;font-size:.58vh;font-weight:1000;letter-spacing:.12em}
 .themecard.selected{opacity:1;filter:none;border-color:#69e2ff88;box-shadow:0 0 1.7vh #299cff33,0 1vh 3vh #0007}
 .themecard.selected .icon{border-color:#8de9ff99;box-shadow:inset 0 0 2vh #299cff22,0 0 1.5vh #4adfff44}
-.themecard.locked{z-index:6;transform:scale(1.08);border-color:#ffd45ed9;box-shadow:0 0 .7vh #fff2b8aa,0 0 2.1vh #ffd45e66,0 1.2vh 3.2vh #0008;filter:brightness(1.08) saturate(1.08);transition:transform .48s cubic-bezier(.2,1.45,.3,1),border-color .35s,box-shadow .35s,filter .35s}
+.themecard.locked{z-index:60;border-color:#ffd45ed9;box-shadow:0 0 .7vh #fff2b8aa,0 0 2.1vh #ffd45e66,0 1.2vh 3.2vh #0008;filter:brightness(1.08) saturate(1.08);transition:border-color .35s,box-shadow .35s,filter .35s}
 .themecard.locked .icon{transform:translateX(-50%) scale(1.08);border-color:#ffd45e99;box-shadow:inset 0 0 2vh #ffd45e1c,0 0 1.45vh #ffd45e55}
 .themecard.locked .tag{color:#ffe58a;border-color:#ffd45e77;background:#ffd45e14}
 .themecard.dimmed{opacity:.18;filter:saturate(.55) brightness(.72)}
@@ -76,19 +79,22 @@ body{display:grid;place-items:center}
 .diffgrid{position:absolute;left:2.5%;right:2.5%;top:10.1vh;height:35.2vh;display:grid;grid-template-columns:19.3vh 1fr;gap:1.25vh;align-items:center}
 .carryframe{position:relative;width:19.3vh;height:27.4vh;border-radius:2.25vh;border:1px solid #ffd45e88;box-shadow:inset 0 0 1.6vh #ffd45e12,0 0 1.9vh #ffd45e2c;display:grid;place-items:center}
 .carryframe:after{content:"CATEGORY LOCKED";position:absolute;left:50%;bottom:-1.8vh;transform:translateX(-50%);white-space:nowrap;color:#ffd45e;font-size:.58vh;font-weight:1000;letter-spacing:.14em}
-.carryframe .themecard{position:relative;flex:none;width:18.4vh;height:24.5vh;opacity:1;transform:scale(.94);margin:0}
-.carryframe .themecard.locked{transform:scale(.94);animation:none}
-.diffmeter{position:relative;height:32vh;padding:.5vh 0}
-.diffscan{position:absolute;left:-.35vh;right:-.35vh;height:5.05vh;border-radius:1.25vh;border:1px solid #68dcff88;background:#42cfff0d;box-shadow:0 0 1.3vh #299cff26;opacity:0;transform:translateY(0);z-index:1}
-.levels{position:relative;z-index:2;display:flex;flex-direction:column;gap:.72vh}
-.level{height:5.05vh;display:grid;grid-template-columns:3.55vh 1fr auto;align-items:center;gap:.55vh;padding:.45vh .65vh;border-radius:1.15vh;border:1px solid #ffffff12;background:#071724c7;color:#7f9bad;transition:.22s}
+.carryframe .themecard{position:relative;left:auto!important;top:auto!important;flex:none;width:18.4vh;height:24.5vh;opacity:1!important;transform:scale(.94)!important;margin:0;z-index:auto!important}
+.carryframe .themecard.locked{transform:scale(.94)!important;animation:none}
+.diffmeter{position:relative;height:32vh;padding:.5vh 0;overflow:hidden;perspective:900px}
+.diffwheelring{position:absolute;left:50%;top:50%;width:23vh;height:29vh;transform:translate(-50%,-50%);border:1px solid #53dfff14;border-radius:50%;box-shadow:inset 0 0 1.5vh #299cff08;pointer-events:none}
+.diffwheelring:before,.diffwheelring:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #53dfff0a}
+.diffwheelring:before{width:76%;height:88%}.diffwheelring:after{width:52%;height:72%}
+.diffscan{position:absolute;left:3%;right:3%;top:50%;height:6.2vh;margin-top:-3.1vh;border-radius:1.3vh;border:1px solid #ffd45e66;background:#ffd45e0a;box-shadow:0 0 1.4vh #ffd45e22;opacity:.85;z-index:2;pointer-events:none}
+.levels{position:absolute;inset:0;z-index:3;transform-style:preserve-3d}
+.level{position:absolute;left:50%;top:50%;width:94%;height:5.4vh;display:grid;grid-template-columns:3.55vh 1fr auto;align-items:center;gap:.55vh;padding:.45vh .65vh;border-radius:1.15vh;border:1px solid #ffffff12;background:#071724e8;color:#7f9bad;transition:border-color .22s,background .22s,box-shadow .22s,color .22s;transform-origin:center}
 .level .emoji{width:2.9vh;height:2.9vh;display:grid;place-items:center;border-radius:.78vh;background:#ffffff08;font-size:1.38vh}
 .level .name{font-size:.88vh;font-weight:1000;letter-spacing:.07em}
 .level .hint{font-size:.51vh;font-weight:900;color:#718b9c;letter-spacing:.09em;margin-top:.1vh}
 .level .reward{font-size:1.38vh;font-weight:1000;color:#8fa9ba;letter-spacing:.01em;text-shadow:0 0 .8vh transparent;transition:.2s}
-.level.hot{color:#fff;border-color:#68dcff77;background:#0a2a43e5;box-shadow:0 0 1vh #299cff20;transform:scale(1.018)}
+.level.hot{color:#fff;border-color:#68dcff77;background:#0a2a43e5;box-shadow:0 0 1vh #299cff20}
 .level.hot .reward{color:#a9ecff;text-shadow:0 0 .8vh #299cff55}
-.level.final{color:#fff;border-color:#ffd45eaa;background:linear-gradient(90deg,#2c250dca,#0a2032ea);box-shadow:0 0 1.7vh #ffd45e44;transform:scale(1.035)}
+.level.final{color:#fff;border-color:#ffd45eaa;background:linear-gradient(90deg,#2c250dca,#0a2032ea);box-shadow:0 0 1.7vh #ffd45e44}
 .level.final .reward{color:#ffd45e;font-size:1.68vh;text-shadow:0 0 .9vh #ffd45e77}
 .level.final .emoji{background:#ffd45e16;border:1px solid #ffd45e55;box-shadow:0 0 .9vh #ffd45e22}
 .resultcard{position:absolute;left:19%;right:8%;top:47vh;height:8.9vh;border-radius:1.45vh;border:1px solid #ffd45e55;background:#06131fdc;opacity:0;transform:translateY(.8vh) scale(.96);display:flex;align-items:center;justify-content:center;gap:1vh}
@@ -104,8 +110,8 @@ body{display:grid;place-items:center}
 .summaryhead{text-align:center}
 .summarygrid{margin-top:2.2vh;display:grid;grid-template-columns:19.8vh 1fr;gap:1.35vh;align-items:center}
 .summarytheme{height:28.2vh;border-radius:2.3vh;border:1px solid #ffd45e88;box-shadow:inset 0 0 1.5vh #ffd45e10,0 0 2vh #ffd45e2b;display:grid;place-items:center}
-.summarytheme .themecard{position:relative;flex:none;width:18.4vh;height:24.5vh;opacity:1;transform:scale(.94);margin:0}
-.summarytheme .themecard.locked{transform:scale(.94);animation:none}
+.summarytheme .themecard{position:relative;left:auto!important;top:auto!important;flex:none;width:18.4vh;height:24.5vh;opacity:1!important;transform:scale(.94)!important;margin:0;z-index:auto!important}
+.summarytheme .themecard.locked{transform:scale(.94)!important;animation:none}
 .summarydiff{display:flex;flex-direction:column;gap:.9vh}
 .summarylevel{min-height:7.3vh;border-radius:1.25vh;border:1px solid #ffd45e99;background:linear-gradient(90deg,#2c250dcc,#0a2032f0);box-shadow:0 0 1.7vh #ffd45e33;padding:.8vh;display:flex;align-items:center;gap:.7vh}
 .summarylevel .bigemoji{font-size:2.4vh}.summarylevel .copy b{display:block;font-size:1.05vh;letter-spacing:.08em}.summarylevel .copy span{display:block;color:#a6bdca;font-size:.58vh;font-weight:900;letter-spacing:.1em;margin-top:.12vh}
@@ -128,7 +134,7 @@ body{display:grid;place-items:center}
 <div id="app">
   <div class="bggrid"></div><div class="orbit"></div>
   <a class="back" href="game.html">← BACK</a>
-  <div class="brand">QUIZGAME MASTER · DESIGN LAB</div><div class="version">V2 TRANSITION TEST</div>
+  <div class="brand">QUIZGAME MASTER · DESIGN LAB</div><div class="version">V2 WHEEL TRANSITION TEST</div>
   <div class="stage">
     <section id="intro" class="screen introscreen on">
       <div class="introcore">
@@ -148,6 +154,7 @@ body{display:grid;place-items:center}
         <div class="roundpill">ROUND 2 · QUESTION 06/20</div>
       </div>
       <div class="themezone">
+        <div class="themewheelring"></div>
         <div id="themetrack" class="themetrack"></div>
         <div id="focusbracket" class="focusbracket"></div>
         <div id="lockline" class="lockline"><b>CATEGORY LOCKED</b><span>DIFFICULTY SCAN INCOMING</span></div>
@@ -163,6 +170,7 @@ body{display:grid;place-items:center}
       <div class="diffgrid">
         <div id="carryframe" class="carryframe"></div>
         <div class="diffmeter">
+          <div class="diffwheelring"></div>
           <div id="diffscan" class="diffscan"></div>
           <div id="levels" class="levels"></div>
         </div>
@@ -233,19 +241,60 @@ function sweepTone(n){tone(420+n*55,.045,.0045,"triangle")}
 function lockTone(){tone(720,.08,.008,"triangle");later(()=>tone(1040,.11,.011,"sine"),75);later(()=>tone(1480,.15,.012,"sine"),150)}
 function finalTone(reward){tone(620+reward*70,.08,.008,"triangle");later(()=>tone(940+reward*75,.12,.012,"sine"),90);later(()=>tone(1280+reward*80,.18,.012,"sine"),190)}
 function buildThemeTrack(){
-  const base=["landmarks","flags","landmarks","flags","landmarks","flags","landmarks"];
-  let target=preset.theme;
-  let seq=[...base,target,...base.slice(0,3)];
+  const count=10;
+  let seq=Array.from({length:count},(_,n)=>n===0?preset.theme:(n%2?"landmarks":"flags"));
   $("themetrack").innerHTML=seq.map((id,n)=>{
     let t=THEMES[id];
     return '<div class="themecard" data-i="'+n+'" data-theme="'+id+'"><div class="icon">'+t.icon+'</div><div class="label">'+t.label+'</div><div class="desc">'+t.desc+'</div><div class="tag">'+t.tag+'</div></div>';
   }).join("");
-  return base.length;
+  return 0;
+}
+function renderThemeWheel(phase,lock=false){
+  let cards=[...$("themetrack").children],count=cards.length;
+  let zone=$("theme").querySelector(".themezone"),cx=zone.clientWidth/2,cy=17.3*innerHeight/100;
+  let rx=Math.min(zone.clientWidth*.39,190),ry=Math.min(zone.clientHeight*.16,54);
+  cards.forEach((card,n)=>{
+    let angle=(n/count)*Math.PI*2+phase;
+    let depth=(Math.cos(angle)+1)/2;
+    let x=cx+Math.sin(angle)*rx;
+    let y=cy+(1-Math.cos(angle))*ry*.72;
+    let scale=.48+depth*.58;
+    let opacity=.16+depth*.84;
+    card.style.left=x+"px";
+    card.style.top=y+"px";
+    card.style.opacity=opacity;
+    card.style.zIndex=String(Math.round(10+depth*40));
+    card.style.filter="brightness("+(0.55+depth*.55)+") saturate("+(0.65+depth*.45)+")";
+    card.style.transform="translate(-50%,-50%) scale("+scale+") rotateY("+(-Math.sin(angle)*24)+"deg)";
+    card.classList.toggle("selected",depth>.94);
+    if(!lock)card.classList.remove("locked","dimmed");
+  });
 }
 function buildLevels(){
   $("levels").innerHTML=LEVELS.map((l,n)=>
     '<div id="level-'+n+'" class="level"><div class="emoji">'+l.emoji+'</div><div><div class="name">'+l.name+'</div><div class="hint">'+l.hint+'</div></div><div class="reward">+'+l.reward+' ★</div></div>'
   ).join("");
+}
+function renderDifficultyWheel(phase,target,lock=false){
+  let rows=[...document.querySelectorAll(".level")],count=rows.length;
+  let box=$("levels").getBoundingClientRect();
+  let cy=box.height/2,ry=Math.min(box.height*.39,118);
+  rows.forEach((row,n)=>{
+    let angle=((n-target)/count)*Math.PI*2+phase;
+    let depth=(Math.cos(angle)+1)/2;
+    let y=cy+Math.sin(angle)*ry;
+    let xShift=(1-Math.cos(angle))*8;
+    let scale=.54+depth*.54;
+    let opacity=.18+depth*.82;
+    row.style.left="50%";
+    row.style.top=y+"px";
+    row.style.opacity=opacity;
+    row.style.zIndex=String(Math.round(10+depth*40));
+    row.style.filter="brightness("+(0.58+depth*.5)+") saturate("+(0.68+depth*.38)+")";
+    row.style.transform="translate(calc(-50% + "+xShift+"px),-50%) scale("+scale+") rotateX("+(Math.sin(angle)*26)+"deg)";
+    row.classList.toggle("hot",depth>.94&&!lock);
+    row.classList.toggle("final",depth>.94&&lock);
+  });
 }
 function resetView(){
   clearTimers();
@@ -254,7 +303,8 @@ function resetView(){
   $("lockline").classList.remove("show");$("resultcard").classList.remove("show");$("readyflash").classList.remove("show");
   $("carryframe").innerHTML="";$("summarytheme").innerHTML="";$("summarylevel").innerHTML="";
   buildLevels();
-  document.querySelectorAll(".level").forEach(r=>r.style.opacity="1");
+  renderThemeWheel(0,false);
+  renderDifficultyWheel(0,LEVELS.findIndex(x=>x.id===preset.level),false);
 }
 function selectedThemeCardHtml(){
   let t=THEMES[preset.theme];
@@ -268,81 +318,59 @@ function startSequence(){
 }
 function runTheme(){
   $("intro").classList.remove("on");$("summary").classList.remove("on");$("difficulty").classList.remove("on");$("theme").classList.add("on");
-  let targetIndex=buildThemeTrack(),track=$("themetrack");
-  let cards=[...track.children],selected=cards[targetIndex],frame=$("focusbracket"),zone=$("theme").querySelector(".themezone");
-  track.style.transition="none";track.style.transform="translateX(0)";
-  cards.forEach(c=>c.classList.remove("selected","locked","dimmed"));
-  frame.classList.remove("locked");
+  let targetIndex=buildThemeTrack(),cards=[...$("themetrack").children],frame=$("focusbracket");
+  frame.classList.remove("locked");$("lockline").classList.remove("show");
 
-  function targetTranslate(){
-    let zoneCenter=zone.clientWidth/2;
-    let selectedCenter=selected.offsetLeft+selected.offsetWidth/2;
-    return zoneCenter-selectedCenter;
-  }
-
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    track.style.transition="transform 3.25s cubic-bezier(.08,.72,.08,1)";
-    track.style.transform="translate3d("+targetTranslate()+"px,0,0)";
-  }));
-
-  let tick=0;
-  for(let ms=300;ms<3000;ms+=250){
-    later(()=>{sweepTone(tick++%8)},ms);
-  }
-
-  function snapAndLock(){
-    let sr=selected.getBoundingClientRect(),fr=frame.getBoundingClientRect();
-    let delta=(fr.left+fr.width/2)-(sr.left+sr.width/2);
-
-    if(Math.abs(delta)>1.5){
-      let computed=getComputedStyle(track).transform;
-      let m=computed&&computed!=="none"?new DOMMatrixReadOnly(computed):new DOMMatrixReadOnly();
-      let currentX=Number.isFinite(m.m41)?m.m41:0;
-      track.style.transition="transform .28s cubic-bezier(.2,.8,.25,1)";
-      track.style.transform="translate3d("+(currentX+delta)+"px,0,0)";
-      later(snapAndLock,320);
-      return;
+  let duration=3450,startPhase=Math.PI*2*4.35,endPhase=0,startAt=performance.now(),lastTick=-1;
+  function frameSpin(now){
+    let t=Math.min(1,(now-startAt)/duration);
+    let eased=1-Math.pow(1-t,4);
+    let phase=startPhase+(endPhase-startPhase)*eased;
+    renderThemeWheel(phase,false);
+    let tick=Math.floor(eased*28);
+    if(tick!==lastTick&&t<.96){lastTick=tick;sweepTone(tick%8)}
+    if(t<1)requestAnimationFrame(frameSpin);
+    else{
+      renderThemeWheel(0,true);
+      cards.forEach((card,n)=>{
+        card.classList.toggle("dimmed",n!==targetIndex);
+        if(n===targetIndex)card.classList.add("locked","selected");
+      });
+      frame.classList.add("locked");
+      $("lockline").classList.add("show");
+      lockTone();
     }
-
-    cards.forEach((card,n)=>card.classList.toggle("dimmed",n!==targetIndex));
-    selected.classList.add("selected","locked");
-    frame.classList.add("locked");
-    $("lockline").classList.add("show");
-    lockTone();
   }
-
-  later(snapAndLock,3360);
-  later(()=>runDifficulty(),4620);
+  requestAnimationFrame(frameSpin);
+  later(()=>runDifficulty(),4650);
 }
 function runDifficulty(){
   $("theme").classList.remove("on");$("difficulty").classList.add("on");
   $("carryframe").innerHTML=selectedThemeCardHtml();
   let target=LEVELS.findIndex(x=>x.id===preset.level);
-  let rows=[...document.querySelectorAll(".level")],scan=$("diffscan");
-  rows.forEach(r=>r.classList.remove("hot","final"));
-  scan.style.opacity="1";
-  scan.style.transition="none";scan.style.transform="translateY(0)";
   $("resultcard").classList.remove("show");$("readyflash").classList.remove("show");
-  const sequence=[0,1,2,3,4,3,2,1,2,3,4,target];
-  let step=0;
-  function hop(){
-    rows.forEach(r=>r.classList.remove("hot"));
-    let ix=sequence[step],row=rows[ix];
-    row.classList.add("hot");
-    scan.style.transition="transform .14s cubic-bezier(.2,.8,.25,1)";
-    scan.style.transform="translateY("+(ix*5.77)+"vh)";
-    sweepTone(ix);
-    step++;
-    if(step<sequence.length)later(hop,150);
-    else later(()=>finishDifficulty(target),170);
+  buildLevels();
+
+  let duration=2650,startPhase=Math.PI*2*5.4,endPhase=0,startAt=performance.now(),lastTick=-1;
+  function spin(now){
+    let t=Math.min(1,(now-startAt)/duration);
+    let eased=1-Math.pow(1-t,4);
+    let phase=startPhase+(endPhase-startPhase)*eased;
+    renderDifficultyWheel(phase,target,false);
+    let tick=Math.floor(eased*34);
+    if(tick!==lastTick&&t<.97){lastTick=tick;sweepTone((tick+target)%5)}
+    if(t<1)requestAnimationFrame(spin);
+    else{
+      renderDifficultyWheel(0,target,true);
+      later(()=>finishDifficulty(target),240);
+    }
   }
-  later(hop,330);
+  requestAnimationFrame(spin);
 }
 function finishDifficulty(target){
   let rows=[...document.querySelectorAll(".level")],l=LEVELS[target];
-  rows.forEach((r,n)=>{r.classList.remove("hot");if(n!==target)r.style.opacity=".35"});
-  rows[target].style.opacity="1";rows[target].classList.add("final");
-  $("diffscan").style.opacity="0";
+  renderDifficultyWheel(0,target,true);
+  $("diffscan").style.opacity=".95";
   $("resultname").textContent=l.emoji+" "+l.name+" LOCKED";
   $("resultreward").textContent="CORRECT ANSWER · +"+l.reward+" ★";
   $("resultcard").classList.add("show");finalTone(l.reward);
