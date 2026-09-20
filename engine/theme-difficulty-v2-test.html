@@ -128,6 +128,9 @@ body{display:grid;place-items:center}
 .controls button.active{border-color:#ffd45e88;color:#ffe58a;background:#ffd45e12}
 .back{position:absolute;z-index:50;top:1.1vh;left:1.1vh;text-decoration:none}
 .note{position:absolute;bottom:4.6vh;left:0;right:0;text-align:center;color:#ffffff33;font-size:.55vh;font-weight:900;letter-spacing:.1em}
+body.embed .back,body.embed .controls,body.embed .note,body.embed .brand,body.embed .version{display:none!important}
+body.embed #app{max-width:none;width:100vw}
+body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
 </style>
 </head>
 <body>
@@ -139,8 +142,8 @@ body{display:grid;place-items:center}
     <section id="intro" class="screen introscreen on">
       <div class="introcore">
         <div class="introey">NEXT QUESTION</div>
-        <div class="introround">ROUND 2</div>
-        <div class="introq">06<b>OF 20</b></div>
+        <div id="intro-round" class="introround">ROUND 2</div>
+        <div id="intro-question" class="introq">06<b>OF 20</b></div>
         <div class="introline"><span></span></div>
         <div class="introsub">CATEGORY DRAW STARTING</div>
       </div>
@@ -151,7 +154,7 @@ body{display:grid;place-items:center}
         <div class="kicker">NEXT CHALLENGE</div>
         <div class="title">CATEGORY DRAW</div>
         <div class="sub">THE NEXT QUESTION IS LOADING</div>
-        <div class="roundpill">ROUND 2 · QUESTION 06/20</div>
+        <div id="theme-roundpill" class="roundpill">ROUND 2 · QUESTION 06/20</div>
       </div>
       <div class="themezone">
         <div class="themewheelring"></div>
@@ -183,7 +186,7 @@ body{display:grid;place-items:center}
       <div class="summarywrap">
         <div class="summaryhead">
           <div class="kicker">CHALLENGE READY</div>
-          <div class="title">ROUND 2 · QUESTION 06/20</div>
+          <div id="summary-roundtitle" class="title">ROUND 2 · QUESTION 06/20</div>
           <div class="sub">CATEGORY + DIFFICULTY LOCKED</div>
         </div>
         <div class="summarygrid">
@@ -225,7 +228,24 @@ const LEVELS=[
   {id:"ninja",emoji:"🥷",name:"NINJA",hint:"HARD",reward:4},
   {id:"master",emoji:"👑",name:"MASTER",hint:"ELITE",reward:5}
 ];
-let preset={theme:"flags",level:"pro"},timers=[],audio=null;
+const params=new URLSearchParams(location.search);
+const embedded=params.get("embed")==="1";
+const gameRound=Math.max(1,Number(params.get("round"))||2);
+const gameQuestion=Math.max(1,Number(params.get("question"))||6);
+const gameTotal=Math.max(1,Number(params.get("total"))||20);
+const requestedTheme=String(params.get("theme")||"flags").toLowerCase();
+const requestedLevel=String(params.get("level")||"pro").toLowerCase();
+let preset={
+  theme:THEMES[requestedTheme]?requestedTheme:"flags",
+  level:LEVELS.some(x=>x.id===requestedLevel)?requestedLevel:"pro"
+},timers=[],audio=null;
+if(embedded)document.body.classList.add("embed");
+function applyGameMeta(){
+  $("intro-round").textContent="ROUND "+gameRound;
+  $("intro-question").innerHTML=String(gameQuestion).padStart(2,"0")+"<b>OF "+gameTotal+"</b>";
+  $("theme-roundpill").textContent="ROUND "+gameRound+" · QUESTION "+String(gameQuestion).padStart(2,"0")+"/"+gameTotal;
+  $("summary-roundtitle").textContent="ROUND "+gameRound+" · QUESTION "+String(gameQuestion).padStart(2,"0")+"/"+gameTotal;
+}
 function clearTimers(){timers.forEach(clearTimeout);timers=[]}
 function later(fn,ms){let t=setTimeout(fn,ms);timers.push(t);return t}
 function tone(f,d=.08,v=.01,type="sine"){
@@ -386,6 +406,9 @@ function showSummary(target){
   $("summaryreward").textContent="+"+l.reward+" ★ CORRECT ANSWER";
   $("summary").classList.add("on");
   lockTone();
+  if(embedded){
+    later(()=>parent.postMessage({type:"qgm-v2-transition-complete"},"*"),2200);
+  }
 }
 function replay(){startSequence()}
 function playPreset(theme,level,btn){
@@ -394,8 +417,9 @@ function playPreset(theme,level,btn){
   btn?.classList.add("active");
   startSequence();
 }
+applyGameMeta();
 buildLevels();
-later(startSequence,350);
+later(startSequence,embedded?120:350);
 document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){}},{once:true});
 </script>
 </body></html>
