@@ -48,13 +48,15 @@ body{display:grid;place-items:center}
 .themecard .tag{position:absolute;bottom:1.15vh;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.28vh .58vh;border-radius:.7vh;background:#42cfff0c;border:1px solid #4ddaff33;color:#77ddff;font-size:.58vh;font-weight:1000;letter-spacing:.12em}
 .themecard.selected{opacity:1;filter:none;border-color:#69e2ff88;box-shadow:0 0 1.7vh #299cff33,0 1vh 3vh #0007}
 .themecard.selected .icon{border-color:#8de9ff99;box-shadow:inset 0 0 2vh #299cff22,0 0 1.5vh #4adfff44}
-.themecard.locked{animation:themeLock .72s cubic-bezier(.2,1.5,.3,1);border-color:#ffd45eaa;box-shadow:0 0 1.7vh #ffd45e3f,0 1vh 3vh #0007}
-.themecard.locked .tag{color:#ffe58a;border-color:#ffd45e66;background:#ffd45e12}
-@keyframes themeLock{0%{transform:scale(.9)}55%{transform:scale(1.09)}100%{transform:scale(1)}}
+.themecard.locked{z-index:6;transform:scale(1.08);border-color:#ffd45ed9;box-shadow:0 0 .7vh #fff2b8aa,0 0 2.1vh #ffd45e66,0 1.2vh 3.2vh #0008;filter:brightness(1.08) saturate(1.08);transition:transform .48s cubic-bezier(.2,1.45,.3,1),border-color .35s,box-shadow .35s,filter .35s}
+.themecard.locked .icon{transform:translateX(-50%) scale(1.08);border-color:#ffd45e99;box-shadow:inset 0 0 2vh #ffd45e1c,0 0 1.45vh #ffd45e55}
+.themecard.locked .tag{color:#ffe58a;border-color:#ffd45e77;background:#ffd45e14}
+.themecard.dimmed{opacity:.18;filter:saturate(.55) brightness(.72)}
+@keyframes themeLock{0%{transform:scale(.9)}58%{transform:scale(1.14)}100%{transform:scale(1.08)}}
 .focusbracket{position:absolute;z-index:11;left:50%;top:3.8vh;width:20.6vh;height:27vh;transform:translateX(-50%);pointer-events:none;border-radius:2.25vh}
 .focusbracket:before,.focusbracket:after{content:"";position:absolute;inset:0;border-radius:2.25vh}
 .focusbracket:before{border:1px solid #51dfff28}
-.focusbracket:after{inset:-.35vh;border:1px solid #51dfff10}
+.focusbracket:after{inset:-.35vh;border:1px solid #51dfff10}.focusbracket.locked:before{border-color:#ffd45e99;box-shadow:inset 0 0 1.6vh #ffd45e16,0 0 1.7vh #ffd45e35}.focusbracket.locked:after{border-color:#ffd45e44;box-shadow:0 0 2.7vh #ffd45e22}
 .lockline{position:absolute;left:50%;top:34.4vh;transform:translateX(-50%);min-width:14vh;text-align:center;opacity:0}
 .lockline.show{animation:lockIn .48s ease forwards}
 .lockline b{display:block;color:#ffd45e;font-size:.78vh;letter-spacing:.17em}
@@ -108,7 +110,7 @@ body{display:grid;place-items:center}
       </div>
       <div class="themezone">
         <div id="themetrack" class="themetrack"></div>
-        <div class="focusbracket"></div>
+        <div id="focusbracket" class="focusbracket"></div>
         <div id="lockline" class="lockline"><b>CATEGORY LOCKED</b><span>DIFFICULTY SCAN INCOMING</span></div>
       </div>
     </section>
@@ -194,7 +196,8 @@ function runTheme(){
   let targetIndex=buildThemeTrack(),track=$("themetrack");
   let cards=[...track.children],cardW=cards[0].getBoundingClientRect().width,gap=parseFloat(getComputedStyle(track).gap)||0;
   track.style.transition="none";track.style.transform="translateX(0)";
-  cards.forEach(c=>c.classList.remove("selected","locked"));
+  cards.forEach(c=>c.classList.remove("selected","locked","dimmed"));
+  $("focusbracket").classList.remove("locked");
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     let centerOffset=targetIndex*(cardW+gap)+cardW/2;
     let x=-centerOffset;
@@ -206,9 +209,24 @@ function runTheme(){
     later(()=>{sweepTone(tick++%8)},ms);
   }
   later(()=>{
-    cards[targetIndex].classList.add("selected","locked");$("lockline").classList.add("show");lockTone();
-  },3320);
-  later(()=>runDifficulty(),4300);
+    const selected=cards[targetIndex],frame=$("focusbracket");
+    const sr=selected.getBoundingClientRect(),fr=frame.getBoundingClientRect();
+    const correction=(fr.left+fr.width/2)-(sr.left+sr.width/2);
+    const current=new DOMMatrixReadOnly(getComputedStyle(track).transform);
+    const currentX=Number.isFinite(current.m41)?current.m41:0;
+
+    track.style.transition="transform .34s cubic-bezier(.2,.8,.25,1)";
+    track.style.transform="translateX("+(currentX+correction)+"px)";
+
+    later(()=>{
+      cards.forEach((card,n)=>card.classList.toggle("dimmed",n!==targetIndex));
+      selected.classList.add("selected","locked");
+      frame.classList.add("locked");
+      $("lockline").classList.add("show");
+      lockTone();
+    },360);
+  },3220);
+  later(()=>runDifficulty(),4480);
 }
 function runDifficulty(){
   $("theme").classList.remove("on");$("difficulty").classList.add("on");
