@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QuizGame Master · Control Center</title>
+<style>
+:root{
+  --bg:#071019;--panel:#0d1924;--panel2:#101f2c;--line:#1f3445;--text:#eef7ff;--muted:#88a3b8;
+  --gold:#ffd45e;--blue:#45c4ff;--green:#57df9a;--red:#ff6d79;--orange:#ffb45b;
+}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 80% -10%,#123956 0,transparent 34%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,select{font:inherit}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;padding:24px 18px;border-right:1px solid var(--line);background:#08131ddd;backdrop-filter:blur(12px)}
+.brand{font-weight:1000;letter-spacing:.06em;font-size:19px}.brand b{color:var(--gold)}.sub{color:var(--muted);font-size:12px;margin-top:5px}
+.nav{margin-top:28px;display:grid;gap:7px}.nav button{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#b7cad8;padding:11px 12px;border-radius:11px;cursor:pointer;font-weight:800}.nav button:hover,.nav button.active{background:#15304788;border-color:#28506b;color:white}.nav button.active{box-shadow:inset 3px 0 var(--blue)}
+.sidefoot{position:absolute;bottom:18px;left:18px;right:18px;color:#6d879a;font-size:11px;line-height:1.5}.sidefoot a{color:#9bdcff;text-decoration:none}
+.main{padding:26px 30px 50px;min-width:0}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}.top h1{margin:0;font-size:28px;letter-spacing:-.02em}.top p{margin:6px 0 0;color:var(--muted)}
+.toplinks{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #2c4a60;background:#112637;color:#dff4ff;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:800;cursor:pointer}.btn:hover{border-color:#4e7895}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:linear-gradient(180deg,#10202d,#0c1822);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 12px 32px #0003}.metric span{color:var(--muted);font-size:12px;font-weight:800}.metric b{display:block;font-size:30px;margin-top:4px}.metric small{color:#7390a4}
+.section{display:none}.section.active{display:block}.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 12px}.sectionhead h2{margin:0;font-size:20px}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar input,.toolbar select{border:1px solid var(--line);background:#0a1721;color:white;border-radius:10px;padding:9px 11px;outline:none}.toolbar input{min-width:260px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:15px;background:#0b1721}.table{width:100%;border-collapse:collapse;min-width:980px}.table th{position:sticky;top:0;background:#0f202d;color:#7895a9;text-align:left;font-size:11px;letter-spacing:.06em;padding:11px;border-bottom:1px solid var(--line)}.table td{padding:11px;border-bottom:1px solid #172b3a;vertical-align:middle;font-size:13px}.table tr{cursor:pointer}.table tbody tr:hover{background:#102637}
+.qid{font-weight:1000;color:var(--gold)}.thumb{width:58px;height:42px;border-radius:8px;object-fit:cover;background:#132736;border:1px solid #274154}.flagthumb{object-fit:contain;padding:4px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;font-size:11px;font-weight:900;border:1px solid #ffffff20;background:#ffffff0b}.ok{color:var(--green);border-color:#57df9a45}.warn{color:var(--orange);border-color:#ffb45b50}.bad{color:var(--red);border-color:#ff6d7950}.info{color:#7ad7ff;border-color:#45c4ff45}
+.categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cat h3{margin:0 0 5px}.cat .big{font-size:34px;font-weight:1000}.bar{height:8px;background:#152b3a;border-radius:99px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:inherit}
+.issue{display:flex;gap:12px;align-items:flex-start;padding:12px;border-bottom:1px solid #172b3a}.issue:last-child{border:0}.issue b{display:block}.issue small{color:var(--muted)}
+.empty{padding:28px;text-align:center;color:var(--muted)}.notice{padding:13px 15px;border-radius:12px;background:#142633;border:1px solid #29485d;color:#b9d3e4;font-size:13px;line-height:1.5}.notice strong{color:white}
+.split{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}.playeravatar{width:30px;height:30px;border-radius:50%;object-fit:cover;background:#173044}
+.modal{display:none;position:fixed;inset:0;z-index:99;background:#02070bc9;backdrop-filter:blur(8px);padding:24px;overflow:auto}.modal.show{display:flex;align-items:flex-start;justify-content:center}.modalbox{width:min(930px,100%);background:#0b1822;border:1px solid #29465a;border-radius:18px;margin:auto;padding:21px;box-shadow:0 30px 80px #0009}.modaltop{display:flex;justify-content:space-between;gap:15px}.modal h2{margin:4px 0 3px}.close{border:0;background:#182b39;color:white;border-radius:10px;width:38px;height:38px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.detail{padding:13px;border:1px solid var(--line);border-radius:12px;background:#0f202b}.detail label{display:block;color:#7896aa;font-size:11px;font-weight:900;margin-bottom:6px}.answers{display:grid;gap:6px}.answer{padding:8px 10px;border:1px solid #244052;border-radius:9px}.answer.correct{border-color:#57df9a88;color:#b8ffd8}
+.mediaPreview{max-width:100%;max-height:260px;border-radius:12px;border:1px solid var(--line);background:#09131b}.path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#9bcce8;font-size:11px;word-break:break-all}
+.statrow{display:grid;grid-template-columns:1fr 80px;gap:10px;align-items:center;margin:9px 0}.statrow .bar{margin:0}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}.app{grid-template-columns:190px 1fr}.main{padding:22px 18px}}
+@media(max-width:720px){.app{display:block}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(2,1fr)}.sidefoot{display:none}.grid,.categories,.detailgrid{grid-template-columns:1fr}.toolbar input{min-width:0;width:100%}.main{padding:18px 12px}.top{display:block}.toplinks{margin-top:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">QUIZGAME <b>MASTER</b></div>
+  <div class="sub">CONTROL CENTER · v0.1</div>
+  <div class="nav">
+    <button data-tab="overview" class="active">◈ Overview</button>
+    <button data-tab="questions">▤ Questions</button>
+    <button data-tab="categories">▦ Categories</button>
+    <button data-tab="media">◉ Media & licenses</button>
+    <button data-tab="analytics">⌁ Analytics</button>
+    <button data-tab="players">♟ Players</button>
+  </div>
+  <div class="sidefoot">Permanent IDs: <b>Q001…</b><br>Never reuse or renumber.<br><a href="game.html">Open game →</a></div>
+</aside>
+
+<main class="main">
+  <div class="top">
+    <div><h1>Game Control Center</h1><p>Questions, assets, licenses and LIVE data in one place.</p></div>
+    <div class="toplinks"><button class="btn" id="refresh">↻ Refresh data</button><a class="btn" href="game.html">▶ Open game</a></div>
+  </div>
+
+  <section id="overview" class="section active">
+    <div class="grid">
+      <div class="card metric"><span>TOTAL QUESTIONS</span><b id="mQuestions">—</b><small id="mCategories">— categories</small></div>
+      <div class="card metric"><span>MISSING QUESTION AUDIO</span><b id="mAudio">—</b><small>final licensed voice files</small></div>
+      <div class="card metric"><span>LICENSE ITEMS TO REVIEW</span><b id="mLicense">—</b><small>image / fact image / audio</small></div>
+      <div class="card metric"><span>KNOWN GLOBAL PLAYERS</span><b id="mPlayers">—</b><small>from cloud game state</small></div>
+    </div>
+    <div class="split">
+      <div>
+        <div class="sectionhead"><div><h2>Production readiness</h2><p>What still blocks clean commercial publishing.</p></div></div>
+        <div class="card" id="issues"></div>
+      </div>
+      <div>
+        <div class="sectionhead"><div><h2>ID & file rules</h2><p>Keep the library predictable.</p></div></div>
+        <div class="card">
+          <div class="notice"><strong>QID is permanent.</strong> Q001 stays Q001 forever, even if the question text changes or the category grows.</div>
+          <div style="margin-top:14px;font-size:13px;line-height:1.8;color:#b7cedd">
+            Question audio: <span class="path">Q001-question.mp3</span><br>
+            Existing internal ID stays for compatibility.<br>
+            Next free ID: <b id="nextQid">—</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="questions" class="section">
+    <div class="sectionhead">
+      <div><h2>Questions</h2><p>Click any row for full question, media and license details.</p></div>
+      <div class="toolbar">
+        <input id="search" placeholder="Search QID, question, answer…">
+        <select id="catFilter"><option value="">All categories</option></select>
+        <select id="diffFilter"><option value="">All difficulties</option></select>
+        <select id="licenseFilter"><option value="">All license states</option><option value="problem">Needs attention</option><option value="ready">Recorded/ready</option></select>
+      </div>
+    </div>
+    <div class="tablewrap"><table class="table"><thead><tr><th>ID</th><th>Preview</th><th>Category</th><th>Difficulty</th><th>Question</th><th>Correct</th><th>Audio</th><th>Licenses</th></tr></thead><tbody id="qRows"></tbody></table></div>
+  </section>
+
+  <section id="categories" class="section">
+    <div class="sectionhead"><div><h2>Categories</h2><p>Question counts and difficulty coverage.</p></div></div>
+    <div class="categories" id="categoryCards"></div>
+  </section>
+
+  <section id="media" class="section">
+    <div class="sectionhead"><div><h2>Media & license audit</h2><p>Nothing is treated as commercially cleared unless proof is recorded.</p></div></div>
+    <div class="card" id="mediaList"></div>
+  </section>
+
+  <section id="analytics" class="section">
+    <div class="sectionhead"><div><h2>Question analytics</h2><p>Designed for real difficulty calibration, not guesses.</p></div></div>
+    <div id="analyticsNotice" class="notice"></div>
+    <div style="height:12px"></div>
+    <div class="grid">
+      <div class="card metric"><span>RECORDED QUESTION PLAYS</span><b id="aPlays">0</b><small>across persisted LIVE sessions</small></div>
+      <div class="card metric"><span>RECORDED ANSWERS</span><b id="aAnswers">0</b><small>valid A/B/C/D submissions</small></div>
+      <div class="card metric"><span>AVERAGE CORRECT</span><b id="aCorrect">—</b><small>weighted by answers</small></div>
+      <div class="card metric"><span>RECORDED SESSIONS</span><b id="aSessions">0</b><small>future session history</small></div>
+    </div>
+    <div class="sectionhead"><div><h2>Per-question performance</h2></div></div>
+    <div class="tablewrap"><table class="table"><thead><tr><th>ID</th><th>Question</th><th>Shown</th><th>Answers</th><th>Correct %</th><th>Avg response</th></tr></thead><tbody id="analyticsRows"></tbody></table></div>
+  </section>
+
+  <section id="players" class="section">
+    <div class="sectionhead"><div><h2>Players</h2><p>Current all-time leaderboard data already stored by the game.</p></div></div>
+    <div class="tablewrap"><table class="table"><thead><tr><th>#</th><th>Player</th><th>Points</th><th>Stored key</th></tr></thead><tbody id="playerRows"></tbody></table></div>
+  </section>
+</main>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox">
+  <div class="modaltop"><div><div class="qid" id="dQid"></div><h2 id="dQuestion"></h2><div id="dMeta"></div></div><button class="close" id="close">×</button></div>
+  <div class="detailgrid">
+    <div class="detail"><label>QUESTION MEDIA</label><div id="dImage"></div></div>
+    <div class="detail"><label>ANSWERS</label><div class="answers" id="dAnswers"></div></div>
+    <div class="detail"><label>FACT</label><div id="dFact"></div></div>
+    <div class="detail"><label>QUESTION AUDIO</label><div id="dAudio"></div></div>
+    <div class="detail"><label>LICENSE STATUS</label><div id="dLicense"></div></div>
+    <div class="detail"><label>RECORDED PERFORMANCE</label><div id="dStats"></div></div>
+  </div>
+</div></div>
+
+<script>
+const BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
+const state={questions:[],catalog:{questions:{},id_policy:{}},analytics:{questions:{},sessions:[],collection_status:"not_connected"},players:[]};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nice=s=>String(s||"").replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());
+const pill=(txt,kind="info")=>'<span class="pill '+kind+'">'+esc(txt)+'</span>';
+const statusKind=s=>s==="verified"||s==="licensed"||s==="not_required"?"ok":s==="missing"?"bad":"warn";
+const fresh=url=>fetch(url+(url.includes("?")?"&":"?")+"_="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()});
+
+function media(q){
+  if(q.type==="flag_to_country"&&q.asset?.code)return {src:"https://flagcdn.com/w320/"+q.asset.code+".png",flag:true,path:"FlagCDN · "+q.asset.code.toUpperCase()};
+  if(q.type==="country_to_flag")return {src:"https://flagcdn.com/w320/"+(q.answers?.find(a=>a.country===q.correct)?.code||"").toLowerCase()+".png",flag:true,path:"Flag choices loaded from FlagCDN"};
+  return {src:q.asset?.image||"",flag:false,path:q.asset?.image||"No question image"};
+}
+function metaFor(q){return state.catalog.questions?.[q.id]||{qid:q.qid,workflow:"review",media:{question_image:{status:"review"},fact_image:{status:q.asset?.fact_image?"review":"not_required"},question_audio:{status:"missing",file:"../assets/audio/questions/"+q.qid+"-question.mp3"}}}}
+function qStats(q){return state.analytics.questions?.[q.qid]||state.analytics.questions?.[q.id]||{}}
+function licenseProblems(q){
+  const m=metaFor(q).media||{};
+  return ["question_image","fact_image","question_audio"].filter(k=>m[k] && !["verified","licensed","not_required"].includes(m[k].status));
+}
+function renderOverview(){
+  const cats=[...new Set(state.questions.map(q=>q.category))];
+  const audioMissing=state.questions.filter(q=>metaFor(q).media?.question_audio?.status==="missing").length;
+  const lic=state.questions.reduce((n,q)=>n+licenseProblems(q).length,0);
+  document.querySelector("#mQuestions").textContent=state.questions.length;
+  document.querySelector("#mCategories").textContent=cats.length+" categories";
+  document.querySelector("#mAudio").textContent=audioMissing;
+  document.querySelector("#mLicense").textContent=lic;
+  document.querySelector("#mPlayers").textContent=state.players.length;
+  document.querySelector("#nextQid").textContent=state.catalog.id_policy?.next_qid||"—";
+  const issues=[];
+  if(audioMissing)issues.push(["bad",audioMissing+" question audio files missing","Use final licensed files before public commercial LIVE."]);
+  const imageReview=state.questions.reduce((n,q)=>n+["question_image","fact_image"].filter(k=>metaFor(q).media?.[k]?.status==="review").length,0);
+  if(imageReview)issues.push(["warn",imageReview+" image license records need review","Record source, license name and proof instead of relying on memory."]);
+  if(state.analytics.collection_status!=="connected")issues.push(["info","Per-question analytics are not connected yet","The dashboard is ready for them, but the game is not yet persisting question/session events."]);
+  document.querySelector("#issues").innerHTML=issues.map(x=>'<div class="issue"><span class="pill '+x[0]+'">'+(x[0]==="bad"?"!":x[0]==="warn"?"△":"i")+'</span><div><b>'+esc(x[1])+'</b><small>'+esc(x[2])+'</small></div></div>').join("")||'<div class="empty">No production blockers recorded.</div>';
+}
+function filters(){
+  const cats=[...new Set(state.questions.map(q=>q.category))].sort();
+  document.querySelector("#catFilter").innerHTML='<option value="">All categories</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join("");
+  const diffs=["newbie","rookie","pro","ninja","master"];
+  document.querySelector("#diffFilter").innerHTML='<option value="">All difficulties</option>'+diffs.map(x=>'<option value="'+x+'">'+nice(x)+'</option>').join("");
+}
+function filteredQuestions(){
+  const s=document.querySelector("#search").value.trim().toLowerCase(),c=document.querySelector("#catFilter").value,d=document.querySelector("#diffFilter").value,l=document.querySelector("#licenseFilter").value;
+  return state.questions.filter(q=>{
+    let hay=[q.qid,q.id,q.category,q.question,q.correct,...(q.answers||[]).map(a=>typeof a==="string"?a:a.country||a.name||"")].join(" ").toLowerCase();
+    if(s&&!hay.includes(s))return false;if(c&&q.category!==c)return false;if(d&&q.difficulty!==d)return false;
+    let probs=licenseProblems(q).length;
+    if(l==="problem"&&!probs)return false;if(l==="ready"&&probs)return false;return true;
+  });
+}
+function renderQuestions(){
+  const qs=filteredQuestions();
+  document.querySelector("#qRows").innerHTML=qs.map(q=>{
+    const m=media(q),md=metaFor(q),probs=licenseProblems(q);
+    const audio=md.media?.question_audio?.status||"missing";
+    return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':'—')+'</td><td>'+esc(q.category)+'</td><td>'+pill(nice(q.difficulty),"info")+'</td><td>'+esc(q.question)+'</td><td><b>'+esc(q.correct)+'</b></td><td>'+pill(nice(audio),statusKind(audio))+'</td><td>'+(probs.length?pill(probs.length+" need review","warn"):pill("ready","ok"))+'</td></tr>';
+  }).join("")||'<tr><td colspan="8" class="empty">No questions match the filters.</td></tr>';
+  document.querySelectorAll("#qRows tr[data-id]").forEach(r=>r.onclick=()=>openQuestion(r.dataset.id));
+}
+function renderCategories(){
+  const groups={};state.questions.forEach(q=>(groups[q.category]??=[]).push(q));
+  document.querySelector("#categoryCards").innerHTML=Object.entries(groups).map(([cat,qs])=>{
+    const ready=qs.filter(q=>licenseProblems(q).length===0).length,pct=Math.round(ready*100/qs.length);
+    const diffs={};qs.forEach(q=>diffs[q.difficulty]=(diffs[q.difficulty]||0)+1);
+    return '<div class="card cat"><h3>'+esc(cat)+'</h3><div class="big">'+qs.length+'</div><div style="color:var(--muted);font-size:12px">'+Object.entries(diffs).map(([k,v])=>nice(k)+" "+v).join(" · ")+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div style="margin-top:7px;color:var(--muted);font-size:11px">'+ready+'/'+qs.length+' fully licensed in catalog</div></div>';
+  }).join("");
+}
+function renderMedia(){
+  const rows=[];
+  state.questions.forEach(q=>{
+    const md=metaFor(q),m=md.media||{};
+    [["Question image","question_image"],["Fact image","fact_image"],["Question audio","question_audio"]].forEach(([label,k])=>{
+      const x=m[k];if(!x||x.status==="not_required")return;
+      rows.push('<div class="issue"><span class="qid" style="min-width:44px">'+esc(q.qid)+'</span><div style="flex:1"><b>'+esc(label)+' · '+esc(q.question)+'</b><small>'+(x.file?'<span class="path">'+esc(x.file)+'</span>':esc(x.source||"Source not recorded"))+'</small></div>'+pill(nice(x.status),statusKind(x.status))+'</div>');
+    });
+  });
+  document.querySelector("#mediaList").innerHTML=rows.join("")||'<div class="empty">No media records.</div>';
+}
+function renderAnalytics(){
+  const a=state.analytics||{},stats=Object.values(a.questions||{});
+  let plays=stats.reduce((n,x)=>n+(Number(x.shown)||0),0),answers=stats.reduce((n,x)=>n+(Number(x.answers)||0),0),correct=stats.reduce((n,x)=>n+(Number(x.correct)||0),0);
+  document.querySelector("#aPlays").textContent=plays;document.querySelector("#aAnswers").textContent=answers;
+  document.querySelector("#aCorrect").textContent=answers?Math.round(correct*100/answers)+"%":"—";document.querySelector("#aSessions").textContent=(a.sessions||[]).length;
+  document.querySelector("#analyticsNotice").innerHTML=a.collection_status==="connected"
+    ?"<strong>Analytics collection connected.</strong> These values come from persisted LIVE events."
+    :"<strong>Analytics schema is ready, collection is not connected yet.</strong> Next backend step: persist question shown, answer, correctness, response time, join/leave and session events. Region will only be stored if TikTok explicitly provides a reliable region field — it will not be guessed.";
+  document.querySelector("#analyticsRows").innerHTML=state.questions.map(q=>{
+    const s=qStats(q),shown=Number(s.shown)||0,ans=Number(s.answers)||0,cor=Number(s.correct)||0,avg=Number(s.avg_response_ms)||0;
+    return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+esc(q.question)+'</td><td>'+shown+'</td><td>'+ans+'</td><td>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</td><td>'+(avg?(avg/1000).toFixed(1)+"s":"—")+'</td></tr>';
+  }).join("");
+  document.querySelectorAll("#analyticsRows tr[data-id]").forEach(r=>r.onclick=()=>openQuestion(r.dataset.id));
+}
+function renderPlayers(){
+  document.querySelector("#playerRows").innerHTML=state.players.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:9px">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<b>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</b></div></td><td class="qid">'+(Number(p.points)||0)+' ★</td><td><span class="path">'+esc(p.key)+'</span></td></tr>').join("")||'<tr><td colspan="4" class="empty">No cloud players returned.</td></tr>';
+}
+function openQuestion(id){
+  const q=state.questions.find(x=>x.id===id);if(!q)return;const md=metaFor(q),m=media(q),s=qStats(q);
+  document.querySelector("#dQid").textContent=q.qid+" · "+q.id;
+  document.querySelector("#dQuestion").textContent=q.question;
+  document.querySelector("#dMeta").innerHTML=pill(q.category,"info")+" "+pill(nice(q.difficulty),"info")+" "+pill(nice(q.type),"info");
+  document.querySelector("#dImage").innerHTML=(m.src?'<img class="mediaPreview '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'"><div class="path" style="margin-top:7px">'+esc(m.path)+'</div>':'No image');
+  document.querySelector("#dAnswers").innerHTML=(q.answers||[]).map((a,i)=>{let label=typeof a==="string"?a:a.country||a.name||"",ok=label===q.correct;return '<div class="answer '+(ok?"correct":"")+'"><b>'+"ABCD"[i]+'</b> · '+esc(label)+(ok?" ✓":"")+'</div>'}).join("");
+  document.querySelector("#dFact").innerHTML='<b>'+esc(q.fact_tag||"FACT")+'</b><div style="margin-top:7px;line-height:1.55">'+esc(q.fact||"")+'</div>'+(q.asset?.fact_image?'<div class="path" style="margin-top:9px">'+esc(q.asset.fact_image)+'</div>':"");
+  const au=md.media?.question_audio||{};
+  document.querySelector("#dAudio").innerHTML=pill(nice(au.status||"missing"),statusKind(au.status||"missing"))+'<div class="path" style="margin-top:8px">'+esc(au.file||"")+'</div><div style="color:var(--muted);font-size:12px;margin-top:7px">Provider: '+esc(au.provider||"—")+' · License: '+esc(au.license||"—")+'</div>';
+  const lm=md.media||{};
+  document.querySelector("#dLicense").innerHTML=["question_image","fact_image","question_audio"].map(k=>{let x=lm[k];if(!x)return"";return '<div style="display:flex;justify-content:space-between;gap:8px;margin:7px 0"><span>'+nice(k)+'</span>'+pill(nice(x.status),statusKind(x.status))+'</div>'}).join("");
+  let shown=Number(s.shown)||0,ans=Number(s.answers)||0,cor=Number(s.correct)||0;
+  document.querySelector("#dStats").innerHTML='<div>Shown: <b>'+shown+'</b></div><div>Answers: <b>'+ans+'</b></div><div>Correct: <b>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</b></div><div>Avg response: <b>'+(s.avg_response_ms?(Number(s.avg_response_ms)/1000).toFixed(1)+"s":"—")+'</b></div>';
+  document.querySelector("#modal").classList.add("show");
+}
+function renderAll(){renderOverview();filters();renderQuestions();renderCategories();renderMedia();renderAnalytics();renderPlayers()}
+async function load(){
+  const [flags,landmarks,catalog,analytics]=await Promise.all([
+    fresh("../data/questions-flags.json"),fresh("../data/questions-landmarks.json"),fresh("../data/admin-catalog.json"),fresh("../data/analytics-snapshot.json")
+  ]);
+  state.questions=[...flags.questions.map(q=>({...q,category:flags.category})),...landmarks.questions.map(q=>({...q,category:landmarks.category}))];
+  state.catalog=catalog;state.analytics=analytics;
+  try{
+    const cloud=await fetch(BRIDGE+"/game/state",{cache:"no-store"}).then(r=>r.json());
+    const p=cloud?.players&&typeof cloud.players==="object"?Object.entries(cloud.players).map(([key,v])=>({key,...v})):[];
+    state.players=p.sort((a,b)=>(Number(b.points)||0)-(Number(a.points)||0));
+  }catch(e){state.players=[]}
+  renderAll();
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))});
+["search","catFilter","diffFilter","licenseFilter"].forEach(id=>document.querySelector("#"+id).addEventListener(id==="search"?"input":"change",renderQuestions));
+document.querySelector("#close").onclick=()=>document.querySelector("#modal").classList.remove("show");
+document.querySelector("#modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("show")};
+document.querySelector("#refresh").onclick=load;
+load().catch(e=>{document.querySelector("#issues").innerHTML='<div class="empty">Could not load admin data: '+esc(e.message)+'</div>'});
+</script>
+</body>
+</html>
