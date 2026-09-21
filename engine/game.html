@@ -2429,7 +2429,8 @@ function liveAnalyticsEngagementSnapshot(r){
     like_events:Number(r.likeEvents)||0,likes:Number(r.likes)||0,first_like_at:liveAnalyticsIso(r.firstLikeAt),last_like_at:liveAnalyticsIso(r.lastLikeAt),
     follow_events:Number(r.followEvents)||0,first_follow_at:liveAnalyticsIso(r.firstFollowAt),last_follow_at:liveAnalyticsIso(r.lastFollowAt),
     share_events:Number(r.shareEvents)||0,first_share_at:liveAnalyticsIso(r.firstShareAt),last_share_at:liveAnalyticsIso(r.lastShareAt),
-    unfollow_events:Number(r.unfollowEvents)||0,first_unfollow_at:liveAnalyticsIso(r.firstUnfollowAt),last_unfollow_at:liveAnalyticsIso(r.lastUnfollowAt)
+    unfollow_events:Number(r.unfollowEvents)||0,first_unfollow_at:liveAnalyticsIso(r.firstUnfollowAt),last_unfollow_at:liveAnalyticsIso(r.lastUnfollowAt),
+    last_follow_status_observed:r.lastObservedFollowStatus||""
   };
 }
 function isLiveGiftType(type){
