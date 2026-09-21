@@ -2374,7 +2374,7 @@ function liveAnalyticsRecordGift(known,source,type){
   let name=known?.name||"";
   let giftId=liveAnalyticsFindMeta(source,["giftId","gift_id"]);
   let giftName=liveAnalyticsFindMeta(source,["giftName","gift_name"]);
-  let giftType=liveAnalyticsNumberMeta(source,["giftType","gift_type","type"]);
+  let giftType=liveAnalyticsNumberMeta(source,["giftType","gift_type"]);
   let repeatCount=liveAnalyticsNumberMeta(source,["repeatCount","repeat_count","comboCount","combo_count"]);
   let repeatEndRaw=liveAnalyticsFindMeta(source,["repeatEnd","repeat_end","isRepeatEnd","is_repeat_end"]);
   let repeatEnd=repeatEndRaw===""?null:liveAnalyticsBool(repeatEndRaw);
@@ -2559,7 +2559,7 @@ function flushLiveAnalytics(q,submitted=[],correctLetter="",reason="question"){
   let changed=[...liveAnalyticsPendingChanged].map(k=>liveAnalyticsUsers.get(k)).filter(Boolean).map(r=>liveAnalyticsVisitorSnapshot(r,now));
   let qid=q?.qid||q?.id||q?.internal_id||null;
   let payload={
-    schema_version:1,batch_id:liveAnalyticsSessionId+":"+seq,session_id:liveAnalyticsSessionId,sequence:seq,
+    schema_version:2,batch_id:liveAnalyticsSessionId+":"+seq,session_id:liveAnalyticsSessionId,sequence:seq,
     captured_at:liveAnalyticsIso(now),session_started_at:liveAnalyticsIso(liveAnalyticsSessionStartedAt),session_ended_at:reason==="stream_end"?liveAnalyticsIso(now):null,
     channel:LIVE_UNIQUE_IDS[liveConnectVariant]||LIVE_UNIQUE_IDS[0],reason,
     question:q?{qid,category:q.category||"",difficulty:q.difficulty||"",type:q.type||"",round:currentRound,number:questionInRound,started_at:liveAnalyticsIso(liveAnalyticsQuestionStartedAt),ended_at:liveAnalyticsIso(now)}:{qid:null,round:currentRound,number:questionInRound,started_at:null,ended_at:liveAnalyticsIso(now)},
