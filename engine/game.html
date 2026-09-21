@@ -101,7 +101,7 @@ linear-gradient(180deg,#061521 0%,#020810 62%,#010509 100%)}
 @keyframes answerCountPopV1{0%{transform:translateX(-50%) scale(1)}42%{transform:translateX(-50%) scale(1.24);filter:brightness(1.65)}100%{transform:translateX(-50%) scale(1)}}
 @keyframes v2Iris{0%{transform:translate(-50%,-50%) scale(0);opacity:0}42%{transform:translate(-50%,-50%) scale(18);opacity:1}58%{transform:translate(-50%,-50%) scale(18);opacity:1}100%{transform:translate(-50%,-50%) scale(0);opacity:0}}
 @keyframes v2Sweep{0%,100%{transform:scaleX(0);opacity:0}38%{transform:scaleX(1);opacity:1}62%{transform:scaleX(1);opacity:1}}
-</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v1.0.15</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="settingslabel">LIVE GAME DESIGN</div><div class="liveversionpick"><label class="liveversioncard"><input type="radio" name="liveversion" value="classic" onchange="updateLiveVersionChoice()"><b>CLASSIC · v0 LEGACY</b><span>ORIGINAL STABLE LIVE LAYOUT</span></label><label class="liveversioncard"><input type="radio" name="liveversion" value="new" checked onchange="updateLiveVersionChoice()"><b>V1 · NEW DESIGN</b><span>WHEELS · V2 QUESTION · STANDINGS · FACT</span></label></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="factenabled" type="checkbox" checked onchange="persistSettingsFromUI('live')"></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="devfactenabled" type="checkbox" checked onchange="persistSettingsFromUI('dev')"></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><div class="settingslabel">AUDIO</div><div class="musicset"><label class="musicrow"><span>BACKGROUND MUSIC</span><input id="devmusic" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="audiosub">MELODIES · SELECT + PREVIEW</div><div class="musictracks"><div class="musictrack"><input type="checkbox" name="musictrack" value="mossy-path" checked onchange="updateMusicSettings()"><span>MOSSY PATH</span><button class="trackpreview" type="button" data-track="mossy-path" onclick="previewMusicTrack('mossy-path',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="crystal-cave" checked onchange="updateMusicSettings()"><span>CRYSTAL CAVE</span><button class="trackpreview" type="button" data-track="crystal-cave" onclick="previewMusicTrack('crystal-cave',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="river-steps" checked onchange="updateMusicSettings()"><span>RIVER STEPS</span><button class="trackpreview" type="button" data-track="river-steps" onclick="previewMusicTrack('river-steps',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="glass-garden" checked onchange="updateMusicSettings()"><span>GLASS GARDEN</span><button class="trackpreview" type="button" data-track="glass-garden" onclick="previewMusicTrack('glass-garden',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="moonwell" checked onchange="updateMusicSettings()"><span>MOONWELL</span><button class="trackpreview" type="button" data-track="moonwell" onclick="previewMusicTrack('moonwell',this)">▶</button></div></div><label class="musicrow"><span>CHANGE EACH ROUND</span><input id="devmusicrotate" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>MUSIC VOLUME</span><div class="musicvol"><input id="devmusicvol" type="range" min="0" max="100" step="1" value="9" oninput="updateMusicSettings()"><span id="devmusicval" class="musicval">9%</span></div></div><div class="musicrow"><span>EFFECTS VOLUME</span><div class="musicvol"><input id="deveffectvol" type="range" min="0" max="100" step="5" value="80" oninput="updateMusicSettings()"><span id="deveffectval" class="musicval">80%</span></div></div></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST · CLASSIC</button><button class="previewbtn play" onclick="launchDevNew()">✨ START 4-PLAYER TEST · NEW DESIGN</button><div class="layoutlab"><div class="layoutlabtitle">LAYOUT LAB</div><div class="layoutlabrow"><button class="layoutlabbtn" onclick="openNewDesignPreview()">👁 QUESTION</button><button class="layoutlabbtn" onclick="openFactLayoutPreview()">💡 FACT</button><button class="layoutlabbtn" onclick="openLeaderboardPreview()">⚡ STANDINGS</button><button class="layoutlabbtn" onclick="openGlobalRankingPreview()">🌐 GLOBAL TOP 50</button><button class="layoutlabbtn" onclick="location.href='theme-difficulty-v2-test.html'">🎲 THEME + DIFFICULTY V2</button></div></div></div><div id="designpreview" class="designpreview"><div class="np-bg"></div><div class="np-brandline">THE QUIZGAME MASTER · v1.0.15</div><button class="np-back" onclick="closeNewDesignPreview()">← BACK TO DEVELOPMENT</button><div class="np-wrap"><div id="np-hero" class="np-hero"><img id="np-image" alt=""><div id="np-subjecthero" class="np-subjecthero"></div><div class="np-heroShade"></div><div class="np-meta"><div id="np-category" class="np-chip">GEOGRAPHY</div><div id="np-difficulty" class="np-chip diff">⚡ PRO</div></div><div id="np-answercount" class="np-answercount"><span>ANSWERS</span><b id="np-answercount-num">0</b></div><div class="np-side"><div class="np-sidehead"><span id="np-sideicon">🏆</span><b id="np-sidetitle">ROUND TOP 5</b></div><div id="np-sidebody"></div></div></div><div class="np-ticker"><div class="np-tlabel">🌐 GLOBAL RANKING</div><div class="np-twin"><div id="np-track" class="np-track"></div></div></div><div class="np-body"><div class="np-headrow"><div id="np-round" class="np-round">ROUND 1 · QUESTION 3/20</div><div id="np-reward" class="np-reward">★ +1</div></div><div class="np-bonushud"><span class="first">⚡ FIRST +1 ⭐</span><span class="streak">🔥 STREAK +1</span></div><div id="np-question" class="np-q"></div><div class="np-callout">💬 TYPE YOUR ANSWER IN CHAT: <b>A · B · C · D</b></div><div class="np-timerrow"><div id="np-seconds" class="np-seconds">18</div><div class="np-bar"><div id="np-barfill"></div></div></div><div id="np-answers" class="np-answers"></div><div class="np-note">V1 QUESTION LAYOUT · THE QUIZGAME MASTER</div></div></div></div><div id="factpreview" class="factpreview"><button class="fp-back" onclick="closeFactLayoutPreview()">← BACK TO DEVELOPMENT</button><div class="fp-wrap"><div class="fp-hero"><img id="fp-image" class="fp-heroimg" alt=""><div class="fp-heroShade"></div><div class="fp-meta"><div id="fp-category" class="fp-chip">LANDMARKS</div><div id="fp-difficulty" class="fp-chip diff">⚡ PRO</div></div><div class="fp-top"><div class="fp-tophead"><span>🏆</span><b>ROUND TOP 5</b></div><div id="fp-topbody"></div></div></div><div class="fp-body"><div id="fp-correct" class="fp-correct">✓ CORRECT ANSWER · <b>B</b></div><div id="fp-answer" class="fp-answer">EIFFEL TOWER</div><div id="fp-countryline" class="fp-countryline"></div><div class="fp-factcard"><div class="fp-facthead"><span class="fp-bulb">💡</span><span id="fp-facttag">DID YOU KNOW?</span></div><div id="fp-facttext" class="fp-facttext"></div></div><div class="fp-winners"><div class="fp-winhead"><span>⚡ FIRST CORRECT ANSWERS</span><span id="fp-questionreward">+1 ★</span></div><div id="fp-winrow" class="fp-winrow"></div></div></div></div></div><div id="globalpreview" class="globalpreview">
+</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v1.0.16</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="settingslabel">LIVE GAME DESIGN</div><div class="liveversionpick"><label class="liveversioncard"><input type="radio" name="liveversion" value="classic" onchange="updateLiveVersionChoice()"><b>CLASSIC · v0 LEGACY</b><span>ORIGINAL STABLE LIVE LAYOUT</span></label><label class="liveversioncard"><input type="radio" name="liveversion" value="new" checked onchange="updateLiveVersionChoice()"><b>V1 · NEW DESIGN</b><span>WHEELS · V2 QUESTION · STANDINGS · FACT</span></label></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="factenabled" type="checkbox" checked onchange="persistSettingsFromUI('live')"></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><div class="timeset"><label class="facttoggle"><span>🔊 QUESTION VOICE</span><input id="livevoice" type="checkbox" checked onchange="updateMusicSettings()"></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="devfactenabled" type="checkbox" checked onchange="persistSettingsFromUI('dev')"></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><div class="settingslabel">AUDIO</div><div class="musicset"><label class="musicrow"><span>BACKGROUND MUSIC</span><input id="devmusic" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="audiosub">REAL BACKGROUND TRACKS · SELECT + PREVIEW</div><div class="musictracks"><div class="musictrack"><input type="checkbox" name="musictrack" value="wholesome" checked onchange="updateMusicSettings()"><span>WHOLESOME</span><button class="trackpreview" type="button" data-track="wholesome" onclick="previewMusicTrack('wholesome',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="long-trail" checked onchange="updateMusicSettings()"><span>LONG TRAIL</span><button class="trackpreview" type="button" data-track="long-trail" onclick="previewMusicTrack('long-trail',this)">▶</button></div></div><label class="musicrow"><span>CHANGE EACH ROUND</span><input id="devmusicrotate" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>MUSIC VOLUME</span><div class="musicvol"><input id="devmusicvol" type="range" min="0" max="100" step="1" value="12" oninput="updateMusicSettings()"><span id="devmusicval" class="musicval">12%</span></div></div><label class="musicrow"><span>QUESTION VOICE</span><input id="devvoice" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>VOICE VOLUME</span><div class="musicvol"><input id="devvoicevol" type="range" min="20" max="100" step="5" value="90" oninput="updateMusicSettings()"><span id="devvoiceval" class="musicval">90%</span></div></div><div class="musicrow"><span>VOICE SPEED</span><div class="musicvol"><input id="devvoicerate" type="range" min="75" max="115" step="1" value="96" oninput="updateMusicSettings()"><span id="devvoicerateval" class="musicval">96%</span></div></div><div class="musicrow"><span>EFFECTS VOLUME</span><div class="musicvol"><input id="deveffectvol" type="range" min="0" max="100" step="5" value="80" oninput="updateMusicSettings()"><span id="deveffectval" class="musicval">80%</span></div></div><div class="audiosub">MUSIC: KEVIN MACLEOD · WIKIMEDIA COMMONS</div></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST · CLASSIC</button><button class="previewbtn play" onclick="launchDevNew()">✨ START 4-PLAYER TEST · NEW DESIGN</button><div class="layoutlab"><div class="layoutlabtitle">LAYOUT LAB</div><div class="layoutlabrow"><button class="layoutlabbtn" onclick="openNewDesignPreview()">👁 QUESTION</button><button class="layoutlabbtn" onclick="openFactLayoutPreview()">💡 FACT</button><button class="layoutlabbtn" onclick="openLeaderboardPreview()">⚡ STANDINGS</button><button class="layoutlabbtn" onclick="openGlobalRankingPreview()">🌐 GLOBAL TOP 50</button><button class="layoutlabbtn" onclick="location.href='theme-difficulty-v2-test.html'">🎲 THEME + DIFFICULTY V2</button></div></div></div><div id="designpreview" class="designpreview"><div class="np-bg"></div><div class="np-brandline">THE QUIZGAME MASTER · v1.0.16</div><button class="np-back" onclick="closeNewDesignPreview()">← BACK TO DEVELOPMENT</button><div class="np-wrap"><div id="np-hero" class="np-hero"><img id="np-image" alt=""><div id="np-subjecthero" class="np-subjecthero"></div><div class="np-heroShade"></div><div class="np-meta"><div id="np-category" class="np-chip">GEOGRAPHY</div><div id="np-difficulty" class="np-chip diff">⚡ PRO</div></div><div id="np-answercount" class="np-answercount"><span>ANSWERS</span><b id="np-answercount-num">0</b></div><div class="np-side"><div class="np-sidehead"><span id="np-sideicon">🏆</span><b id="np-sidetitle">ROUND TOP 5</b></div><div id="np-sidebody"></div></div></div><div class="np-ticker"><div class="np-tlabel">🌐 GLOBAL RANKING</div><div class="np-twin"><div id="np-track" class="np-track"></div></div></div><div class="np-body"><div class="np-headrow"><div id="np-round" class="np-round">ROUND 1 · QUESTION 3/20</div><div id="np-reward" class="np-reward">★ +1</div></div><div class="np-bonushud"><span class="first">⚡ FIRST +1 ⭐</span><span class="streak">🔥 STREAK +1</span></div><div id="np-question" class="np-q"></div><div class="np-callout">💬 TYPE YOUR ANSWER IN CHAT: <b>A · B · C · D</b></div><div class="np-timerrow"><div id="np-seconds" class="np-seconds">18</div><div class="np-bar"><div id="np-barfill"></div></div></div><div id="np-answers" class="np-answers"></div><div class="np-note">V1 QUESTION LAYOUT · THE QUIZGAME MASTER</div></div></div></div><div id="factpreview" class="factpreview"><button class="fp-back" onclick="closeFactLayoutPreview()">← BACK TO DEVELOPMENT</button><div class="fp-wrap"><div class="fp-hero"><img id="fp-image" class="fp-heroimg" alt=""><div class="fp-heroShade"></div><div class="fp-meta"><div id="fp-category" class="fp-chip">LANDMARKS</div><div id="fp-difficulty" class="fp-chip diff">⚡ PRO</div></div><div class="fp-top"><div class="fp-tophead"><span>🏆</span><b>ROUND TOP 5</b></div><div id="fp-topbody"></div></div></div><div class="fp-body"><div id="fp-correct" class="fp-correct">✓ CORRECT ANSWER · <b>B</b></div><div id="fp-answer" class="fp-answer">EIFFEL TOWER</div><div id="fp-countryline" class="fp-countryline"></div><div class="fp-factcard"><div class="fp-facthead"><span class="fp-bulb">💡</span><span id="fp-facttag">DID YOU KNOW?</span></div><div id="fp-facttext" class="fp-facttext"></div></div><div class="fp-winners"><div class="fp-winhead"><span>⚡ FIRST CORRECT ANSWERS</span><span id="fp-questionreward">+1 ★</span></div><div id="fp-winrow" class="fp-winrow"></div></div></div></div></div><div id="globalpreview" class="globalpreview">
 <button class="gp-back" onclick="closeGlobalRankingPreview()">← BACK TO DEVELOPMENT</button>
 <button class="gp-replay" onclick="replayGlobalRankingPreview()">↻ REPLAY</button>
 <div id="gp-roundover" class="gp-roundover">
@@ -133,7 +133,7 @@ linear-gradient(180deg,#061521 0%,#020810 62%,#010509 100%)}
 <div id="cat" class="screen on"><div class="ey">NEXT CATEGORY</div><div class="reel"><div id="items"></div><div class="focus"></div></div><div id="difficulty" class="difficulty"><div class="dl">DIFFICULTY LEVEL</div><div id="rail" class="rail"></div><div id="ready" class="ready">GET READY...</div></div></div>
 <div id="question" class="screen"><div id="roundhud" class="roundhud">ROUND 1 · QUESTION 1/20</div><div class="timer"><div id="bar" class="bar"></div></div><div id="qt" class="q"></div><div id="visual" class="visual"></div><div id="answerprompt" class="prompt">💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS</div><div class="answercount">ANSWERS: <b id="answercount">0</b></div><div id="answers" class="answers"></div></div>
 <div id="round" class="screen"><div class="roundtitle">⚡ ROUND STANDINGS</div><div id="roundsub" class="roundsub"></div><div id="roundanswer" class="roundanswer"></div><div id="roundstarstage" class="roundstarstage"><span class="roundstarhint">QUESTION ★ → PLAYER → ROUND TOTAL</span></div><div id="roundlist" class="roundlist"></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div id="leadertitle" class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
-</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div id="liveonline" class="liveonline"><div class="liveonline-label"><span class="dot"></span><b id="liveonlinecount">0</b><span>ONLINE</span></div><div id="liveonlinewin" class="liveonlinewin"><div id="liveonlinetrack" class="liveonlinetrack"></div></div></div><div id="v2layoutfx" class="v2layoutfx"></div><iframe id="v2transitionframe" class="v2transitionframe" title="V2 challenge transition"></iframe><div class="version">THE QUIZGAME MASTER · v1.0.15</div></div>
+</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div id="liveonline" class="liveonline"><div class="liveonline-label"><span class="dot"></span><b id="liveonlinecount">0</b><span>ONLINE</span></div><div id="liveonlinewin" class="liveonlinewin"><div id="liveonlinetrack" class="liveonlinetrack"></div></div></div><div id="v2layoutfx" class="v2layoutfx"></div><iframe id="v2transitionframe" class="v2transitionframe" title="V2 challenge transition"></iframe><div class="version">THE QUIZGAME MASTER · v1.0.16</div></div>
 <script>
 // Always fetch fresh game/data when opened from the fullscreen browser home page.
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
@@ -215,24 +215,38 @@ function resetLeaderboardAnimSettings(){
   leaderAnimSettings={...DEFAULT_LEADER_ANIM};saveLeaderboardAnimSettings();applyLeaderboardAnimUI();replayLeaderboardPreview();
 }
 const MUSIC_TRACKS=[
-  {id:"mossy-path",name:"MOSSY PATH",step:610,filter:1180,air:6,wave:"triangle",padTypes:["triangle","sine","sine"],padGains:[.09,.055,.026],pads:[65.41,98,130.81],seq:[130.81,146.83,0,164.81,196,0,174.61,146.83,0,123.47,130.81,0,110,123.47,0,146.83]},
-  {id:"crystal-cave",name:"CRYSTAL CAVE",step:480,filter:1680,air:4,wave:"triangle",padTypes:["sine","triangle","triangle"],padGains:[.07,.042,.018],pads:[61.74,92.5,123.47],seq:[246.94,0,369.99,0,293.66,329.63,0,440,0,369.99,293.66,0,277.18,0,369.99,0]},
-  {id:"river-steps",name:"RIVER STEPS",step:560,filter:1850,air:8,wave:"triangle",padTypes:["sine","sine","triangle"],padGains:[.018,.009,.004],pads:[65.41,98,130.81],seq:[261.63,329.63,392,329.63,293.66,349.23,440,349.23,261.63,293.66,329.63,392,349.23,293.66,261.63,0]},
-  {id:"glass-garden",name:"GLASS GARDEN",step:690,filter:2300,air:10,wave:"sine",padTypes:["sine","triangle","sine"],padGains:[.014,.007,.0035],pads:[69.3,103.83,138.59],seq:[329.63,0,392,493.88,0,440,392,329.63,0,293.66,349.23,440,0,392,329.63,261.63]},
-  {id:"moonwell",name:"MOONWELL",step:545,filter:1460,air:7,wave:"sine",padTypes:["triangle","sine","sine"],padGains:[.072,.048,.02],pads:[77.78,116.54,155.56],seq:[311.13,392,0,349.23,0,466.16,415.3,0,311.13,0,261.63,349.23,0,293.66,0,392]}
+  {id:"wholesome",name:"WHOLESOME",url:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Wholesome_by_Kevin_MacLeod.ogg"},
+  {id:"long-trail",name:"LONG TRAIL",url:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Kevin_MacLeod_-_Long_Trail.ogg"}
 ];
-let musicPrefs=loadMusicPrefs(),musicMaster=null,musicFilter=null,musicPadNodes=[],musicTimer=null,musicBeat=0,musicPulseLevel=.07,musicPlaying=false,musicDuckTimer=null,currentMusicTrack="",musicPreviewTimer=null,musicPreviewTrack="";
+let musicPrefs=loadMusicPrefs(),musicElement=null,musicPlaying=false,musicDuckTimer=null,currentMusicTrack="",musicPreviewTimer=null,musicPreviewTrack="",ttsUtterance=null,ttsVoices=[];
 function tone(f,d,v=.01){try{audio||=new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain(),fx=Math.max(0,Math.min(1,Number(musicPrefs?.effectVolume??.8)));o.frequency.value=f;g.gain.value=Math.max(.0001,v*fx);o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
 function loadMusicPrefs(){
   try{
-    let raw=localStorage.getItem("qgm_audio_v2")||localStorage.getItem("qgm_music_v1")||"{}";
-    let x=JSON.parse(raw),defaults=MUSIC_TRACKS.map(t=>t.id),legacyMap={"quiet-horizon":"river-steps","sunset-river":"glass-garden","star-trail":"moonwell","lantern-rain":"river-steps","meadow-dream":"glass-garden"};
+    let raw=localStorage.getItem("qgm_audio_v3")||localStorage.getItem("qgm_audio_v2")||localStorage.getItem("qgm_music_v1")||"{}";
+    let x=JSON.parse(raw),defaults=MUSIC_TRACKS.map(t=>t.id);
+    let legacyMap={
+      "mossy-path":"wholesome","crystal-cave":"long-trail","river-steps":"wholesome",
+      "glass-garden":"long-trail","moonwell":"wholesome","quiet-horizon":"wholesome",
+      "sunset-river":"long-trail","star-trail":"wholesome","lantern-rain":"long-trail","meadow-dream":"wholesome"
+    };
     let requested=Array.isArray(x.tracks)?x.tracks.map(id=>legacyMap[id]||id):defaults;
     let tracks=[...new Set(requested.filter(id=>defaults.includes(id)))];
-    return {enabled:x.enabled!==false,volume:Math.max(0,Math.min(1,Number.isFinite(Number(x.volume))?Number(x.volume):.09)),effectVolume:Math.max(0,Math.min(1,Number.isFinite(Number(x.effectVolume))?Number(x.effectVolume):.8)),rotate:x.rotate!==false,tracks};
-  }catch(e){return {enabled:true,volume:.09,effectVolume:.8,rotate:true,tracks:MUSIC_TRACKS.map(t=>t.id)}}
+    if(!tracks.length)tracks=[...defaults];
+    return {
+      enabled:x.enabled!==false,
+      volume:Math.max(0,Math.min(1,Number.isFinite(Number(x.volume))?Number(x.volume):.12)),
+      effectVolume:Math.max(0,Math.min(1,Number.isFinite(Number(x.effectVolume))?Number(x.effectVolume):.8)),
+      rotate:x.rotate!==false,
+      tracks,
+      voiceEnabled:x.voiceEnabled!==false,
+      voiceVolume:Math.max(.2,Math.min(1,Number.isFinite(Number(x.voiceVolume))?Number(x.voiceVolume):.9)),
+      voiceRate:Math.max(.75,Math.min(1.15,Number.isFinite(Number(x.voiceRate))?Number(x.voiceRate):.96))
+    };
+  }catch(e){
+    return {enabled:true,volume:.12,effectVolume:.8,rotate:true,tracks:MUSIC_TRACKS.map(t=>t.id),voiceEnabled:true,voiceVolume:.9,voiceRate:.96};
+  }
 }
-function saveMusicPrefs(){try{localStorage.setItem("qgm_audio_v2",JSON.stringify(musicPrefs))}catch(e){}}
+function saveMusicPrefs(){try{localStorage.setItem("qgm_audio_v3",JSON.stringify(musicPrefs))}catch(e){}}
 function selectedMusicTracks(){return MUSIC_TRACKS.filter(t=>musicPrefs.tracks.includes(t.id))}
 function currentTrackDef(){return MUSIC_TRACKS.find(t=>t.id===currentMusicTrack)||selectedMusicTracks()[0]||MUSIC_TRACKS[0]}
 function applyMusicUI(){
@@ -242,20 +256,26 @@ function applyMusicUI(){
   if($("deveffectvol"))$("deveffectvol").value=Math.round(musicPrefs.effectVolume*100);
   if($("deveffectval"))$("deveffectval").textContent=Math.round(musicPrefs.effectVolume*100)+"%";
   if($("devmusicrotate"))$("devmusicrotate").checked=musicPrefs.rotate;
+  if($("devvoice"))$("devvoice").checked=musicPrefs.voiceEnabled;
+  if($("livevoice"))$("livevoice").checked=musicPrefs.voiceEnabled;
+  if($("devvoicevol"))$("devvoicevol").value=Math.round(musicPrefs.voiceVolume*100);
+  if($("devvoiceval"))$("devvoiceval").textContent=Math.round(musicPrefs.voiceVolume*100)+"%";
+  if($("devvoicerate"))$("devvoicerate").value=Math.round(musicPrefs.voiceRate*100);
+  if($("devvoicerateval"))$("devvoicerateval").textContent=Math.round(musicPrefs.voiceRate*100)+"%";
   document.querySelectorAll('input[name="musictrack"]').forEach(x=>x.checked=musicPrefs.tracks.includes(x.value));
 }
-function restartMusicTimer(){
-  clearInterval(musicTimer);musicTimer=null;
-  if(!musicPlaying)return;
-  musicBeat=0;musicStep();
-  musicTimer=setInterval(musicStep,currentTrackDef().step);
-}
+function restartMusicTimer(){}
 function setCurrentMusicTrack(id,restart=true){
   let t=MUSIC_TRACKS.find(x=>x.id===id)||selectedMusicTracks()[0];
   if(!t)return;
   currentMusicTrack=t.id;
-  if(audio&&musicFilter)musicFilter.frequency.setTargetAtTime(t.filter,audio.currentTime,.3);
-  if(restart&&musicPlaying)restartMusicTimer();
+  if(restart&&musicPlaying){
+    let wasVolume=musicElement?.volume??musicPrefs.volume;
+    if(musicElement){try{musicElement.pause()}catch(e){}}
+    musicElement=null;musicPlaying=false;
+    startMusic(t.id,false);
+    if(musicElement)musicElement.volume=wasVolume;
+  }
 }
 function resetPreviewButtons(){document.querySelectorAll(".trackpreview").forEach(b=>{b.textContent="▶";b.classList.remove("playing")})}
 function previewMusicTrack(id,button){
@@ -267,7 +287,7 @@ function previewMusicTrack(id,button){
   musicPreviewTrack=id;
   startMusic(id,true);
   if(button){button.textContent="■";button.classList.add("playing")}
-  musicPreviewTimer=setTimeout(()=>{stopMusic();musicPreviewTrack="";resetPreviewButtons()},9000);
+  musicPreviewTimer=setTimeout(()=>{stopMusic();musicPreviewTrack="";resetPreviewButtons()},10000);
 }
 function rotateMusicForRound(){
   if(!musicPlaying||!musicPrefs.rotate)return;
@@ -280,79 +300,99 @@ function updateMusicSettings(){
   if($("devmusicvol"))musicPrefs.volume=Math.max(0,Math.min(1,Number($("devmusicvol").value)/100));
   if($("deveffectvol"))musicPrefs.effectVolume=Math.max(0,Math.min(1,Number($("deveffectvol").value)/100));
   if($("devmusicrotate"))musicPrefs.rotate=$("devmusicrotate").checked;
+  if($("devvoice"))musicPrefs.voiceEnabled=$("devvoice").checked;
+  else if($("livevoice"))musicPrefs.voiceEnabled=$("livevoice").checked;
+  if($("devvoicevol"))musicPrefs.voiceVolume=Math.max(.2,Math.min(1,Number($("devvoicevol").value)/100));
+  if($("devvoicerate"))musicPrefs.voiceRate=Math.max(.75,Math.min(1.15,Number($("devvoicerate").value)/100));
   let boxes=[...document.querySelectorAll('input[name="musictrack"]')];
   if(boxes.length)musicPrefs.tracks=boxes.filter(x=>x.checked).map(x=>x.value);
+  if(!musicPrefs.tracks.length)musicPrefs.tracks=[MUSIC_TRACKS[0].id];
   saveMusicPrefs();applyMusicUI();
-  if(musicMaster&&audio){musicMaster.gain.cancelScheduledValues(audio.currentTime);musicMaster.gain.setTargetAtTime(musicPrefs.enabled?musicPrefs.volume:0,audio.currentTime,.12)}
+  if(musicElement)musicElement.volume=musicPrefs.enabled?musicPrefs.volume:0;
   let selected=selectedMusicTracks();
   if(!musicPrefs.enabled||!selected.length)stopMusic();
   else if(musicPlaying&&!selected.some(t=>t.id===currentMusicTrack))setCurrentMusicTrack(selected[0].id,true);
 }
-function musicPulse(freq,level,dur=.42){
-  if(!musicPlaying||!audio||!musicFilter)return;
-  let now=audio.currentTime,o=audio.createOscillator(),g=audio.createGain(),track=currentTrackDef();
-  o.type=track.wave||"triangle";o.frequency.setValueAtTime(freq,now);
-  g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(Math.max(.0002,level),now+.018);g.gain.exponentialRampToValueAtTime(.0001,now+dur);
-  o.connect(g);g.connect(musicFilter);o.start(now);o.stop(now+dur+.05);
-}
-function musicAir(){
-  if(!musicPlaying||!audio||!musicFilter)return;
-  let len=Math.floor(audio.sampleRate*.08),buf=audio.createBuffer(1,len,audio.sampleRate),data=buf.getChannelData(0);
-  for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*(1-i/len);
-  let src=audio.createBufferSource(),hp=audio.createBiquadFilter(),g=audio.createGain(),now=audio.currentTime;
-  src.buffer=buf;hp.type="highpass";hp.frequency.value=5000;g.gain.value=.012;
-  src.connect(hp);hp.connect(g);g.connect(musicMaster);src.start(now);
-}
-function musicStep(){
-  if(!musicPlaying)return;
-  let track=currentTrackDef(),seq=track.seq,f=seq[musicBeat%seq.length];
-  if(f)musicPulse(f,musicPulseLevel,musicBeat%8===0?.68:.44);
-  musicBeat++;
-}
-function setMusicScene(scene){
-  if(!musicPlaying||!audio||!musicFilter)return;
-  let base=currentTrackDef().filter,target=base,level=.058;
-  if(scene==="questionnew"){target=base+260;level=.082}
-  else if(scene==="factnew"){target=Math.max(620,base-100);level=.048}
-  else if(scene==="round"||scene==="leaderboard"){target=base+100;level=.066}
-  else if(scene==="cat"){target=Math.max(650,base-140);level=.05}
-  musicPulseLevel=level;
-  musicFilter.frequency.cancelScheduledValues(audio.currentTime);
-  musicFilter.frequency.setTargetAtTime(target,audio.currentTime,.45);
-}
+function setMusicScene(scene){}
 function startMusic(initialTrack="",force=false){
   if((!musicPrefs.enabled&&!force)||musicPlaying)return;
+  let selected=selectedMusicTracks(),track=MUSIC_TRACKS.find(t=>t.id===initialTrack)||(selected[0]||MUSIC_TRACKS[0]);
+  if(!track)return;
   try{
-    audio||=new(window.AudioContext||window.webkitAudioContext)();
-    if(audio.state==="suspended")audio.resume();
-    let selected=selectedMusicTracks(),track=MUSIC_TRACKS.find(t=>t.id===initialTrack)||(selected[0]||MUSIC_TRACKS[0]);
-    if(!track)return;
-    musicMaster=audio.createGain();musicFilter=audio.createBiquadFilter();
-    musicFilter.type="lowpass";musicFilter.frequency.value=track.filter;musicFilter.Q.value=.65;
-    musicMaster.gain.value=0;musicFilter.connect(musicMaster);musicMaster.connect(audio.destination);
-    // No continuous oscillator pads/LFO: keep the temporary procedural tracks
-    // clean and sparse until real background tracks are loaded.
-    musicPadNodes=[];
-    musicPlaying=true;currentMusicTrack=track.id;
-    restartMusicTimer();
-    musicMaster.gain.setTargetAtTime(force?Math.max(.02,musicPrefs.volume):musicPrefs.volume,audio.currentTime,.22);
-    setMusicScene("cat");
-  }catch(e){musicPlaying=false}
+    let el=new Audio(track.url);
+    el.loop=true;
+    el.preload="auto";
+    el.volume=force?Math.max(.03,musicPrefs.volume):musicPrefs.volume;
+    el.addEventListener("error",()=>{if(musicElement===el){musicPlaying=false;musicElement=null}});
+    musicElement=el;
+    currentMusicTrack=track.id;
+    musicPlaying=true;
+    let playPromise=el.play();
+    if(playPromise&&typeof playPromise.catch==="function")playPromise.catch(()=>{if(musicElement===el){musicPlaying=false}});
+  }catch(e){musicPlaying=false;musicElement=null}
 }
 function stopMusic(){
-  clearInterval(musicTimer);musicTimer=null;clearTimeout(musicDuckTimer);musicDuckTimer=null;
+  clearTimeout(musicDuckTimer);musicDuckTimer=null;
   clearTimeout(musicPreviewTimer);musicPreviewTimer=null;
-  if(musicMaster&&audio){try{musicMaster.gain.setTargetAtTime(0,audio.currentTime,.08)}catch(e){}}
-  let nodes=musicPadNodes;musicPadNodes=[];
-  setTimeout(()=>nodes.forEach(([o])=>{try{o.stop()}catch(e){}}),260);
-  musicPlaying=false;musicMaster=null;musicFilter=null;
+  if(musicElement){
+    try{musicElement.pause();musicElement.currentTime=0}catch(e){}
+    musicElement=null;
+  }
+  musicPlaying=false;
 }
 function duckMusic(depth=.32,ms=900){
-  if(!musicPlaying||!musicMaster||!audio)return;
+  if(!musicPlaying||!musicElement)return;
   clearTimeout(musicDuckTimer);
-  let now=audio.currentTime,target=musicPrefs.volume*Math.max(.08,Math.min(1,depth));
-  musicMaster.gain.cancelScheduledValues(now);musicMaster.gain.setTargetAtTime(target,now,.035);
-  musicDuckTimer=setTimeout(()=>{if(musicMaster&&audio&&musicPlaying)musicMaster.gain.setTargetAtTime(musicPrefs.volume,audio.currentTime,.18)},ms);
+  musicElement.volume=musicPrefs.volume*Math.max(.05,Math.min(1,depth));
+  musicDuckTimer=setTimeout(()=>{if(musicElement&&musicPlaying)musicElement.volume=musicPrefs.enabled?musicPrefs.volume:0},ms);
+}
+function refreshTtsVoices(){
+  try{ttsVoices=speechSynthesis.getVoices()||[]}catch(e){ttsVoices=[]}
+}
+function preferredQuizVoice(){
+  refreshTtsVoices();
+  let english=ttsVoices.filter(v=>/^en[-_]/i.test(v.lang||"")||/^en$/i.test(v.lang||""));
+  let priorities=[
+    /google.*(uk|us).*english/i,/microsoft.*(aria|jenny|guy|sonia|ryan)/i,
+    /samantha/i,/daniel/i,/serena/i,/karen/i,/moira/i
+  ];
+  for(let rx of priorities){
+    let v=english.find(x=>rx.test(x.name||""));
+    if(v)return v;
+  }
+  return english.find(v=>/en-GB/i.test(v.lang||""))||english.find(v=>/en-US/i.test(v.lang||""))||english[0]||ttsVoices[0]||null;
+}
+function restoreMusicAfterVoice(){
+  if(musicElement&&musicPlaying)musicElement.volume=musicPrefs.enabled?musicPrefs.volume:0;
+}
+function cancelQuestionVoice(){
+  try{speechSynthesis.cancel()}catch(e){}
+  ttsUtterance=null;
+  restoreMusicAfterVoice();
+}
+function speakQuestion(q){
+  if(!musicPrefs.voiceEnabled||!("speechSynthesis" in window))return;
+  let text=String(q?.question||"").trim();
+  if(!text)return;
+  cancelQuestionVoice();
+  try{
+    let u=new SpeechSynthesisUtterance(text);
+    u.lang="en-US";
+    u.volume=musicPrefs.voiceVolume;
+    u.rate=musicPrefs.voiceRate;
+    u.pitch=1;
+    let voice=preferredQuizVoice();
+    if(voice){u.voice=voice;u.lang=voice.lang||"en-US"}
+    u.onstart=()=>{if(musicElement&&musicPlaying)musicElement.volume=musicPrefs.volume*.16};
+    u.onend=()=>{ttsUtterance=null;restoreMusicAfterVoice()};
+    u.onerror=()=>{ttsUtterance=null;restoreMusicAfterVoice()};
+    ttsUtterance=u;
+    speechSynthesis.speak(u);
+  }catch(e){restoreMusicAfterVoice()}
+}
+if("speechSynthesis" in window){
+  refreshTtsVoices();
+  speechSynthesis.addEventListener?.("voiceschanged",refreshTtsVoices);
 }
 function show(x){
   ["cat","question","round","reveal","leaderboard"].forEach(y=>$(y).classList.toggle("on",x===y));
@@ -904,6 +944,7 @@ function renderNewQuestion(q,a){
     },4500);
   }
 
+  speakQuestion(q);
   start=performance.now();
   last=-1;
   raf=requestAnimationFrame(tick);
@@ -3247,6 +3288,7 @@ function startMode(m){
     $("livechecks").innerHTML=cats.map(x=>"<label class='checkrow'><input type='checkbox' name='livecat' value='"+x+"' checked onchange='validateLive();persistSettingsFromUI(\"live\")'>"+x.toUpperCase()+"</label>").join("");
     $("livepanel").classList.add("show");
     applySettingsToUI();
+    applyMusicUI();
     validateLive();
     updateLiveVersionChoice();
   }
@@ -3376,6 +3418,7 @@ function question(){
   else if(q.type==="landmark_image")v.innerHTML="<div class='mediafade'><img class='blur' src='"+q.asset.image+"'><img class='main' src='"+q.asset.image+"'></div>";
   else v.innerHTML="<div class='subject'>"+q.subject.toUpperCase()+"</div>";
   $("answers").innerHTML=a.map((x,n)=>"<div class='ans'><div class='pctbar'></div><div class='letter'>"+"ABCD"[n]+"</div>"+(q.type==="country_to_flag"?"<img src='"+flag(x.code)+"'>":"")+"<span>"+(q.type==="country_to_flag"?"":x.country)+"</span><div class='pct'>0%</div></div>").join("");
+  speakQuestion(q);
   start=performance.now();last=-1;raf=requestAnimationFrame(tick);
 }
 function timerTickTone(remaining){
@@ -3438,6 +3481,7 @@ function continueAfterLeaderboard(){
 }
 function reveal(){
   if(state!=="q")return;
+  cancelQuestionVoice();
   state="mark";
   cancelAnimationFrame(raf);
   clearInterval(designPreviewTimer);
