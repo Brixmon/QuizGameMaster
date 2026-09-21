@@ -1,314 +1,169 @@
 <!doctype html>
-<html lang="en">
+<html lang="lv">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>QuizGame Master · Control Center</title>
 <style>
-:root{
-  --bg:#071019;--panel:#0d1924;--panel2:#101f2c;--line:#1f3445;--text:#eef7ff;--muted:#88a3b8;
-  --gold:#ffd45e;--blue:#45c4ff;--green:#57df9a;--red:#ff6d79;--orange:#ffb45b;
+:root{--bg:#061019;--panel:#0d1924;--panel2:#10212e;--line:#203847;--text:#eef8ff;--muted:#86a0b3;--gold:#ffd45e;--blue:#45c4ff;--green:#57df9a;--red:#ff6d79;--orange:#ffb45b}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 80% -10%,#123956 0,transparent 34%),var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,select,textarea{font:inherit}.app{display:grid;grid-template-columns:235px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--line);background:#08131de8;backdrop-filter:blur(12px);z-index:40}.brand{font-weight:1000;letter-spacing:.055em;font-size:18px}.brand b{color:var(--gold)}.ver{color:var(--muted);font-size:11px;margin-top:5px}.nav{display:grid;gap:7px;margin-top:26px}.nav button{border:1px solid transparent;background:transparent;color:#b8cbd8;padding:11px 12px;border-radius:11px;text-align:left;font-weight:800;cursor:pointer}.nav button.active,.nav button:hover{background:#15304788;border-color:#28506b;color:white}.nav button.active{box-shadow:inset 3px 0 var(--blue)}.main{min-width:0;padding:24px 28px 50px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}.top h1{margin:0;font-size:28px}.top p{margin:5px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn{border:1px solid #2c4b61;background:#102536;color:#e6f7ff;padding:9px 11px;border-radius:10px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn:hover{border-color:#4c7898}.btn.primary{background:#173b50;border-color:#3d7da4}.btn.good{border-color:#3f8b67}.dot{width:8px;height:8px;border-radius:50%;background:#657c8e}.connected .dot{background:var(--green);box-shadow:0 0 12px #57df9a99}.langs{display:flex;border:1px solid #2c4b61;border-radius:10px;overflow:hidden}.langs button{border:0;background:#0b1b27;color:#829fb2;padding:9px 10px;font-weight:1000;cursor:pointer}.langs button.active{background:#1c3b50;color:#fff}.section{display:none}.section.active{display:block}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}.card{background:linear-gradient(180deg,#10202d,#0c1822);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 12px 30px #0003}.metric span{color:var(--muted);font-size:11px;font-weight:900}.metric b{display:block;font-size:29px;margin-top:4px}.metric small{color:#7490a4}.head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:23px 0 11px}.head h2{margin:0;font-size:20px}.head p{margin:4px 0 0;color:var(--muted);font-size:12px}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar input,.toolbar select,.field input,.field select,.field textarea{border:1px solid var(--line);background:#081722;color:white;border-radius:9px;padding:9px 10px;outline:none}.toolbar input{min-width:250px}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#0b1721}.table{width:100%;border-collapse:collapse;min-width:880px}.table th{position:sticky;top:0;background:#0f202d;color:#7896aa;font-size:10px;letter-spacing:.06em;text-align:left;padding:10px;border-bottom:1px solid var(--line)}.table td{padding:10px;border-bottom:1px solid #172b3a;font-size:13px;vertical-align:middle}.table tbody tr{cursor:pointer}.table tbody tr:hover{background:#102637}.qid{color:var(--gold);font-weight:1000}.pill{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;border:1px solid #ffffff20;background:#ffffff0b;font-size:10px;font-weight:900}.pill.ok{color:var(--green);border-color:#57df9a55}.pill.warn{color:var(--orange);border-color:#ffb45b55}.pill.bad{color:var(--red);border-color:#ff6d7955}.pill.info{color:#7ad7ff;border-color:#45c4ff55}.thumb{width:58px;height:42px;border-radius:8px;object-fit:cover;background:#132736;border:1px solid #274154}.flagthumb{object-fit:contain;padding:3px}.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px}.cat b{font-size:30px}.bar{height:7px;background:#152b3a;border-radius:99px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold))}.notice{padding:12px 14px;border:1px solid #29485d;border-radius:11px;background:#142633;color:#b9d3e4;font-size:12px;line-height:1.5}.empty{padding:25px;text-align:center;color:var(--muted)}.path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#9bcce8;font-size:11px;word-break:break-all}.assetlist{display:grid;gap:8px}.assetrow{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #1f3748;border-radius:10px;background:#0a1721}.assetmeta{min-width:0;flex:1}.assetmeta b{display:block}.assetmeta .path{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mobilecards{display:none}.modal{display:none;position:fixed;inset:0;z-index:200;background:#02070bd7;backdrop-filter:blur(8px);padding:20px;overflow:auto}.modal.show{display:flex;align-items:flex-start;justify-content:center}.box{width:min(960px,100%);margin:auto;background:#0b1822;border:1px solid #29465a;border-radius:18px;padding:20px;box-shadow:0 30px 80px #000a}.boxtop{display:flex;justify-content:space-between;gap:12px}.boxtop h2{margin:4px 0 3px}.close{width:38px;height:38px;border:0;border-radius:10px;background:#182b39;color:white;font-size:22px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}.detail{padding:12px;border:1px solid var(--line);border-radius:12px;background:#0f202b}.detail.span2{grid-column:1/-1}.detail>label,.field label{display:block;color:#7896aa;font-size:10px;font-weight:900;margin-bottom:6px}.answers{display:grid;gap:6px}.answer{padding:8px 9px;border:1px solid #244052;border-radius:8px}.answer.correct{border-color:#57df9a88;color:#b8ffd8}.preview{max-width:100%;max-height:260px;border-radius:11px;border:1px solid var(--line);background:#09131b}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field input,.field select,.field textarea{width:100%}.uploadgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.upload{border:1px solid var(--line);border-radius:11px;padding:11px;background:#091721}.upload b{display:block;margin-bottom:8px}.upload input{width:100%;font-size:11px;color:var(--muted)}.upload .btn{width:100%;margin-top:9px}.uploadstatus{margin-top:9px;color:var(--muted);font-size:12px}.playeravatar{width:30px;height:30px;border-radius:50%;object-fit:cover;background:#173044}
+@media(max-width:950px){.app{grid-template-columns:185px 1fr}.main{padding:20px 16px}.uploadgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){
+ body{padding-bottom:76px}.app{display:block}.side{position:relative;height:auto;padding:14px 12px 11px;border-right:0;border-bottom:1px solid var(--line)}.nav{position:fixed;left:0;right:0;bottom:0;z-index:150;display:flex;gap:5px;overflow-x:auto;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#07131df7;border-top:1px solid var(--line);backdrop-filter:blur(14px);scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{min-width:100px;text-align:center;padding:9px 6px;font-size:10px;white-space:nowrap}.nav button.active{box-shadow:inset 0 3px var(--blue)}
+ .main{padding:14px 10px 20px}.top{display:block}.top h1{font-size:23px}.actions{display:grid;grid-template-columns:1fr 1fr;margin-top:11px}.langs{grid-column:1/-1}.langs button{flex:1}.head{display:block;margin-top:18px}.toolbar{display:grid;grid-template-columns:1fr;margin-top:9px}.toolbar input,.toolbar select{width:100%;min-width:0}.metrics{grid-template-columns:1fr 1fr}.tablewrap{display:none}.mobilecards{display:grid;gap:9px}.qcard{border:1px solid var(--line);border-radius:13px;padding:12px;background:#0b1822}.qcardtop{display:flex;gap:10px;align-items:center}.qcard .thumb{width:66px;height:48px}.qcard h3{margin:0;font-size:14px}.qcard p{margin:8px 0 0;color:#dcebf5;font-size:13px}.qcardmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+ .modal{padding:0}.modal.show{align-items:flex-end}.box{width:100%;max-height:93vh;overflow:auto;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.boxtop{position:sticky;top:-15px;z-index:4;background:#0b1822;padding:10px 0 8px}.detailgrid,.formgrid,.uploadgrid{grid-template-columns:1fr}.detail.span2{grid-column:auto}.assetrow{align-items:flex-start}
 }
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 80% -10%,#123956 0,transparent 34%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-button,input,select{font:inherit}
-.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-.sidebar{position:sticky;top:0;height:100vh;padding:24px 18px;border-right:1px solid var(--line);background:#08131ddd;backdrop-filter:blur(12px)}
-.brand{font-weight:1000;letter-spacing:.06em;font-size:19px}.brand b{color:var(--gold)}.sub{color:var(--muted);font-size:12px;margin-top:5px}
-.nav{margin-top:28px;display:grid;gap:7px}.nav button{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:#b7cad8;padding:11px 12px;border-radius:11px;cursor:pointer;font-weight:800}.nav button:hover,.nav button.active{background:#15304788;border-color:#28506b;color:white}.nav button.active{box-shadow:inset 3px 0 var(--blue)}
-.sidefoot{position:absolute;bottom:18px;left:18px;right:18px;color:#6d879a;font-size:11px;line-height:1.5}.sidefoot a{color:#9bdcff;text-decoration:none}
-.main{padding:26px 30px 50px;min-width:0}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px}.top h1{margin:0;font-size:28px;letter-spacing:-.02em}.top p{margin:6px 0 0;color:var(--muted)}
-.toplinks{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.btn{border:1px solid #2c4a60;background:#112637;color:#dff4ff;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:800;cursor:pointer}.btn:hover{border-color:#4e7895}.langswitch{display:flex;border:1px solid #2c4a60;border-radius:10px;overflow:hidden;background:#0b1b27}.langswitch button{border:0;background:transparent;color:#7f9daf;padding:9px 11px;font-weight:1000;cursor:pointer}.langswitch button.active{background:#1c3b50;color:#fff}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:linear-gradient(180deg,#10202d,#0c1822);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 12px 32px #0003}.metric span{color:var(--muted);font-size:12px;font-weight:800}.metric b{display:block;font-size:30px;margin-top:4px}.metric small{color:#7390a4}
-.section{display:none}.section.active{display:block}.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 12px}.sectionhead h2{margin:0;font-size:20px}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:13px}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar input,.toolbar select{border:1px solid var(--line);background:#0a1721;color:white;border-radius:10px;padding:9px 11px;outline:none}.toolbar input{min-width:260px}
-.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:15px;background:#0b1721}.table{width:100%;border-collapse:collapse;min-width:980px}.table th{position:sticky;top:0;background:#0f202d;color:#7895a9;text-align:left;font-size:11px;letter-spacing:.06em;padding:11px;border-bottom:1px solid var(--line)}.table td{padding:11px;border-bottom:1px solid #172b3a;vertical-align:middle;font-size:13px}.table tr{cursor:pointer}.table tbody tr:hover{background:#102637}
-.qid{font-weight:1000;color:var(--gold)}.thumb{width:58px;height:42px;border-radius:8px;object-fit:cover;background:#132736;border:1px solid #274154}.flagthumb{object-fit:contain;padding:4px}
-.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;font-size:11px;font-weight:900;border:1px solid #ffffff20;background:#ffffff0b}.ok{color:var(--green);border-color:#57df9a45}.warn{color:var(--orange);border-color:#ffb45b50}.bad{color:var(--red);border-color:#ff6d7950}.info{color:#7ad7ff;border-color:#45c4ff45}
-.categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cat h3{margin:0 0 5px}.cat .big{font-size:34px;font-weight:1000}.bar{height:8px;background:#152b3a;border-radius:99px;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:inherit}
-.issue{display:flex;gap:12px;align-items:flex-start;padding:12px;border-bottom:1px solid #172b3a}.issue:last-child{border:0}.issue b{display:block}.issue small{color:var(--muted)}
-.empty{padding:28px;text-align:center;color:var(--muted)}.notice{padding:13px 15px;border-radius:12px;background:#142633;border:1px solid #29485d;color:#b9d3e4;font-size:13px;line-height:1.5}.notice strong{color:white}
-.split{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}.playeravatar{width:30px;height:30px;border-radius:50%;object-fit:cover;background:#173044}
-.modal{display:none;position:fixed;inset:0;z-index:99;background:#02070bc9;backdrop-filter:blur(8px);padding:24px;overflow:auto}.modal.show{display:flex;align-items:flex-start;justify-content:center}.modalbox{width:min(930px,100%);background:#0b1822;border:1px solid #29465a;border-radius:18px;margin:auto;padding:21px;box-shadow:0 30px 80px #0009}.modaltop{display:flex;justify-content:space-between;gap:15px}.modal h2{margin:4px 0 3px}.close{border:0;background:#182b39;color:white;border-radius:10px;width:38px;height:38px;cursor:pointer}.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.detail{padding:13px;border:1px solid var(--line);border-radius:12px;background:#0f202b}.detail label{display:block;color:#7896aa;font-size:11px;font-weight:900;margin-bottom:6px}.answers{display:grid;gap:6px}.answer{padding:8px 10px;border:1px solid #244052;border-radius:9px}.answer.correct{border-color:#57df9a88;color:#b8ffd8}
-.mediaPreview{max-width:100%;max-height:260px;border-radius:12px;border:1px solid var(--line);background:#09131b}.path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#9bcce8;font-size:11px;word-break:break-all}
-.statrow{display:grid;grid-template-columns:1fr 80px;gap:10px;align-items:center;margin:9px 0}.statrow .bar{margin:0}
-@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}.app{grid-template-columns:190px 1fr}.main{padding:22px 18px}}
-@media(max-width:720px){.app{display:block}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(2,1fr)}.sidefoot{display:none}.grid,.categories,.detailgrid{grid-template-columns:1fr}.toolbar input{min-width:0;width:100%}.main{padding:18px 12px}.top{display:block}.toplinks{margin-top:12px}}
+@media(max-width:410px){.metrics{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.langs{grid-column:auto}}
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sidebar">
-  <div class="brand">QUIZGAME <b>MASTER</b></div>
-  <div class="sub"><span data-i18n="control_center">CONTROL CENTER</span> · v0.2</div>
-  <div class="nav">
-    <button data-tab="overview" class="active">◈ <span data-i18n="overview">Overview</span></button>
-    <button data-tab="questions">▤ <span data-i18n="questions">Questions</span></button>
-    <button data-tab="categories">▦ <span data-i18n="categories">Categories</span></button>
-    <button data-tab="media">◉ <span data-i18n="media_licenses">Media & licenses</span></button>
-    <button data-tab="analytics">⌁ <span data-i18n="analytics">Analytics</span></button>
-    <button data-tab="players">♟ <span data-i18n="players">Players</span></button>
-  </div>
-  <div class="sidefoot"><span data-i18n="permanent_ids">Permanent IDs</span>: <b>Q001…</b><br><span data-i18n="never_reuse">Never reuse or renumber.</span><br><a href="game.html" data-i18n="open_game">Open game →</a></div>
+<aside class="side">
+ <div class="brand">QUIZGAME <b>MASTER</b></div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.3</div>
+ <div class="nav">
+  <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
+  <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
+  <button data-tab="categories">▦ <span data-t="categories">Kategorijas</span></button>
+  <button data-tab="media">◉ <span data-t="media">Faili</span></button>
+  <button data-tab="analytics">⌁ <span data-t="analytics">Analītika</span></button>
+  <button data-tab="players">♟ <span data-t="players">Spēlētāji</span></button>
+ </div>
 </aside>
-
 <main class="main">
-  <div class="top">
-    <div><h1 data-i18n="game_control_center">Game Control Center</h1><p data-i18n="subtitle">Questions, assets, licenses and LIVE data in one place.</p></div>
-    <div class="toplinks"><div class="langswitch"><button id="langLv" type="button">LV</button><button id="langEn" type="button">EN</button></div><button class="btn" id="refresh">↻ <span data-i18n="refresh_data">Refresh data</span></button><a class="btn" href="game.html">▶ <span data-i18n="open_game_plain">Open game</span></a></div>
+ <div class="top">
+  <div><h1 data-t="title">Spēles vadības centrs</h1><p data-t="subtitle">Jautājumi, faili, licences un LIVE dati vienuviet.</p></div>
+  <div class="actions">
+   <div class="langs"><button id="lvBtn">LV</button><button id="enBtn">EN</button></div>
+   <button class="btn" id="cloudBtn"><span class="dot"></span><span id="cloudText">Pieslēgt Cloud</span></button>
+   <button class="btn" id="refreshBtn">↻ <span data-t="refresh">Atjaunot</span></button>
+   <a class="btn primary" href="game.html">▶ <span data-t="openGame">Atvērt spēli</span></a>
   </div>
+ </div>
 
-  <section id="overview" class="section active">
-    <div class="grid">
-      <div class="card metric"><span data-i18n="total_questions">TOTAL QUESTIONS</span><b id="mQuestions">—</b><small id="mCategories">— categories</small></div>
-      <div class="card metric"><span data-i18n="missing_audio">MISSING QUESTION AUDIO</span><b id="mAudio">—</b><small data-i18n="final_licensed_voice">final licensed voice files</small></div>
-      <div class="card metric"><span data-i18n="license_review">LICENSE ITEMS TO REVIEW</span><b id="mLicense">—</b><small data-i18n="image_fact_audio">image / fact image / audio</small></div>
-      <div class="card metric"><span data-i18n="known_players">KNOWN GLOBAL PLAYERS</span><b id="mPlayers">—</b><small data-i18n="from_cloud_state">from cloud game state</small></div>
-    </div>
-    <div class="split">
-      <div>
-        <div class="sectionhead"><div><h2 data-i18n="production_readiness">Production readiness</h2><p data-i18n="production_readiness_sub">What still blocks clean commercial publishing.</p></div></div>
-        <div class="card" id="issues"></div>
-      </div>
-      <div>
-        <div class="sectionhead"><div><h2 data-i18n="id_file_rules">ID & file rules</h2><p data-i18n="keep_predictable">Keep the library predictable.</p></div></div>
-        <div class="card">
-          <div class="notice"><strong data-i18n="qid_permanent">QID is permanent.</strong> <span data-i18n="qid_permanent_desc">Q001 stays Q001 forever, even if the question text changes or the category grows.</span></div>
-          <div style="margin-top:14px;font-size:13px;line-height:1.8;color:#b7cedd">
-            <span data-i18n="question_audio">Question audio</span>: <span class="path">Q001-question.mp3</span><br>
-            <span data-i18n="internal_id_compat">Existing internal ID stays for compatibility.</span><br>
-            <span data-i18n="next_free_id">Next free ID</span>: <b id="nextQid">—</b>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+ <section id="overview" class="section active">
+  <div class="metrics">
+   <div class="card metric"><span data-t="totalQuestions">KOPĀ JAUTĀJUMU</span><b id="mQuestions">—</b><small id="mCats">—</small></div>
+   <div class="card metric"><span data-t="rankingPlayers">REITINGA SPĒLĒTĀJI</span><b id="mPlayers">—</b><small data-t="rankingSub">globālajā spēles reitingā</small></div>
+   <div class="card metric"><span data-t="visitors">LIVE APMEKLĒTĀJI</span><b id="mVisitors">—</b><small data-t="visitorsSub">unikāli analītikā</small></div>
+   <div class="card metric"><span data-t="sessions">LIVE SESIJAS</span><b id="mSessions">—</b><small data-t="sessionsSub">saglabātas D1</small></div>
+   <div class="card metric"><span data-t="cloudFiles">CLOUD FAILI</span><b id="mFiles">—</b><small data-t="cloudFilesSub">R2 satura faili</small></div>
+  </div>
+  <div class="head"><div><h2 data-t="status">Sistēmas statuss</h2><p data-t="statusSub">Kas šobrīd ir pieslēgts un gatavs darbam.</p></div></div>
+  <div class="card" id="statusBox"></div>
+ </section>
 
-  <section id="questions" class="section">
-    <div class="sectionhead">
-      <div><h2 data-i18n="questions">Questions</h2><p data-i18n="questions_sub">Click any row for full question, media and license details.</p></div>
-      <div class="toolbar">
-        <input id="search" data-i18n-placeholder="search_placeholder" placeholder="Search QID, question, answer…">
-        <select id="catFilter"><option value="">All categories</option></select>
-        <select id="diffFilter"><option value="">All difficulties</option></select>
-        <select id="licenseFilter"><option value="">All license states</option><option value="problem">Needs attention</option><option value="ready">Recorded/ready</option></select>
-      </div>
-    </div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>ID</th><th data-i18n="preview">Preview</th><th data-i18n="category">Category</th><th data-i18n="difficulty">Difficulty</th><th data-i18n="question">Question</th><th data-i18n="correct">Correct</th><th>Audio</th><th data-i18n="licenses">Licenses</th></tr></thead><tbody id="qRows"></tbody></table></div>
-  </section>
+ <section id="questions" class="section">
+  <div class="head">
+   <div><h2 data-t="questions">Jautājumi</h2><p data-t="questionsSub">Atver jautājumu, lai apskatītu detaļas un augšupielādētu failus tieši Cloudflare R2.</p></div>
+   <div class="toolbar"><input id="search" placeholder="Meklēt…"><select id="catFilter"></select><select id="diffFilter"></select></div>
+  </div>
+  <div class="tablewrap"><table class="table"><thead><tr><th>ID</th><th data-t="preview">Priekšskatījums</th><th data-t="category">Kategorija</th><th data-t="difficulty">Grūtība</th><th data-t="question">Jautājums</th><th data-t="correct">Pareizā</th></tr></thead><tbody id="qRows"></tbody></table></div>
+  <div class="mobilecards" id="qCards"></div>
+ </section>
 
-  <section id="categories" class="section">
-    <div class="sectionhead"><div><h2 data-i18n="categories">Categories</h2><p data-i18n="categories_sub">Question counts and difficulty coverage.</p></div></div>
-    <div class="categories" id="categoryCards"></div>
-  </section>
+ <section id="categories" class="section">
+  <div class="head"><div><h2 data-t="categories">Kategorijas</h2><p data-t="categoriesSub">Jautājumu un grūtības līmeņu pārklājums.</p></div></div>
+  <div class="cats" id="catCards"></div>
+ </section>
 
-  <section id="media" class="section">
-    <div class="sectionhead"><div><h2 data-i18n="media_audit">Media & license audit</h2><p data-i18n="media_audit_sub">Nothing is treated as commercially cleared unless proof is recorded.</p></div></div>
-    <div class="card" id="mediaList"></div>
-  </section>
+ <section id="media" class="section">
+  <div class="head"><div><h2 data-t="mediaTitle">Cloud faili (R2)</h2><p data-t="mediaSub">Šie faili tiek augšupielādēti no vadības centra — GitHub nav vajadzīgs.</p></div></div>
+  <div class="card" id="mediaList"></div>
+ </section>
 
-  <section id="analytics" class="section">
-    <div class="sectionhead"><div><h2 data-i18n="question_analytics">Question analytics</h2><p data-i18n="question_analytics_sub">Designed for real difficulty calibration, not guesses.</p></div></div>
-    <div id="analyticsNotice" class="notice"></div>
-    <div style="height:12px"></div>
-    <div class="grid">
-      <div class="card metric"><span data-i18n="recorded_question_plays">RECORDED QUESTION PLAYS</span><b id="aPlays">0</b><small data-i18n="across_sessions">across persisted LIVE sessions</small></div>
-      <div class="card metric"><span data-i18n="recorded_answers">RECORDED ANSWERS</span><b id="aAnswers">0</b><small data-i18n="valid_submissions">valid A/B/C/D submissions</small></div>
-      <div class="card metric"><span data-i18n="average_correct">AVERAGE CORRECT</span><b id="aCorrect">—</b><small data-i18n="weighted_answers">weighted by answers</small></div>
-      <div class="card metric"><span data-i18n="recorded_sessions">RECORDED SESSIONS</span><b id="aSessions">0</b><small data-i18n="future_session_history">future session history</small></div>
-    </div>
-    <div class="sectionhead"><div><h2 data-i18n="per_question_performance">Per-question performance</h2></div></div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>ID</th><th data-i18n="question">Question</th><th data-i18n="shown">Shown</th><th data-i18n="answers">Answers</th><th data-i18n="correct_pct">Correct %</th><th data-i18n="avg_response">Avg response</th></tr></thead><tbody id="analyticsRows"></tbody></table></div>
-  </section>
+ <section id="analytics" class="section">
+  <div class="head"><div><h2 data-t="analyticsTitle">LIVE analītika</h2><p data-t="analyticsSub">Reālie D1 dati no TikTok LIVE sesijām.</p></div></div>
+  <div class="metrics">
+   <div class="card metric"><span data-t="questionPlays">JAUTĀJUMU PARĀDĪŠANAS</span><b id="aPlays">—</b></div>
+   <div class="card metric"><span data-t="answers">ATBILDES</span><b id="aAnswers">—</b></div>
+   <div class="card metric"><span data-t="correctPct">PAREIZI</span><b id="aCorrect">—</b></div>
+   <div class="card metric"><span data-t="visitors">LIVE APMEKLĒTĀJI</span><b id="aVisitors">—</b></div>
+  </div>
+  <div class="head"><div><h2 data-t="perQuestion">Pa jautājumiem</h2></div></div>
+  <div class="tablewrap"><table class="table"><thead><tr><th>ID</th><th data-t="question">Jautājums</th><th data-t="shown">Parādīts</th><th data-t="answers">Atbildes</th><th data-t="correctPct">Pareizi</th><th data-t="avgTime">Vid. laiks</th></tr></thead><tbody id="aRows"></tbody></table></div>
+  <div class="mobilecards" id="aCards"></div>
+ </section>
 
-  <section id="players" class="section">
-    <div class="sectionhead"><div><h2 data-i18n="players">Players</h2><p data-i18n="players_sub">Current all-time leaderboard data already stored by the game.</p></div></div>
-    <div class="tablewrap"><table class="table"><thead><tr><th>#</th><th data-i18n="player">Player</th><th data-i18n="points">Points</th><th data-i18n="stored_key">Stored key</th></tr></thead><tbody id="playerRows"></tbody></table></div>
-  </section>
+ <section id="players" class="section">
+  <div class="head"><div><h2 data-t="players">Spēlētāji</h2><p data-t="playersSub">Globālais reitings no spēles cloud state. Tas nav tas pats, kas visi LIVE apmeklētāji.</p></div></div>
+  <div class="tablewrap"><table class="table"><thead><tr><th>#</th><th data-t="player">Spēlētājs</th><th data-t="points">Punkti</th><th>Key</th></tr></thead><tbody id="pRows"></tbody></table></div>
+  <div class="mobilecards" id="pCards"></div>
+ </section>
 </main>
 </div>
 
-<div class="modal" id="modal"><div class="modalbox">
-  <div class="modaltop"><div><div class="qid" id="dQid"></div><h2 id="dQuestion"></h2><div id="dMeta"></div></div><button class="close" id="close">×</button></div>
-  <div class="detailgrid">
-    <div class="detail"><label data-i18n="question_media">QUESTION MEDIA</label><div id="dImage"></div></div>
-    <div class="detail"><label data-i18n="answers">ANSWERS</label><div class="answers" id="dAnswers"></div></div>
-    <div class="detail"><label data-i18n="fact">FACT</label><div id="dFact"></div></div>
-    <div class="detail"><label data-i18n="question_audio_caps">QUESTION AUDIO</label><div id="dAudio"></div></div>
-    <div class="detail"><label data-i18n="license_status">LICENSE STATUS</label><div id="dLicense"></div></div>
-    <div class="detail"><label data-i18n="recorded_performance">RECORDED PERFORMANCE</label><div id="dStats"></div></div>
+<div class="modal" id="modal"><div class="box">
+ <div class="boxtop"><div><div class="qid" id="dQid"></div><h2 id="dQuestion"></h2><div id="dMeta"></div></div><button class="close" id="close">×</button></div>
+ <div class="detailgrid">
+  <div class="detail"><label data-t="questionMedia">JAUTĀJUMA ATTĒLS</label><div id="dImage"></div></div>
+  <div class="detail"><label data-t="answers">ATBILDES</label><div class="answers" id="dAnswers"></div></div>
+  <div class="detail"><label data-t="fact">FAKTS</label><div id="dFact"></div></div>
+  <div class="detail"><label data-t="performance">REZULTĀTI</label><div id="dStats"></div></div>
+  <div class="detail span2">
+   <label data-t="cloudUpload">CLOUD FAILU AUGŠUPIELĀDE</label>
+   <div class="notice" id="uploadGate" data-t="connectToUpload">Pieslēdz Cloud admin, lai augšupielādētu failus tieši R2.</div>
+   <div id="uploadPanel" style="display:none">
+    <div class="formgrid">
+     <div class="field"><label data-t="licenseStatus">LICENCES STATUSS</label><select id="licStatus"><option value="review">Review</option><option value="verified">Verified</option><option value="licensed">Licensed</option></select></div>
+     <div class="field"><label data-t="provider">PAKALPOJUMS / AVOTS</label><input id="provider" placeholder="ElevenLabs / Wikimedia / own…"></div>
+     <div class="field"><label data-t="license">LICENCE</label><input id="licenseName" placeholder="Commercial / CC BY / Own…"></div>
+     <div class="field"><label data-t="source">AVOTA URL / PIEZĪME</label><input id="source" placeholder="https://…"></div>
+     <div class="field" style="grid-column:1/-1"><label data-t="proof">PIERĀDĪJUMA URL / PIEZĪME</label><input id="proof" placeholder="https://…"></div>
+    </div>
+    <div class="uploadgrid">
+     <div class="upload"><b data-t="questionImage">Jautājuma attēls</b><input id="qImageFile" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" data-kind="question_image" data-input="qImageFile">⬆ <span data-t="upload">Augšupielādēt</span></button></div>
+     <div class="upload"><b data-t="factImage">Fakta attēls</b><input id="factImageFile" type="file" accept="image/png,image/jpeg,image/webp"><button class="btn" data-kind="fact_image" data-input="factImageFile">⬆ <span data-t="upload">Augšupielādēt</span></button></div>
+     <div class="upload"><b data-t="questionAudio">Jautājuma audio</b><input id="audioFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg"><button class="btn" data-kind="question_audio" data-input="audioFile">⬆ <span data-t="upload">Augšupielādēt</span></button></div>
+    </div>
+    <div class="uploadstatus" id="uploadStatus"></div>
+    <div class="assetlist" id="qAssets" style="margin-top:10px"></div>
+   </div>
   </div>
+ </div>
 </div></div>
 
 <script>
-const I18N={
-lv:{
-control_center:"VADĪBAS CENTRS",overview:"Pārskats",questions:"Jautājumi",categories:"Kategorijas",media_licenses:"Mediji un licences",analytics:"Analītika",players:"Spēlētāji",
-permanent_ids:"Pastāvīgie ID",never_reuse:"Nekad neizmanto atkārtoti un nepārnumurē.",open_game:"Atvērt spēli →",game_control_center:"Spēles vadības centrs",subtitle:"Jautājumi, faili, licences un LIVE dati vienuviet.",
-refresh_data:"Atjaunot datus",open_game_plain:"Atvērt spēli",total_questions:"KOPĀ JAUTĀJUMU",missing_audio:"TRŪKST JAUTĀJUMU AUDIO",final_licensed_voice:"gala licencētie balss faili",license_review:"JĀPĀRBAUDA LICENCES",image_fact_audio:"attēls / fakta attēls / audio",known_players:"ZINĀMIE GLOBĀLIE SPĒLĒTĀJI",from_cloud_state:"no spēles mākoņa datiem",
-production_readiness:"Gatavība publicēšanai",production_readiness_sub:"Kas vēl traucē drošai komerciālai publicēšanai.",id_file_rules:"ID un failu noteikumi",keep_predictable:"Saglabājam failu bibliotēku pārskatāmu.",qid_permanent:"QID ir pastāvīgs.",qid_permanent_desc:"Q001 vienmēr paliek Q001, pat ja mainās jautājuma teksts vai pieaug kategorija.",question_audio:"Jautājuma audio",internal_id_compat:"Esošais tehniskais ID paliek savietojamībai.",next_free_id:"Nākamais brīvais ID",
-questions_sub:"Nospied uz jebkuras rindas, lai redzētu pilnu jautājumu, failus un licences.",search_placeholder:"Meklēt QID, jautājumu, atbildi…",all_categories:"Visas kategorijas",all_difficulties:"Visi grūtības līmeņi",all_license_states:"Visi licenču statusi",needs_attention:"Jāpārbauda",recorded_ready:"Reģistrēts/gatavs",
-preview:"Priekšskatījums",category:"Kategorija",difficulty:"Grūtība",question:"Jautājums",correct:"Pareizā",licenses:"Licences",categories_sub:"Jautājumu skaits un grūtības līmeņu pārklājums.",media_audit:"Mediju un licenču audits",media_audit_sub:"Nekas netiek uzskatīts par komerciāli drošu, kamēr nav saglabāts licences pierādījums.",
-question_analytics:"Jautājumu analītika",question_analytics_sub:"Reālai grūtības kalibrēšanai, nevis minējumiem.",recorded_question_plays:"REĢISTRĒTAS JAUTĀJUMU PARĀDĪŠANAS",across_sessions:"saglabātajās LIVE sesijās",recorded_answers:"REĢISTRĒTAS ATBILDES",valid_submissions:"derīgas A/B/C/D atbildes",average_correct:"VIDĒJI PAREIZI",weighted_answers:"svērts pēc atbilžu skaita",recorded_sessions:"REĢISTRĒTAS SESIJAS",future_session_history:"turpmākā sesiju vēsture",per_question_performance:"Rezultāti pa jautājumiem",shown:"Parādīts",answers:"Atbildes",correct_pct:"Pareizi %",avg_response:"Vid. atbildes laiks",
-players_sub:"Spēlē jau saglabātie visu laiku reitinga dati.",player:"Spēlētājs",points:"Punkti",stored_key:"Saglabātā atslēga",question_media:"JAUTĀJUMA MEDIJI",fact:"FAKTS",question_audio_caps:"JAUTĀJUMA AUDIO",license_status:"LICENCES STATUSS",recorded_performance:"REĢISTRĒTIE REZULTĀTI",
-categories_count:"kategorijas",fully_licensed:"pilnībā licencēti katalogā",question_image:"Jautājuma attēls",fact_image:"Fakta attēls",question_audio_item:"Jautājuma audio",source_not_recorded:"Avots nav reģistrēts",no_media_records:"Nav mediju ierakstu.",audio_missing_issue:"jautājumu audio faili trūkst",audio_missing_desc:"Pirms publiska komerciāla LIVE izmanto tikai gala failus ar skaidru licenci.",image_license_issue:"attēlu licenču ieraksti jāpārbauda",image_license_desc:"Saglabā avotu, licences nosaukumu un pierādījumu, nepaļaujoties uz atmiņu.",analytics_not_connected:"Jautājumu analītika vēl nav pieslēgta",analytics_not_connected_desc:"Panelis ir gatavs, bet spēle vēl nesaglabā jautājumu un sesiju notikumus.",no_blockers:"Nav reģistrētu publicēšanas šķēršļu.",no_questions_match:"Neviens jautājums neatbilst filtriem.",need_review:"jāpārbauda",ready:"gatavs",licensed:"licencēts",verified:"pārbaudīts",missing:"trūkst",review:"pārbaude",not_required:"nav vajadzīgs",
-collection_connected:"Analītikas vākšana ir pieslēgta.",collection_connected_desc:"Šie skaitļi nāk no saglabātiem LIVE notikumiem.",collection_not_connected:"Analītikas struktūra ir gatava, bet datu vākšana vēl nav pieslēgta.",collection_not_connected_desc:"Nākamais backend solis: saglabāt jautājuma parādīšanu, atbildi, pareizību, atbildes laiku, pievienošanos/iziešanu un sesijas notikumus. Reģionu glabāsim tikai tad, ja TikTok pats dod uzticamu reģiona lauku — neko neminēsim.",no_cloud_players:"Mākonī nav saņemti spēlētāju dati.",provider:"Pakalpojums",license:"Licence",shown_label:"Parādīts",answers_label:"Atbildes",correct_label:"Pareizi",avg_response_label:"Vid. atbildes laiks",no_image:"Nav attēla"
-},
-en:{
-control_center:"CONTROL CENTER",overview:"Overview",questions:"Questions",categories:"Categories",media_licenses:"Media & licenses",analytics:"Analytics",players:"Players",
-permanent_ids:"Permanent IDs",never_reuse:"Never reuse or renumber.",open_game:"Open game →",game_control_center:"Game Control Center",subtitle:"Questions, assets, licenses and LIVE data in one place.",refresh_data:"Refresh data",open_game_plain:"Open game",total_questions:"TOTAL QUESTIONS",missing_audio:"MISSING QUESTION AUDIO",final_licensed_voice:"final licensed voice files",license_review:"LICENSE ITEMS TO REVIEW",image_fact_audio:"image / fact image / audio",known_players:"KNOWN GLOBAL PLAYERS",from_cloud_state:"from cloud game state",
-production_readiness:"Production readiness",production_readiness_sub:"What still blocks clean commercial publishing.",id_file_rules:"ID & file rules",keep_predictable:"Keep the library predictable.",qid_permanent:"QID is permanent.",qid_permanent_desc:"Q001 stays Q001 forever, even if the question text changes or the category grows.",question_audio:"Question audio",internal_id_compat:"Existing internal ID stays for compatibility.",next_free_id:"Next free ID",
-questions_sub:"Click any row for full question, media and license details.",search_placeholder:"Search QID, question, answer…",all_categories:"All categories",all_difficulties:"All difficulties",all_license_states:"All license states",needs_attention:"Needs attention",recorded_ready:"Recorded/ready",preview:"Preview",category:"Category",difficulty:"Difficulty",question:"Question",correct:"Correct",licenses:"Licenses",categories_sub:"Question counts and difficulty coverage.",media_audit:"Media & license audit",media_audit_sub:"Nothing is treated as commercially cleared unless proof is recorded.",
-question_analytics:"Question analytics",question_analytics_sub:"Designed for real difficulty calibration, not guesses.",recorded_question_plays:"RECORDED QUESTION PLAYS",across_sessions:"across persisted LIVE sessions",recorded_answers:"RECORDED ANSWERS",valid_submissions:"valid A/B/C/D submissions",average_correct:"AVERAGE CORRECT",weighted_answers:"weighted by answers",recorded_sessions:"RECORDED SESSIONS",future_session_history:"future session history",per_question_performance:"Per-question performance",shown:"Shown",answers:"Answers",correct_pct:"Correct %",avg_response:"Avg response",
-players_sub:"Current all-time leaderboard data already stored by the game.",player:"Player",points:"Points",stored_key:"Stored key",question_media:"QUESTION MEDIA",fact:"FACT",question_audio_caps:"QUESTION AUDIO",license_status:"LICENSE STATUS",recorded_performance:"RECORDED PERFORMANCE",categories_count:"categories",fully_licensed:"fully licensed in catalog",question_image:"Question image",fact_image:"Fact image",question_audio_item:"Question audio",source_not_recorded:"Source not recorded",no_media_records:"No media records.",audio_missing_issue:"question audio files missing",audio_missing_desc:"Use final licensed files before public commercial LIVE.",image_license_issue:"image license records need review",image_license_desc:"Record source, license name and proof instead of relying on memory.",analytics_not_connected:"Per-question analytics are not connected yet",analytics_not_connected_desc:"The dashboard is ready for them, but the game is not yet persisting question/session events.",no_blockers:"No production blockers recorded.",no_questions_match:"No questions match the filters.",need_review:"need review",ready:"ready",licensed:"licensed",verified:"verified",missing:"missing",review:"review",not_required:"not required",
-collection_connected:"Analytics collection connected.",collection_connected_desc:"These values come from persisted LIVE events.",collection_not_connected:"Analytics schema is ready, collection is not connected yet.",collection_not_connected_desc:"Next backend step: persist question shown, answer, correctness, response time, join/leave and session events. Region will only be stored if TikTok explicitly provides a reliable region field — it will not be guessed.",no_cloud_players:"No cloud players returned.",provider:"Provider",license:"License",shown_label:"Shown",answers_label:"Answers",correct_label:"Correct",avg_response_label:"Avg response",no_image:"No image"
-}};
-let uiLang=localStorage.getItem("qgm_admin_lang")||"lv";
-function t(k){return I18N[uiLang]?.[k]||I18N.en[k]||k}
-function applyLanguage(){
- document.documentElement.lang=uiLang;
- document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
- document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>el.placeholder=t(el.dataset.i18nPlaceholder));
- document.querySelector("#langLv")?.classList.toggle("active",uiLang==="lv");
- document.querySelector("#langEn")?.classList.toggle("active",uiLang==="en");
-}
-function setLang(lang){uiLang=lang==="en"?"en":"lv";localStorage.setItem("qgm_admin_lang",uiLang);applyLanguage();renderAll()}
-function statusLabel(s){let k=String(s||"").replaceAll(" ","_");return I18N[uiLang]?.[k]||nice(s)}
 const BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
-const state={questions:[],catalog:{questions:{},id_policy:{}},analytics:{questions:{},sessions:[],collection_status:"not_connected"},players:[]};
+const T={
+lv:{overview:"Pārskats",questions:"Jautājumi",categories:"Kategorijas",media:"Faili",analytics:"Analītika",players:"Spēlētāji",title:"Spēles vadības centrs",subtitle:"Jautājumi, faili, licences un LIVE dati vienuviet.",refresh:"Atjaunot",openGame:"Atvērt spēli",totalQuestions:"KOPĀ JAUTĀJUMU",rankingPlayers:"REITINGA SPĒLĒTĀJI",rankingSub:"globālajā spēles reitingā",visitors:"LIVE APMEKLĒTĀJI",visitorsSub:"unikāli analītikā",sessions:"LIVE SESIJAS",sessionsSub:"saglabātas D1",cloudFiles:"CLOUD FAILI",cloudFilesSub:"R2 satura faili",status:"Sistēmas statuss",statusSub:"Kas šobrīd ir pieslēgts un gatavs darbam.",questionsSub:"Atver jautājumu, lai apskatītu detaļas un augšupielādētu failus tieši Cloudflare R2.",preview:"Priekšskatījums",category:"Kategorija",difficulty:"Grūtība",question:"Jautājums",correct:"Pareizā",categoriesSub:"Jautājumu un grūtības līmeņu pārklājums.",mediaTitle:"Cloud faili (R2)",mediaSub:"Šie faili tiek augšupielādēti no vadības centra — GitHub nav vajadzīgs.",analyticsTitle:"LIVE analītika",analyticsSub:"Reālie D1 dati no TikTok LIVE sesijām.",questionPlays:"JAUTĀJUMU PARĀDĪŠANAS",answers:"ATBILDES",correctPct:"PAREIZI",perQuestion:"Pa jautājumiem",shown:"Parādīts",avgTime:"Vid. laiks",playersSub:"Globālais reitings no spēles cloud state. Tas nav tas pats, kas visi LIVE apmeklētāji.",player:"Spēlētājs",points:"Punkti",questionMedia:"JAUTĀJUMA ATTĒLS",fact:"FAKTS",performance:"REZULTĀTI",cloudUpload:"CLOUD FAILU AUGŠUPIELĀDE",connectToUpload:"Pieslēdz Cloud admin, lai augšupielādētu failus tieši R2.",licenseStatus:"LICENCES STATUSS",provider:"PAKALPOJUMS / AVOTS",license:"LICENCE",source:"AVOTA URL / PIEZĪME",proof:"PIERĀDĪJUMA URL / PIEZĪME",questionImage:"Jautājuma attēls",factImage:"Fakta attēls",questionAudio:"Jautājuma audio",upload:"Augšupielādēt"},
+en:{overview:"Overview",questions:"Questions",categories:"Categories",media:"Files",analytics:"Analytics",players:"Players",title:"Game Control Center",subtitle:"Questions, files, licenses and LIVE data in one place.",refresh:"Refresh",openGame:"Open game",totalQuestions:"TOTAL QUESTIONS",rankingPlayers:"RANKING PLAYERS",rankingSub:"in the global game ranking",visitors:"LIVE VISITORS",visitorsSub:"unique users in analytics",sessions:"LIVE SESSIONS",sessionsSub:"stored in D1",cloudFiles:"CLOUD FILES",cloudFilesSub:"R2 content files",status:"System status",statusSub:"What is connected and ready right now.",questionsSub:"Open a question to inspect it and upload files directly to Cloudflare R2.",preview:"Preview",category:"Category",difficulty:"Difficulty",question:"Question",correct:"Correct",categoriesSub:"Question counts and difficulty coverage.",mediaTitle:"Cloud files (R2)",mediaSub:"These files are uploaded from Control Center — GitHub is not used.",analyticsTitle:"LIVE analytics",analyticsSub:"Real D1 data from TikTok LIVE sessions.",questionPlays:"QUESTION PLAYS",answers:"ANSWERS",correctPct:"CORRECT",perQuestion:"Per question",shown:"Shown",avgTime:"Avg time",playersSub:"Global ranking from game cloud state. This is not the same as all LIVE visitors.",player:"Player",points:"Points",questionMedia:"QUESTION IMAGE",fact:"FACT",performance:"PERFORMANCE",cloudUpload:"CLOUD MEDIA UPLOAD",connectToUpload:"Connect Cloud admin to upload files directly to R2.",licenseStatus:"LICENSE STATUS",provider:"PROVIDER / SOURCE",license:"LICENSE",source:"SOURCE URL / NOTE",proof:"PROOF URL / NOTE",questionImage:"Question image",factImage:"Fact image",questionAudio:"Question audio",upload:"Upload"}};
+let lang=localStorage.getItem("qgm_admin_lang")||"lv";
+const state={questions:[],catalog:{questions:{},id_policy:{}},players:[],cloud:{connected:false,assets:[],exp:null},current:null};
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const nice=s=>String(s||"").replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());
-const pill=(txt,kind="info")=>'<span class="pill '+kind+'">'+esc(txt)+'</span>';
-const statusKind=s=>s==="verified"||s==="licensed"||s==="not_required"?"ok":s==="missing"?"bad":"warn";
-const fresh=url=>fetch(url+(url.includes("?")?"&":"?")+"_="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()});
-
-function media(q){
-  if(q.type==="flag_to_country"&&q.asset?.code)return {src:"https://flagcdn.com/w320/"+q.asset.code+".png",flag:true,path:"FlagCDN · "+q.asset.code.toUpperCase()};
-  if(q.type==="country_to_flag")return {src:"https://flagcdn.com/w320/"+(q.answers?.find(a=>a.country===q.correct)?.code||"").toLowerCase()+".png",flag:true,path:"Flag choices loaded from FlagCDN"};
-  return {src:q.asset?.image||"",flag:false,path:q.asset?.image||"No question image"};
-}
-function metaFor(q){return state.catalog.questions?.[q.id]||{qid:q.qid,workflow:"review",media:{question_image:{status:"review"},fact_image:{status:q.asset?.fact_image?"review":"not_required"},question_audio:{status:"missing",file:"../assets/audio/questions/"+q.qid+"-question.mp3"}}}}
-function qStats(q){return state.analytics.questions?.[q.qid]||state.analytics.questions?.[q.id]||{}}
-function licenseProblems(q){
-  const m=metaFor(q).media||{};
-  return ["question_image","fact_image","question_audio"].filter(k=>m[k] && !["verified","licensed","not_required"].includes(m[k].status));
-}
-function renderOverview(){
-  const cats=[...new Set(state.questions.map(q=>q.category))];
-  const audioMissing=state.questions.filter(q=>metaFor(q).media?.question_audio?.status==="missing").length;
-  const lic=state.questions.reduce((n,q)=>n+licenseProblems(q).length,0);
-  document.querySelector("#mQuestions").textContent=state.questions.length;
-  document.querySelector("#mCategories").textContent=cats.length+" "+t("categories_count");
-  document.querySelector("#mAudio").textContent=audioMissing;
-  document.querySelector("#mLicense").textContent=lic;
-  document.querySelector("#mPlayers").textContent=state.players.length;
-  document.querySelector("#nextQid").textContent=state.catalog.id_policy?.next_qid||"—";
-  const issues=[];
-  if(audioMissing)issues.push(["bad",audioMissing+" "+t("audio_missing_issue"),t("audio_missing_desc")]);
-  const imageReview=state.questions.reduce((n,q)=>n+["question_image","fact_image"].filter(k=>metaFor(q).media?.[k]?.status==="review").length,0);
-  if(imageReview)issues.push(["warn",imageReview+" "+t("image_license_issue"),t("image_license_desc")]);
-  if(state.analytics.collection_status!=="connected")issues.push(["info",t("analytics_not_connected"),t("analytics_not_connected_desc")]);
-  document.querySelector("#issues").innerHTML=issues.map(x=>'<div class="issue"><span class="pill '+x[0]+'">'+(x[0]==="bad"?"!":x[0]==="warn"?"△":"i")+'</span><div><b>'+esc(x[1])+'</b><small>'+esc(x[2])+'</small></div></div>').join("")||'<div class="empty">'+esc(t("no_blockers"))+'</div>';
-}
-function filters(){
-  const cats=[...new Set(state.questions.map(q=>q.category))].sort();
-  document.querySelector("#catFilter").innerHTML='<option value="">'+esc(t("all_categories"))+'</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join("");
-  const diffs=["newbie","rookie","pro","ninja","master"];
-  document.querySelector("#diffFilter").innerHTML='<option value="">'+esc(t("all_difficulties"))+'</option>'+diffs.map(x=>'<option value="'+x+'">'+nice(x)+'</option>').join("");
-  document.querySelector("#licenseFilter").innerHTML='<option value="">'+esc(t("all_license_states"))+'</option><option value="problem">'+esc(t("needs_attention"))+'</option><option value="ready">'+esc(t("recorded_ready"))+'</option>';
-}
-function filteredQuestions(){
-  const s=document.querySelector("#search").value.trim().toLowerCase(),c=document.querySelector("#catFilter").value,d=document.querySelector("#diffFilter").value,l=document.querySelector("#licenseFilter").value;
-  return state.questions.filter(q=>{
-    let hay=[q.qid,q.id,q.category,q.question,q.correct,...(q.answers||[]).map(a=>typeof a==="string"?a:a.country||a.name||"")].join(" ").toLowerCase();
-    if(s&&!hay.includes(s))return false;if(c&&q.category!==c)return false;if(d&&q.difficulty!==d)return false;
-    let probs=licenseProblems(q).length;
-    if(l==="problem"&&!probs)return false;if(l==="ready"&&probs)return false;return true;
-  });
-}
-function renderQuestions(){
-  const qs=filteredQuestions();
-  document.querySelector("#qRows").innerHTML=qs.map(q=>{
-    const m=media(q),md=metaFor(q),probs=licenseProblems(q);
-    const audio=md.media?.question_audio?.status||"missing";
-    return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':'—')+'</td><td>'+esc(q.category)+'</td><td>'+pill(nice(q.difficulty),"info")+'</td><td>'+esc(q.question)+'</td><td><b>'+esc(q.correct)+'</b></td><td>'+pill(statusLabel(audio),statusKind(audio))+'</td><td>'+(probs.length?pill(probs.length+" "+t("need_review"),"warn"):pill(t("ready"),"ok"))+'</td></tr>';
-  }).join("")||'<tr><td colspan="8" class="empty">'+esc(t("no_questions_match"))+'</td></tr>';
-  document.querySelectorAll("#qRows tr[data-id]").forEach(r=>r.onclick=()=>openQuestion(r.dataset.id));
-}
-function renderCategories(){
-  const groups={};state.questions.forEach(q=>(groups[q.category]??=[]).push(q));
-  document.querySelector("#categoryCards").innerHTML=Object.entries(groups).map(([cat,qs])=>{
-    const ready=qs.filter(q=>licenseProblems(q).length===0).length,pct=Math.round(ready*100/qs.length);
-    const diffs={};qs.forEach(q=>diffs[q.difficulty]=(diffs[q.difficulty]||0)+1);
-    return '<div class="card cat"><h3>'+esc(cat)+'</h3><div class="big">'+qs.length+'</div><div style="color:var(--muted);font-size:12px">'+Object.entries(diffs).map(([k,v])=>nice(k)+" "+v).join(" · ")+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div style="margin-top:7px;color:var(--muted);font-size:11px">'+ready+'/'+qs.length+' '+esc(t("fully_licensed"))+'</div></div>';
-  }).join("");
-}
-function renderMedia(){
-  const rows=[];
-  state.questions.forEach(q=>{
-    const md=metaFor(q),m=md.media||{};
-    [[t("question_image"),"question_image"],[t("fact_image"),"fact_image"],[t("question_audio_item"),"question_audio"]].forEach(([label,k])=>{
-      const x=m[k];if(!x||x.status==="not_required")return;
-      rows.push('<div class="issue"><span class="qid" style="min-width:44px">'+esc(q.qid)+'</span><div style="flex:1"><b>'+esc(label)+' · '+esc(q.question)+'</b><small>'+(x.file?'<span class="path">'+esc(x.file)+'</span>':esc(x.source||t("source_not_recorded")))+'</small></div>'+pill(statusLabel(x.status),statusKind(x.status))+'</div>');
-    });
-  });
-  document.querySelector("#mediaList").innerHTML=rows.join("")||'<div class="empty">'+esc(t("no_media_records"))+'</div>';
-}
-function renderAnalytics(){
-  const a=state.analytics||{},stats=Object.values(a.questions||{});
-  let plays=stats.reduce((n,x)=>n+(Number(x.shown)||0),0),answers=stats.reduce((n,x)=>n+(Number(x.answers)||0),0),correct=stats.reduce((n,x)=>n+(Number(x.correct)||0),0);
-  document.querySelector("#aPlays").textContent=plays;document.querySelector("#aAnswers").textContent=answers;
-  document.querySelector("#aCorrect").textContent=answers?Math.round(correct*100/answers)+"%":"—";document.querySelector("#aSessions").textContent=(a.sessions||[]).length;
-  document.querySelector("#analyticsNotice").innerHTML=a.collection_status==="connected"
-    ?"<strong>"+esc(t("collection_connected"))+"</strong> "+esc(t("collection_connected_desc"))
-    :"<strong>"+esc(t("collection_not_connected"))+"</strong> "+esc(t("collection_not_connected_desc"));
-  document.querySelector("#analyticsRows").innerHTML=state.questions.map(q=>{
-    const s=qStats(q),shown=Number(s.shown)||0,ans=Number(s.answers)||0,cor=Number(s.correct)||0,avg=Number(s.avg_response_ms)||0;
-    return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+esc(q.question)+'</td><td>'+shown+'</td><td>'+ans+'</td><td>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</td><td>'+(avg?(avg/1000).toFixed(1)+"s":"—")+'</td></tr>';
-  }).join("");
-  document.querySelectorAll("#analyticsRows tr[data-id]").forEach(r=>r.onclick=()=>openQuestion(r.dataset.id));
-}
-function renderPlayers(){
-  document.querySelector("#playerRows").innerHTML=state.players.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:9px">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<b>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</b></div></td><td class="qid">'+(Number(p.points)||0)+' ★</td><td><span class="path">'+esc(p.key)+'</span></td></tr>').join("")||'<tr><td colspan="4" class="empty">'+esc(t("no_cloud_players"))+'</td></tr>';
-}
-function openQuestion(id){
-  const q=state.questions.find(x=>x.id===id);if(!q)return;const md=metaFor(q),m=media(q),s=qStats(q);
-  document.querySelector("#dQid").textContent=q.qid+" · "+q.id;
-  document.querySelector("#dQuestion").textContent=q.question;
-  document.querySelector("#dMeta").innerHTML=pill(q.category,"info")+" "+pill(nice(q.difficulty),"info")+" "+pill(nice(q.type),"info");
-  document.querySelector("#dImage").innerHTML=(m.src?'<img class="mediaPreview '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'"><div class="path" style="margin-top:7px">'+esc(m.path)+'</div>':esc(t("no_image")));
-  document.querySelector("#dAnswers").innerHTML=(q.answers||[]).map((a,i)=>{let label=typeof a==="string"?a:a.country||a.name||"",ok=label===q.correct;return '<div class="answer '+(ok?"correct":"")+'"><b>'+"ABCD"[i]+'</b> · '+esc(label)+(ok?" ✓":"")+'</div>'}).join("");
-  document.querySelector("#dFact").innerHTML='<b>'+esc(q.fact_tag||"FACT")+'</b><div style="margin-top:7px;line-height:1.55">'+esc(q.fact||"")+'</div>'+(q.asset?.fact_image?'<div class="path" style="margin-top:9px">'+esc(q.asset.fact_image)+'</div>':"");
-  const au=md.media?.question_audio||{};
-  document.querySelector("#dAudio").innerHTML=pill(statusLabel(au.status||"missing"),statusKind(au.status||"missing"))+'<div class="path" style="margin-top:8px">'+esc(au.file||"")+'</div><div style="color:var(--muted);font-size:12px;margin-top:7px">'+esc(t("provider"))+': '+esc(au.provider||"—")+' · '+esc(t("license"))+': '+esc(au.license||"—")+'</div>';
-  const lm=md.media||{};
-  document.querySelector("#dLicense").innerHTML=["question_image","fact_image","question_audio"].map(k=>{let x=lm[k];if(!x)return"";let lbl=k==="question_image"?t("question_image"):k==="fact_image"?t("fact_image"):t("question_audio_item");return '<div style="display:flex;justify-content:space-between;gap:8px;margin:7px 0"><span>'+esc(lbl)+'</span>'+pill(statusLabel(x.status),statusKind(x.status))+'</div>'}).join("");
-  let shown=Number(s.shown)||0,ans=Number(s.answers)||0,cor=Number(s.correct)||0;
-  document.querySelector("#dStats").innerHTML='<div>'+esc(t("shown_label"))+': <b>'+shown+'</b></div><div>'+esc(t("answers_label"))+': <b>'+ans+'</b></div><div>'+esc(t("correct_label"))+': <b>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</b></div><div>'+esc(t("avg_response_label"))+': <b>'+(s.avg_response_ms?(Number(s.avg_response_ms)/1000).toFixed(1)+"s":"—")+'</b></div>';
-  document.querySelector("#modal").classList.add("show");
-}
-function renderAll(){renderOverview();filters();renderQuestions();renderCategories();renderMedia();renderAnalytics();renderPlayers()}
-async function load(){
-  const [flags,landmarks,catalog,analytics]=await Promise.all([
-    fresh("../data/questions-flags.json"),fresh("../data/questions-landmarks.json"),fresh("../data/admin-catalog.json"),fresh("../data/analytics-snapshot.json")
-  ]);
-  state.questions=[...flags.questions.map(q=>({...q,category:flags.category})),...landmarks.questions.map(q=>({...q,category:landmarks.category}))];
-  state.catalog=catalog;state.analytics=analytics;
-  try{
-    const cloud=await fetch(BRIDGE+"/game/state",{cache:"no-store"}).then(r=>r.json());
-    const p=cloud?.players&&typeof cloud.players==="object"?Object.entries(cloud.players).map(([key,v])=>({key,...v})):[];
-    state.players=p.sort((a,b)=>(Number(b.points)||0)-(Number(a.points)||0));
-  }catch(e){state.players=[]}
-  renderAll();
-}
+const pill=(s,k="info")=>'<span class="pill '+k+'">'+esc(s)+'</span>';
+const fresh=u=>fetch(u+(u.includes("?")?"&":"?")+"_="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()});
+const token=()=>sessionStorage.getItem("qgm_admin_token")||"";
+const auth=()=>token()?{Authorization:"Bearer "+token()}:{};
+function tr(k){return T[lang]?.[k]||T.en[k]||k}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-t]").forEach(x=>x.textContent=tr(x.dataset.t));document.querySelector("#lvBtn").classList.toggle("active",lang==="lv");document.querySelector("#enBtn").classList.toggle("active",lang==="en");document.querySelector("#ccLabel").textContent=lang==="lv"?"VADĪBAS CENTRS":"CONTROL CENTER";setCloudUi()}
+function media(q){if(q.type==="flag_to_country"&&q.asset?.code)return{src:"https://flagcdn.com/w320/"+q.asset.code+".png",flag:true,path:"FlagCDN"};if(q.type==="country_to_flag"){const a=(q.answers||[]).find(x=>(x.country||x.name)===q.correct);return{src:a?.code?"https://flagcdn.com/w320/"+String(a.code).toLowerCase()+".png":"",flag:true,path:"FlagCDN"}}return{src:q.asset?.image||"",flag:false,path:q.asset?.image||""}}
+function qStatsMap(){const out={};for(const x of state.cloud.exp?.question_stats||[]){if(!x.qid)continue;const p=out[x.qid]||{shown:0,answers:0,correct:0,w:0};const a=Number(x.answers)||0;p.shown+=Number(x.shown)||0;p.answers+=a;p.correct+=Number(x.correct)||0;p.w+=(Number(x.avg_response_ms)||0)*a;p.avg_response_ms=p.answers?p.w/p.answers:0;out[x.qid]=p}return out}
+function setCloudUi(){const b=document.querySelector("#cloudBtn"),t=document.querySelector("#cloudText");b.classList.toggle("connected",state.cloud.connected);t.textContent=state.cloud.connected?(lang==="lv"?"Cloud pieslēgts":"Cloud connected"):(lang==="lv"?"Pieslēgt Cloud":"Connect Cloud");document.querySelector("#uploadGate").style.display=state.cloud.connected?"none":"block";document.querySelector("#uploadPanel").style.display=state.cloud.connected?"block":"none"}
+async function loadCloud(silent=true){if(!token()){state.cloud={connected:false,assets:[],exp:null};setCloudUi();return false}try{let p=await fetch(BRIDGE+"/admin/ping",{headers:auth(),cache:"no-store"});if(!p.ok)throw Error("HTTP "+p.status);await fetch(BRIDGE+"/admin/init",{method:"POST",headers:auth()});const [a,e]=await Promise.all([fetch(BRIDGE+"/admin/assets",{headers:auth(),cache:"no-store"}).then(r=>{if(!r.ok)throw Error("assets "+r.status);return r.json()}),fetch(BRIDGE+"/admin/analytics/export?limit_sessions=100",{headers:auth(),cache:"no-store"}).then(r=>{if(!r.ok)throw Error("analytics "+r.status);return r.json()})]);state.cloud={connected:true,assets:a.objects||[],exp:e};setCloudUi();return true}catch(e){state.cloud={connected:false,assets:[],exp:null};setCloudUi();if(!silent)alert((lang==="lv"?"Cloud pieslēgums neizdevās: ":"Cloud connection failed: ")+e.message);return false}}
+async function connectCloud(){if(state.cloud.connected){if(confirm(lang==="lv"?"Atvienot Cloud šai cilnei?":"Disconnect Cloud for this tab?")){sessionStorage.removeItem("qgm_admin_token");state.cloud={connected:false,assets:[],exp:null};renderAll()}return}const v=prompt(lang==="lv"?"Ielīmē ADMIN_TOKEN. Tas paliks tikai šīs pārlūka cilnes sesijā.":"Paste ADMIN_TOKEN. It stays only for this browser-tab session.");if(!v)return;sessionStorage.setItem("qgm_admin_token",v.trim());if(await loadCloud(false))renderAll();else sessionStorage.removeItem("qgm_admin_token")}
+function contentAssets(){return(state.cloud.assets||[]).filter(x=>!String(x.key||"").startsWith("analytics/"))}
+function renderOverview(){document.querySelector("#mQuestions").textContent=state.questions.length;document.querySelector("#mCats").textContent=[...new Set(state.questions.map(x=>x.category))].length+" "+(lang==="lv"?"kategorijas":"categories");document.querySelector("#mPlayers").textContent=state.players.length;document.querySelector("#mVisitors").textContent=state.cloud.connected?(state.cloud.exp?.global_users||[]).length:"—";document.querySelector("#mSessions").textContent=state.cloud.connected?(state.cloud.exp?.sessions||[]).length:"—";document.querySelector("#mFiles").textContent=state.cloud.connected?contentAssets().length:"—";const rows=[["ok","Worker","ONLINE"],["ok","TikTok → Euler → game",lang==="lv"?"pārbaudīts LIVE testā":"verified in LIVE test"],[state.cloud.connected?"ok":"warn","D1 / R2",state.cloud.connected?(lang==="lv"?"admin pieslēgts":"admin connected"):(lang==="lv"?"pieslēdz Cloud, lai redzētu privātos datus":"connect Cloud to see private data")]];document.querySelector("#statusBox").innerHTML=rows.map(r=>'<div class="assetrow"><span>'+pill(r[0]==="ok"?"✓":"!",r[0])+'</span><div class="assetmeta"><b>'+esc(r[1])+'</b><small>'+esc(r[2])+'</small></div></div>').join("")}
+function filters(){const cats=[...new Set(state.questions.map(x=>x.category))].sort();document.querySelector("#catFilter").innerHTML='<option value="">'+(lang==="lv"?"Visas kategorijas":"All categories")+'</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join("");const diffs=["newbie","rookie","pro","ninja","master"];document.querySelector("#diffFilter").innerHTML='<option value="">'+(lang==="lv"?"Visi līmeņi":"All difficulties")+'</option>'+diffs.map(x=>'<option value="'+x+'">'+nice(x)+'</option>').join("")}
+function filtered(){const s=document.querySelector("#search").value.trim().toLowerCase(),c=document.querySelector("#catFilter").value,d=document.querySelector("#diffFilter").value;return state.questions.filter(q=>{const h=[q.qid,q.id,q.category,q.question,q.correct].join(" ").toLowerCase();return(!s||h.includes(s))&&(!c||q.category===c)&&(!d||q.difficulty===d)})}
+function renderQuestions(){const qs=filtered();document.querySelector("#qRows").innerHTML=qs.map(q=>{const m=media(q);return'<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':"—")+'</td><td>'+esc(q.category)+'</td><td>'+pill(nice(q.difficulty),"info")+'</td><td>'+esc(q.question)+'</td><td><b>'+esc(q.correct)+'</b></td></tr>'}).join("")||'<tr><td colspan="6" class="empty">'+(lang==="lv"?"Nekas nav atrasts.":"Nothing found.")+'</td></tr>';document.querySelector("#qCards").innerHTML=qs.map(q=>{const m=media(q);return'<div class="qcard" data-id="'+esc(q.id)+'"><div class="qcardtop">'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':"")+'<div><div class="qid">'+esc(q.qid)+'</div><h3>'+esc(q.question)+'</h3></div></div><div class="qcardmeta">'+pill(q.category,"info")+pill(nice(q.difficulty),"info")+'</div><p>✓ '+esc(q.correct)+'</p></div>'}).join("");document.querySelectorAll("[data-id]").forEach(x=>x.onclick=()=>openQuestion(x.dataset.id))}
+function renderCats(){const g={};state.questions.forEach(q=>(g[q.category]??=[]).push(q));document.querySelector("#catCards").innerHTML=Object.entries(g).map(([k,qs])=>{const d={};qs.forEach(q=>d[q.difficulty]=(d[q.difficulty]||0)+1);return'<div class="card cat"><h3>'+esc(k)+'</h3><b>'+qs.length+'</b><div style="color:var(--muted);font-size:12px;margin-top:5px">'+Object.entries(d).map(([a,b])=>nice(a)+" "+b).join(" · ")+'</div><div class="bar"><i style="width:100%"></i></div></div>'}).join("")}
+function renderMedia(){const box=document.querySelector("#mediaList");if(!state.cloud.connected){box.innerHTML='<div class="empty">'+(lang==="lv"?"Pieslēdz Cloud admin. Tad šeit redzēsi un varēsi pārvaldīt R2 failus.":"Connect Cloud admin to view and manage R2 files.")+'</div>';return}const arr=contentAssets();box.innerHTML=arr.length?'<div class="assetlist">'+arr.map(x=>'<div class="assetrow"><div class="assetmeta"><b>'+esc(String(x.key).split("/").pop())+'</b><span class="path">'+esc(x.key)+'</span><small>'+Math.max(1,Math.round((Number(x.size)||0)/1024))+' KB</small></div>'+pill("R2","ok")+'</div>').join("")+'</div>':'<div class="empty">'+(lang==="lv"?"R2 vēl nav satura failu.":"No content files in R2 yet.")+'</div>'}
+function renderAnalytics(){if(!state.cloud.connected){["aPlays","aAnswers","aCorrect","aVisitors"].forEach(id=>document.querySelector("#"+id).textContent="—");document.querySelector("#aRows").innerHTML='<tr><td colspan="6" class="empty">'+(lang==="lv"?"Pieslēdz Cloud admin analītikai.":"Connect Cloud admin for analytics.")+'</td></tr>';document.querySelector("#aCards").innerHTML='<div class="empty">'+(lang==="lv"?"Pieslēdz Cloud admin analītikai.":"Connect Cloud admin for analytics.")+'</div>';return}const map=qStatsMap(),stats=Object.values(map),plays=stats.reduce((n,x)=>n+x.shown,0),ans=stats.reduce((n,x)=>n+x.answers,0),cor=stats.reduce((n,x)=>n+x.correct,0);document.querySelector("#aPlays").textContent=plays;document.querySelector("#aAnswers").textContent=ans;document.querySelector("#aCorrect").textContent=ans?Math.round(cor*100/ans)+"%":"—";document.querySelector("#aVisitors").textContent=(state.cloud.exp?.global_users||[]).length;const rows=state.questions.map(q=>{const s=map[q.qid]||{},a=Number(s.answers)||0,c=Number(s.correct)||0,avg=Number(s.avg_response_ms)||0;return{q,s,a,c,avg}});document.querySelector("#aRows").innerHTML=rows.map(x=>'<tr data-id="'+esc(x.q.id)+'"><td class="qid">'+esc(x.q.qid)+'</td><td>'+esc(x.q.question)+'</td><td>'+Number(x.s.shown||0)+'</td><td>'+x.a+'</td><td>'+(x.a?Math.round(x.c*100/x.a)+"%":"—")+'</td><td>'+(x.avg?(x.avg/1000).toFixed(1)+"s":"—")+'</td></tr>').join("");document.querySelector("#aCards").innerHTML=rows.map(x=>'<div class="qcard" data-id="'+esc(x.q.id)+'"><div class="qid">'+esc(x.q.qid)+'</div><h3>'+esc(x.q.question)+'</h3><div class="qcardmeta">'+pill("Shown "+Number(x.s.shown||0),"info")+pill("Answers "+x.a,"info")+pill(x.a?Math.round(x.c*100/x.a)+"%":"—","ok")+'</div></div>').join("");document.querySelectorAll("[data-id]").forEach(x=>x.onclick=()=>openQuestion(x.dataset.id))}
+function renderPlayers(){document.querySelector("#pRows").innerHTML=state.players.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:8px">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<b>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</b></div></td><td class="qid">'+(Number(p.points)||0)+' ★</td><td class="path">'+esc(p.key)+'</td></tr>').join("");document.querySelector("#pCards").innerHTML=state.players.map((p,i)=>'<div class="qcard"><div class="qcardtop">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<div><div class="qid">#'+(i+1)+' · '+(Number(p.points)||0)+' ★</div><h3>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</h3></div></div></div>').join("")}
+function qAssets(qid){return contentAssets().filter(x=>String(x.key||"").startsWith("questions/"+qid+"/"))}
+function renderQAssets(qid){const b=document.querySelector("#qAssets");const a=qAssets(qid);b.innerHTML=a.length?a.map(x=>'<div class="assetrow"><div class="assetmeta"><b>'+esc(String(x.key).split("/").pop())+'</b><span class="path">'+esc(x.key)+'</span><small>'+Math.max(1,Math.round((Number(x.size)||0)/1024))+' KB</small></div>'+pill("R2","ok")+'</div>').join(""):'<div class="empty">'+(lang==="lv"?"Šim jautājumam R2 failu vēl nav.":"No R2 files for this question yet.")+'</div>'}
+function openQuestion(id){const q=state.questions.find(x=>x.id===id);if(!q)return;state.current=q;const m=media(q),stats=qStatsMap()[q.qid]||{};document.querySelector("#dQid").textContent=q.qid+" · "+q.id;document.querySelector("#dQuestion").textContent=q.question;document.querySelector("#dMeta").innerHTML=pill(q.category,"info")+" "+pill(nice(q.difficulty),"info")+" "+pill(nice(q.type),"info");document.querySelector("#dImage").innerHTML=m.src?'<img class="preview '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'"><div class="path" style="margin-top:6px">'+esc(m.path)+'</div>':(lang==="lv"?"Nav attēla":"No image");document.querySelector("#dAnswers").innerHTML=(q.answers||[]).map((a,i)=>{const v=typeof a==="string"?a:a.country||a.name||"",ok=v===q.correct;return'<div class="answer '+(ok?"correct":"")+'"><b>'+"ABCD"[i]+'</b> · '+esc(v)+(ok?" ✓":"")+'</div>'}).join("");document.querySelector("#dFact").innerHTML='<div style="line-height:1.55">'+esc(q.fact||"—")+'</div>';const a=Number(stats.answers)||0,c=Number(stats.correct)||0;document.querySelector("#dStats").innerHTML='<div>Shown: <b>'+Number(stats.shown||0)+'</b></div><div>Answers: <b>'+a+'</b></div><div>Correct: <b>'+(a?Math.round(c*100/a)+"%":"—")+'</b></div>';setCloudUi();renderQAssets(q.qid);document.querySelector("#modal").classList.add("show")}
+function ext(file){const t=String(file.type||"").toLowerCase();if(t==="image/webp")return"webp";if(t==="image/png")return"png";if(t==="image/jpeg")return"jpg";if(t==="audio/mpeg"||t==="audio/mp3")return"mp3";if(t.includes("wav"))return"wav";if(t==="audio/ogg")return"ogg";return(String(file.name||"").split(".").pop()||"bin").replace(/[^a-z0-9]/gi,"").toLowerCase()}
+function role(k){return k==="question_image"?"question-image":k==="fact_image"?"fact-image":"question-audio"}
+async function upload(kind,inputId){if(!state.cloud.connected){await connectCloud();if(!state.cloud.connected)return}const q=state.current,f=document.querySelector("#"+inputId)?.files?.[0];if(!q||!f){alert(lang==="lv"?"Vispirms izvēlies failu.":"Choose a file first.");return}const key="questions/"+q.qid+"/"+role(kind)+"."+ext(f),st=document.querySelector("#uploadStatus");st.textContent=(lang==="lv"?"Augšupielādē ":"Uploading ")+f.name+"…";try{const h={...auth(),"Content-Type":f.type||"application/octet-stream","X-QGM-QID":q.qid,"X-QGM-Kind":kind,"X-QGM-License-Status":document.querySelector("#licStatus").value,"X-QGM-License-Provider":document.querySelector("#provider").value,"X-QGM-License-Name":document.querySelector("#licenseName").value,"X-QGM-License-Source":document.querySelector("#source").value,"X-QGM-Proof-URL":document.querySelector("#proof").value};const r=await fetch(BRIDGE+"/admin/assets/"+key,{method:"PUT",headers:h,body:f}),o=await r.json().catch(()=>({}));if(!r.ok)throw Error(o.error||("HTTP "+r.status));st.textContent="✓ "+(lang==="lv"?"Augšupielādēts uz R2: ":"Uploaded to R2: ")+key;await loadCloud(true);renderQAssets(q.qid);renderMedia();renderOverview()}catch(e){st.textContent="✗ "+e.message}}
+function renderAll(){applyLang();filters();renderOverview();renderQuestions();renderCats();renderMedia();renderAnalytics();renderPlayers()}
+async function load(){const [f,l,catalog]=await Promise.all([fresh("../data/questions-flags.json"),fresh("../data/questions-landmarks.json"),fresh("../data/admin-catalog.json")]);state.questions=[...f.questions.map(q=>({...q,category:f.category})),...l.questions.map(q=>({...q,category:l.category}))];state.catalog=catalog;try{const cloud=await fetch(BRIDGE+"/game/state",{cache:"no-store"}).then(r=>r.json());state.players=cloud?.players&&typeof cloud.players==="object"?Object.entries(cloud.players).map(([key,v])=>({key,...v})).sort((a,b)=>(Number(b.points)||0)-(Number(a.points)||0)):[]}catch{state.players=[]}await loadCloud(true);renderAll()}
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))});
-["search","catFilter","diffFilter","licenseFilter"].forEach(id=>document.querySelector("#"+id).addEventListener(id==="search"?"input":"change",renderQuestions));
-document.querySelector("#close").onclick=()=>document.querySelector("#modal").classList.remove("show");
-document.querySelector("#modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("show")};
-document.querySelector("#refresh").onclick=load;
-document.querySelector("#langLv").onclick=()=>setLang("lv");
-document.querySelector("#langEn").onclick=()=>setLang("en");
-applyLanguage();
-load().catch(e=>{document.querySelector("#issues").innerHTML='<div class="empty">Could not load admin data: '+esc(e.message)+'</div>'});
+["search","catFilter","diffFilter"].forEach(id=>document.querySelector("#"+id).addEventListener(id==="search"?"input":"change",renderQuestions));
+document.querySelector("#cloudBtn").onclick=connectCloud;document.querySelector("#refreshBtn").onclick=load;document.querySelector("#lvBtn").onclick=()=>{lang="lv";localStorage.setItem("qgm_admin_lang",lang);renderAll()};document.querySelector("#enBtn").onclick=()=>{lang="en";localStorage.setItem("qgm_admin_lang",lang);renderAll()};document.querySelector("#close").onclick=()=>document.querySelector("#modal").classList.remove("show");document.querySelector("#modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("show")};document.querySelectorAll("[data-kind]").forEach(b=>b.onclick=()=>upload(b.dataset.kind,b.dataset.input));
+applyLang();load().catch(e=>{document.querySelector("#statusBox").innerHTML='<div class="empty">Load error: '+esc(e.message)+'</div>'});
 </script>
 </body>
 </html>
