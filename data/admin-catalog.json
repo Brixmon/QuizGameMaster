@@ -1,0 +1,611 @@
+{
+  "version": 1,
+  "updated": "2026-09-21",
+  "id_policy": {
+    "description": "QID is permanent and must never be reused or renumbered.",
+    "next_qid": "Q021",
+    "question_audio_pattern": "../assets/audio/questions/{QID}-question.mp3"
+  },
+  "questions": {
+    "flags_001": {
+      "qid": "Q001",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q001-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_002": {
+      "qid": "Q002",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q002-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_003": {
+      "qid": "Q003",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q003-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_004": {
+      "qid": "Q004",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q004-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_005": {
+      "qid": "Q005",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q005-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_006": {
+      "qid": "Q006",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q006-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_007": {
+      "qid": "Q007",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q007-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_008": {
+      "qid": "Q008",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q008-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_009": {
+      "qid": "Q009",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q009-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "flags_010": {
+      "qid": "Q010",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "Flag image loaded from FlagCDN at runtime",
+          "license": "",
+          "proof": "",
+          "notes": "Commercial-use/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "not_required",
+          "source": "",
+          "license": "",
+          "proof": "",
+          "notes": ""
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q010-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_eiffel_001": {
+      "qid": "Q011",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/eiffel-tower/eiffel-tower-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/eiffel-tower/eiffel-tower-fact-thermal-expansion.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q011-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_colosseum_001": {
+      "qid": "Q012",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/colosseum/colosseum-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/colosseum/colosseum-fact-underground-lifts.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q012-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_pisa_001": {
+      "qid": "Q013",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/leaning-tower-of-pisa/leaning-tower-of-pisa-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/leaning-tower-of-pisa/leaning-tower-of-pisa-fact-bell-tower.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q013-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_christ_redeemer_001": {
+      "qid": "Q014",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/christ-the-redeemer/christ-the-redeemer-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/christ-the-redeemer/christ-the-redeemer-fact-700m-corcovado.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q014-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_petra_001": {
+      "qid": "Q015",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/petra/petra-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/petra/petra-fact-water-system.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q015-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_sagrada_001": {
+      "qid": "Q016",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/sagrada-familia/sagrada-familia-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/sagrada-familia/sagrada-familia-fact-1882-gaudi.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q016-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_sydney_001": {
+      "qid": "Q017",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/sydney-opera-house/sydney-opera-house-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/sydney-opera-house/sydney-opera-house-fact-1056006-tiles.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q017-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_angkor_001": {
+      "qid": "Q018",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/angkor-wat/angkor-wat-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/angkor-wat/angkor-wat-fact-largest-religious-structure.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q018-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_moai_001": {
+      "qid": "Q019",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/moai/moai-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/moai/moai-fact-nearly-900.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q019-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    },
+    "landmark_jetavanaramaya_001": {
+      "qid": "Q020",
+      "workflow": "review",
+      "notes": "",
+      "media": {
+        "question_image": {
+          "status": "review",
+          "source": "../assets/landmarks/jetavanaramaya/jetavanaramaya-question.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "fact_image": {
+          "status": "review",
+          "source": "../assets/landmarks/jetavanaramaya/jetavanaramaya-fact-93-million-bricks.webp",
+          "license": "",
+          "proof": "",
+          "notes": "Source/license proof not recorded yet."
+        },
+        "question_audio": {
+          "status": "missing",
+          "file": "../assets/audio/questions/Q020-question.mp3",
+          "provider": "",
+          "license": "",
+          "generated_at": "",
+          "proof": "",
+          "notes": "Placeholder path. Generate final commercial-use audio before production."
+        }
+      }
+    }
+  }
+}
