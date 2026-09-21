@@ -197,23 +197,24 @@ function renderOverview(){
   const audioMissing=state.questions.filter(q=>metaFor(q).media?.question_audio?.status==="missing").length;
   const lic=state.questions.reduce((n,q)=>n+licenseProblems(q).length,0);
   document.querySelector("#mQuestions").textContent=state.questions.length;
-  document.querySelector("#mCategories").textContent=cats.length+" categories";
+  document.querySelector("#mCategories").textContent=cats.length+" "+t("categories_count");
   document.querySelector("#mAudio").textContent=audioMissing;
   document.querySelector("#mLicense").textContent=lic;
   document.querySelector("#mPlayers").textContent=state.players.length;
   document.querySelector("#nextQid").textContent=state.catalog.id_policy?.next_qid||"—";
   const issues=[];
-  if(audioMissing)issues.push(["bad",audioMissing+" question audio files missing","Use final licensed files before public commercial LIVE."]);
+  if(audioMissing)issues.push(["bad",audioMissing+" "+t("audio_missing_issue"),t("audio_missing_desc")]);
   const imageReview=state.questions.reduce((n,q)=>n+["question_image","fact_image"].filter(k=>metaFor(q).media?.[k]?.status==="review").length,0);
-  if(imageReview)issues.push(["warn",imageReview+" image license records need review","Record source, license name and proof instead of relying on memory."]);
-  if(state.analytics.collection_status!=="connected")issues.push(["info","Per-question analytics are not connected yet","The dashboard is ready for them, but the game is not yet persisting question/session events."]);
-  document.querySelector("#issues").innerHTML=issues.map(x=>'<div class="issue"><span class="pill '+x[0]+'">'+(x[0]==="bad"?"!":x[0]==="warn"?"△":"i")+'</span><div><b>'+esc(x[1])+'</b><small>'+esc(x[2])+'</small></div></div>').join("")||'<div class="empty">No production blockers recorded.</div>';
+  if(imageReview)issues.push(["warn",imageReview+" "+t("image_license_issue"),t("image_license_desc")]);
+  if(state.analytics.collection_status!=="connected")issues.push(["info",t("analytics_not_connected"),t("analytics_not_connected_desc")]);
+  document.querySelector("#issues").innerHTML=issues.map(x=>'<div class="issue"><span class="pill '+x[0]+'">'+(x[0]==="bad"?"!":x[0]==="warn"?"△":"i")+'</span><div><b>'+esc(x[1])+'</b><small>'+esc(x[2])+'</small></div></div>').join("")||'<div class="empty">'+esc(t("no_blockers"))+'</div>';
 }
 function filters(){
   const cats=[...new Set(state.questions.map(q=>q.category))].sort();
-  document.querySelector("#catFilter").innerHTML='<option value="">All categories</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join("");
+  document.querySelector("#catFilter").innerHTML='<option value="">'+esc(t("all_categories"))+'</option>'+cats.map(x=>'<option>'+esc(x)+'</option>').join("");
   const diffs=["newbie","rookie","pro","ninja","master"];
-  document.querySelector("#diffFilter").innerHTML='<option value="">All difficulties</option>'+diffs.map(x=>'<option value="'+x+'">'+nice(x)+'</option>').join("");
+  document.querySelector("#diffFilter").innerHTML='<option value="">'+esc(t("all_difficulties"))+'</option>'+diffs.map(x=>'<option value="'+x+'">'+nice(x)+'</option>').join("");
+  document.querySelector("#licenseFilter").innerHTML='<option value="">'+esc(t("all_license_states"))+'</option><option value="problem">'+esc(t("needs_attention"))+'</option><option value="ready">'+esc(t("recorded_ready"))+'</option>';
 }
 function filteredQuestions(){
   const s=document.querySelector("#search").value.trim().toLowerCase(),c=document.querySelector("#catFilter").value,d=document.querySelector("#diffFilter").value,l=document.querySelector("#licenseFilter").value;
@@ -229,8 +230,8 @@ function renderQuestions(){
   document.querySelector("#qRows").innerHTML=qs.map(q=>{
     const m=media(q),md=metaFor(q),probs=licenseProblems(q);
     const audio=md.media?.question_audio?.status||"missing";
-    return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':'—')+'</td><td>'+esc(q.category)+'</td><td>'+pill(nice(q.difficulty),"info")+'</td><td>'+esc(q.question)+'</td><td><b>'+esc(q.correct)+'</b></td><td>'+pill(nice(audio),statusKind(audio))+'</td><td>'+(probs.length?pill(probs.length+" need review","warn"):pill("ready","ok"))+'</td></tr>';
-  }).join("")||'<tr><td colspan="8" class="empty">No questions match the filters.</td></tr>';
+    return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':'—')+'</td><td>'+esc(q.category)+'</td><td>'+pill(nice(q.difficulty),"info")+'</td><td>'+esc(q.question)+'</td><td><b>'+esc(q.correct)+'</b></td><td>'+pill(statusLabel(audio),statusKind(audio))+'</td><td>'+(probs.length?pill(probs.length+" "+t("need_review"),"warn"):pill(t("ready"),"ok"))+'</td></tr>';
+  }).join("")||'<tr><td colspan="8" class="empty">'+esc(t("no_questions_match"))+'</td></tr>';
   document.querySelectorAll("#qRows tr[data-id]").forEach(r=>r.onclick=()=>openQuestion(r.dataset.id));
 }
 function renderCategories(){
@@ -238,19 +239,19 @@ function renderCategories(){
   document.querySelector("#categoryCards").innerHTML=Object.entries(groups).map(([cat,qs])=>{
     const ready=qs.filter(q=>licenseProblems(q).length===0).length,pct=Math.round(ready*100/qs.length);
     const diffs={};qs.forEach(q=>diffs[q.difficulty]=(diffs[q.difficulty]||0)+1);
-    return '<div class="card cat"><h3>'+esc(cat)+'</h3><div class="big">'+qs.length+'</div><div style="color:var(--muted);font-size:12px">'+Object.entries(diffs).map(([k,v])=>nice(k)+" "+v).join(" · ")+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div style="margin-top:7px;color:var(--muted);font-size:11px">'+ready+'/'+qs.length+' fully licensed in catalog</div></div>';
+    return '<div class="card cat"><h3>'+esc(cat)+'</h3><div class="big">'+qs.length+'</div><div style="color:var(--muted);font-size:12px">'+Object.entries(diffs).map(([k,v])=>nice(k)+" "+v).join(" · ")+'</div><div class="bar"><i style="width:'+pct+'%"></i></div><div style="margin-top:7px;color:var(--muted);font-size:11px">'+ready+'/'+qs.length+' '+esc(t("fully_licensed"))+'</div></div>';
   }).join("");
 }
 function renderMedia(){
   const rows=[];
   state.questions.forEach(q=>{
     const md=metaFor(q),m=md.media||{};
-    [["Question image","question_image"],["Fact image","fact_image"],["Question audio","question_audio"]].forEach(([label,k])=>{
+    [[t("question_image"),"question_image"],[t("fact_image"),"fact_image"],[t("question_audio_item"),"question_audio"]].forEach(([label,k])=>{
       const x=m[k];if(!x||x.status==="not_required")return;
-      rows.push('<div class="issue"><span class="qid" style="min-width:44px">'+esc(q.qid)+'</span><div style="flex:1"><b>'+esc(label)+' · '+esc(q.question)+'</b><small>'+(x.file?'<span class="path">'+esc(x.file)+'</span>':esc(x.source||"Source not recorded"))+'</small></div>'+pill(nice(x.status),statusKind(x.status))+'</div>');
+      rows.push('<div class="issue"><span class="qid" style="min-width:44px">'+esc(q.qid)+'</span><div style="flex:1"><b>'+esc(label)+' · '+esc(q.question)+'</b><small>'+(x.file?'<span class="path">'+esc(x.file)+'</span>':esc(x.source||t("source_not_recorded")))+'</small></div>'+pill(statusLabel(x.status),statusKind(x.status))+'</div>');
     });
   });
-  document.querySelector("#mediaList").innerHTML=rows.join("")||'<div class="empty">No media records.</div>';
+  document.querySelector("#mediaList").innerHTML=rows.join("")||'<div class="empty">'+esc(t("no_media_records"))+'</div>';
 }
 function renderAnalytics(){
   const a=state.analytics||{},stats=Object.values(a.questions||{});
@@ -258,8 +259,8 @@ function renderAnalytics(){
   document.querySelector("#aPlays").textContent=plays;document.querySelector("#aAnswers").textContent=answers;
   document.querySelector("#aCorrect").textContent=answers?Math.round(correct*100/answers)+"%":"—";document.querySelector("#aSessions").textContent=(a.sessions||[]).length;
   document.querySelector("#analyticsNotice").innerHTML=a.collection_status==="connected"
-    ?"<strong>Analytics collection connected.</strong> These values come from persisted LIVE events."
-    :"<strong>Analytics schema is ready, collection is not connected yet.</strong> Next backend step: persist question shown, answer, correctness, response time, join/leave and session events. Region will only be stored if TikTok explicitly provides a reliable region field — it will not be guessed.";
+    ?"<strong>"+esc(t("collection_connected"))+"</strong> "+esc(t("collection_connected_desc"))
+    :"<strong>"+esc(t("collection_not_connected"))+"</strong> "+esc(t("collection_not_connected_desc"));
   document.querySelector("#analyticsRows").innerHTML=state.questions.map(q=>{
     const s=qStats(q),shown=Number(s.shown)||0,ans=Number(s.answers)||0,cor=Number(s.correct)||0,avg=Number(s.avg_response_ms)||0;
     return '<tr data-id="'+esc(q.id)+'"><td class="qid">'+esc(q.qid)+'</td><td>'+esc(q.question)+'</td><td>'+shown+'</td><td>'+ans+'</td><td>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</td><td>'+(avg?(avg/1000).toFixed(1)+"s":"—")+'</td></tr>';
@@ -267,22 +268,22 @@ function renderAnalytics(){
   document.querySelectorAll("#analyticsRows tr[data-id]").forEach(r=>r.onclick=()=>openQuestion(r.dataset.id));
 }
 function renderPlayers(){
-  document.querySelector("#playerRows").innerHTML=state.players.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:9px">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<b>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</b></div></td><td class="qid">'+(Number(p.points)||0)+' ★</td><td><span class="path">'+esc(p.key)+'</span></td></tr>').join("")||'<tr><td colspan="4" class="empty">No cloud players returned.</td></tr>';
+  document.querySelector("#playerRows").innerHTML=state.players.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:9px">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<b>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</b></div></td><td class="qid">'+(Number(p.points)||0)+' ★</td><td><span class="path">'+esc(p.key)+'</span></td></tr>').join("")||'<tr><td colspan="4" class="empty">'+esc(t("no_cloud_players"))+'</td></tr>';
 }
 function openQuestion(id){
   const q=state.questions.find(x=>x.id===id);if(!q)return;const md=metaFor(q),m=media(q),s=qStats(q);
   document.querySelector("#dQid").textContent=q.qid+" · "+q.id;
   document.querySelector("#dQuestion").textContent=q.question;
   document.querySelector("#dMeta").innerHTML=pill(q.category,"info")+" "+pill(nice(q.difficulty),"info")+" "+pill(nice(q.type),"info");
-  document.querySelector("#dImage").innerHTML=(m.src?'<img class="mediaPreview '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'"><div class="path" style="margin-top:7px">'+esc(m.path)+'</div>':'No image');
+  document.querySelector("#dImage").innerHTML=(m.src?'<img class="mediaPreview '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'"><div class="path" style="margin-top:7px">'+esc(m.path)+'</div>':esc(t("no_image")));
   document.querySelector("#dAnswers").innerHTML=(q.answers||[]).map((a,i)=>{let label=typeof a==="string"?a:a.country||a.name||"",ok=label===q.correct;return '<div class="answer '+(ok?"correct":"")+'"><b>'+"ABCD"[i]+'</b> · '+esc(label)+(ok?" ✓":"")+'</div>'}).join("");
   document.querySelector("#dFact").innerHTML='<b>'+esc(q.fact_tag||"FACT")+'</b><div style="margin-top:7px;line-height:1.55">'+esc(q.fact||"")+'</div>'+(q.asset?.fact_image?'<div class="path" style="margin-top:9px">'+esc(q.asset.fact_image)+'</div>':"");
   const au=md.media?.question_audio||{};
-  document.querySelector("#dAudio").innerHTML=pill(nice(au.status||"missing"),statusKind(au.status||"missing"))+'<div class="path" style="margin-top:8px">'+esc(au.file||"")+'</div><div style="color:var(--muted);font-size:12px;margin-top:7px">Provider: '+esc(au.provider||"—")+' · License: '+esc(au.license||"—")+'</div>';
+  document.querySelector("#dAudio").innerHTML=pill(statusLabel(au.status||"missing"),statusKind(au.status||"missing"))+'<div class="path" style="margin-top:8px">'+esc(au.file||"")+'</div><div style="color:var(--muted);font-size:12px;margin-top:7px">'+esc(t("provider"))+': '+esc(au.provider||"—")+' · '+esc(t("license"))+': '+esc(au.license||"—")+'</div>';
   const lm=md.media||{};
-  document.querySelector("#dLicense").innerHTML=["question_image","fact_image","question_audio"].map(k=>{let x=lm[k];if(!x)return"";return '<div style="display:flex;justify-content:space-between;gap:8px;margin:7px 0"><span>'+nice(k)+'</span>'+pill(nice(x.status),statusKind(x.status))+'</div>'}).join("");
+  document.querySelector("#dLicense").innerHTML=["question_image","fact_image","question_audio"].map(k=>{let x=lm[k];if(!x)return"";let lbl=k==="question_image"?t("question_image"):k==="fact_image"?t("fact_image"):t("question_audio_item");return '<div style="display:flex;justify-content:space-between;gap:8px;margin:7px 0"><span>'+esc(lbl)+'</span>'+pill(statusLabel(x.status),statusKind(x.status))+'</div>'}).join("");
   let shown=Number(s.shown)||0,ans=Number(s.answers)||0,cor=Number(s.correct)||0;
-  document.querySelector("#dStats").innerHTML='<div>Shown: <b>'+shown+'</b></div><div>Answers: <b>'+ans+'</b></div><div>Correct: <b>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</b></div><div>Avg response: <b>'+(s.avg_response_ms?(Number(s.avg_response_ms)/1000).toFixed(1)+"s":"—")+'</b></div>';
+  document.querySelector("#dStats").innerHTML='<div>'+esc(t("shown_label"))+': <b>'+shown+'</b></div><div>'+esc(t("answers_label"))+': <b>'+ans+'</b></div><div>'+esc(t("correct_label"))+': <b>'+(ans?Math.round(cor*100/ans)+"%":"—")+'</b></div><div>'+esc(t("avg_response_label"))+': <b>'+(s.avg_response_ms?(Number(s.avg_response_ms)/1000).toFixed(1)+"s":"—")+'</b></div>';
   document.querySelector("#modal").classList.add("show");
 }
 function renderAll(){renderOverview();filters();renderQuestions();renderCategories();renderMedia();renderAnalytics();renderPlayers()}
@@ -304,6 +305,9 @@ document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.quer
 document.querySelector("#close").onclick=()=>document.querySelector("#modal").classList.remove("show");
 document.querySelector("#modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("show")};
 document.querySelector("#refresh").onclick=load;
+document.querySelector("#langLv").onclick=()=>setLang("lv");
+document.querySelector("#langEn").onclick=()=>setLang("en");
+applyLanguage();
 load().catch(e=>{document.querySelector("#issues").innerHTML='<div class="empty">Could not load admin data: '+esc(e.message)+'</div>'});
 </script>
 </body>
