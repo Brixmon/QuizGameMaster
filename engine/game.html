@@ -101,7 +101,7 @@ linear-gradient(180deg,#061521 0%,#020810 62%,#010509 100%)}
 @keyframes answerCountPopV1{0%{transform:translateX(-50%) scale(1)}42%{transform:translateX(-50%) scale(1.24);filter:brightness(1.65)}100%{transform:translateX(-50%) scale(1)}}
 @keyframes v2Iris{0%{transform:translate(-50%,-50%) scale(0);opacity:0}42%{transform:translate(-50%,-50%) scale(18);opacity:1}58%{transform:translate(-50%,-50%) scale(18);opacity:1}100%{transform:translate(-50%,-50%) scale(0);opacity:0}}
 @keyframes v2Sweep{0%,100%{transform:scaleX(0);opacity:0}38%{transform:scaleX(1);opacity:1}62%{transform:scaleX(1);opacity:1}}
-</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v1.0.19</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button><div style="display:flex;gap:.7vh;width:66%;margin-top:1.4vh"><button class="previewbtn" style="margin:0;flex:1;width:auto" onclick="location.href='admin.html'">⚙ CONTROL CENTER</button><button class="previewbtn" style="margin:0;width:auto;padding-left:1.25vh;padding-right:1.25vh" onclick="copyControlCenterLink(event)">🔗 COPY LINK</button></div></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="settingslabel">LIVE GAME DESIGN</div><div class="liveversionpick"><label class="liveversioncard"><input type="radio" name="liveversion" value="classic" onchange="updateLiveVersionChoice()"><b>CLASSIC · v0 LEGACY</b><span>ORIGINAL STABLE LIVE LAYOUT</span></label><label class="liveversioncard"><input type="radio" name="liveversion" value="new" checked onchange="updateLiveVersionChoice()"><b>V1 · NEW DESIGN</b><span>WHEELS · V2 QUESTION · STANDINGS · FACT</span></label></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="factenabled" type="checkbox" checked onchange="persistSettingsFromUI('live')"></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><div class="timeset"><label class="facttoggle"><span>🔊 QUESTION VOICE</span><input id="livevoice" type="checkbox" checked onchange="updateMusicSettings()"></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="devfactenabled" type="checkbox" checked onchange="persistSettingsFromUI('dev')"></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><div class="settingslabel">AUDIO</div><div class="musicset"><label class="musicrow"><span>BACKGROUND MUSIC</span><input id="devmusic" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="audiosub">REAL BACKGROUND TRACKS · SELECT + PREVIEW</div><div class="musictracks"><div class="musictrack"><input type="checkbox" name="musictrack" value="wholesome" checked onchange="updateMusicSettings()"><span>WHOLESOME</span><button class="trackpreview" type="button" data-track="wholesome" onclick="previewMusicTrack('wholesome',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="long-trail" checked onchange="updateMusicSettings()"><span>LONG TRAIL</span><button class="trackpreview" type="button" data-track="long-trail" onclick="previewMusicTrack('long-trail',this)">▶</button></div></div><label class="musicrow"><span>CHANGE EACH ROUND</span><input id="devmusicrotate" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>MUSIC VOLUME</span><div class="musicvol"><input id="devmusicvol" type="range" min="0" max="100" step="1" value="12" oninput="updateMusicSettings()"><span id="devmusicval" class="musicval">12%</span></div></div><label class="musicrow"><span>QUESTION VOICE</span><input id="devvoice" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>VOICE VOLUME</span><div class="musicvol"><input id="devvoicevol" type="range" min="20" max="100" step="5" value="90" oninput="updateMusicSettings()"><span id="devvoiceval" class="musicval">90%</span></div></div><div class="musicrow"><span>VOICE SPEED</span><div class="musicvol"><input id="devvoicerate" type="range" min="75" max="115" step="1" value="96" oninput="updateMusicSettings()"><span id="devvoicerateval" class="musicval">96%</span></div></div><button class="previewbtn play" type="button" onclick="testQuestionVoice()">🔊 TEST QUESTION VOICE</button><div class="musicrow"><span>EFFECTS VOLUME</span><div class="musicvol"><input id="deveffectvol" type="range" min="0" max="100" step="5" value="80" oninput="updateMusicSettings()"><span id="deveffectval" class="musicval">80%</span></div></div><div class="audiosub">MUSIC: KEVIN MACLEOD · WIKIMEDIA COMMONS</div></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST · CLASSIC</button><button class="previewbtn play" onclick="launchDevNew()">✨ START 4-PLAYER TEST · NEW DESIGN</button><div class="layoutlab"><div class="layoutlabtitle">LAYOUT LAB</div><div class="layoutlabrow"><button class="layoutlabbtn" onclick="openNewDesignPreview()">👁 QUESTION</button><button class="layoutlabbtn" onclick="openFactLayoutPreview()">💡 FACT</button><button class="layoutlabbtn" onclick="openLeaderboardPreview()">⚡ STANDINGS</button><button class="layoutlabbtn" onclick="openGlobalRankingPreview()">🌐 GLOBAL TOP 50</button><button class="layoutlabbtn" onclick="location.href='theme-difficulty-v2-test.html'">🎲 THEME + DIFFICULTY V2</button></div></div></div><div id="designpreview" class="designpreview"><div class="np-bg"></div><div class="np-brandline">THE QUIZGAME MASTER · v1.0.19</div><button class="np-back" onclick="closeNewDesignPreview()">← BACK TO DEVELOPMENT</button><div class="np-wrap"><div id="np-hero" class="np-hero"><img id="np-image" alt=""><div id="np-subjecthero" class="np-subjecthero"></div><div class="np-heroShade"></div><div class="np-meta"><div id="np-category" class="np-chip">GEOGRAPHY</div><div id="np-difficulty" class="np-chip diff">⚡ PRO</div></div><div id="np-answercount" class="np-answercount"><span>ANSWERS</span><b id="np-answercount-num">0</b></div><div class="np-side"><div class="np-sidehead"><span id="np-sideicon">🏆</span><b id="np-sidetitle">ROUND TOP 5</b></div><div id="np-sidebody"></div></div></div><div class="np-ticker"><div class="np-tlabel">🌐 GLOBAL RANKING</div><div class="np-twin"><div id="np-track" class="np-track"></div></div></div><div class="np-body"><div class="np-headrow"><div id="np-round" class="np-round">ROUND 1 · QUESTION 3/20</div><div id="np-reward" class="np-reward">★ +1</div></div><div class="np-bonushud"><span class="first">⚡ FIRST +1 ⭐</span><span class="streak">🔥 STREAK +1</span></div><div id="np-question" class="np-q"></div><div class="np-callout">💬 TYPE YOUR ANSWER IN CHAT: <b>A · B · C · D</b></div><div class="np-timerrow"><div id="np-seconds" class="np-seconds">18</div><div class="np-bar"><div id="np-barfill"></div></div></div><div id="np-answers" class="np-answers"></div><div class="np-note">V1 QUESTION LAYOUT · THE QUIZGAME MASTER</div></div></div></div><div id="factpreview" class="factpreview"><button class="fp-back" onclick="closeFactLayoutPreview()">← BACK TO DEVELOPMENT</button><div class="fp-wrap"><div class="fp-hero"><img id="fp-image" class="fp-heroimg" alt=""><div class="fp-heroShade"></div><div class="fp-meta"><div id="fp-category" class="fp-chip">LANDMARKS</div><div id="fp-difficulty" class="fp-chip diff">⚡ PRO</div></div><div class="fp-top"><div class="fp-tophead"><span>🏆</span><b>ROUND TOP 5</b></div><div id="fp-topbody"></div></div></div><div class="fp-body"><div id="fp-correct" class="fp-correct">✓ CORRECT ANSWER · <b>B</b></div><div id="fp-answer" class="fp-answer">EIFFEL TOWER</div><div id="fp-countryline" class="fp-countryline"></div><div class="fp-factcard"><div class="fp-facthead"><span class="fp-bulb">💡</span><span id="fp-facttag">DID YOU KNOW?</span></div><div id="fp-facttext" class="fp-facttext"></div></div><div class="fp-winners"><div class="fp-winhead"><span>⚡ FIRST CORRECT ANSWERS</span><span id="fp-questionreward">+1 ★</span></div><div id="fp-winrow" class="fp-winrow"></div></div></div></div></div><div id="globalpreview" class="globalpreview">
+</style></head><body><div id="app"><div id="modegate" class="modegate"><h1>QUIZGAME MASTER</h1><div class="sub">CHOOSE GAME MODE</div><div style="font-size:1.05vh;color:#ffffff77;font-weight:700;letter-spacing:.08em;margin-top:-3.5vh;margin-bottom:3vh">v1.0.20</div><button class="modebtn live" onclick="startMode('live')">🔴 LIVE MODE</button><button class="modebtn dev" onclick="startMode('dev')">🛠 DEVELOPMENT MODE</button><div style="display:flex;gap:.7vh;width:66%;margin-top:1.4vh"><button class="previewbtn" style="margin:0;flex:1;width:auto" onclick="location.href='admin.html'">⚙ CONTROL CENTER</button><button class="previewbtn" style="margin:0;width:auto;padding-left:1.25vh;padding-right:1.25vh" onclick="copyControlCenterLink(event)">🔗 COPY LINK</button></div></div><div id="livepanel" class="livepanel"><h2>LIVE SETTINGS</h2><div class="hint">CHOOSE CATEGORIES FOR THIS LIVE</div><div id="livechecks" class="checks"></div><div class="settingslabel">LIVE GAME DESIGN</div><div class="liveversionpick"><label class="liveversioncard"><input type="radio" name="liveversion" value="classic" onchange="updateLiveVersionChoice()"><b>CLASSIC · v0 LEGACY</b><span>ORIGINAL STABLE LIVE LAYOUT</span></label><label class="liveversioncard"><input type="radio" name="liveversion" value="new" checked onchange="updateLiveVersionChoice()"><b>V1 · NEW DESIGN</b><span>WHEELS · V2 QUESTION · STANDINGS · FACT</span></label></div><div class="timeset"><label>ANSWER TIME <span><input id="livetime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI()"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="roundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI()"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="holdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI()"> SEC</span></label><label>PLAYER RESULTS <span><input id="holdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI()"> SEC</span></label><label>FACT <span><input id="holdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI()"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="factenabled" type="checkbox" checked onchange="persistSettingsFromUI('live')"></label><label>LEADERBOARD <span><input id="holdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI()"> SEC</span></label></div><div class="timeset"><label class="facttoggle"><span>🔊 QUESTION VOICE</span><input id="livevoice" type="checkbox" checked onchange="updateMusicSettings()"></label></div><button id="startlive" class="startlive" onclick="launchLive()">START LIVE</button></div><div id="devpanel" class="devpanel"><h2>DEVELOPMENT MODE</h2><div class="hint">FULL MULTIPLAYER SIMULATION · NO TIKTOK LIVE REQUIRED</div><div class="settingslabel">CATEGORIES</div><div id="devchecks" class="checks"></div><div class="timeset"><label>ANSWER TIME <span><input id="devtime" type="number" min="5" max="120" step="1" value="30" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>QUESTIONS / ROUND <span><input id="devroundq" type="number" min="1" max="100" step="1" value="20" onchange="persistSettingsFromUI('dev')"></span></label></div><div class="settingslabel">LAYOUT HOLD TIMES</div><div class="timeset"><label>ANSWER % <span><input id="devholdpct" type="number" min="2" max="30" step=".5" value="4" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>PLAYER RESULTS <span><input id="devholdplayers" type="number" min="2" max="30" step=".5" value="5.5" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label>FACT <span><input id="devholdfact" type="number" min="2" max="30" step=".5" value="7" onchange="persistSettingsFromUI('dev')"> SEC</span></label><label class="facttoggle"><span>FACT SCREEN</span><input id="devfactenabled" type="checkbox" checked onchange="persistSettingsFromUI('dev')"></label><label>LEADERBOARD <span><input id="devholdleader" type="number" min="3" max="60" step=".5" value="12" onchange="persistSettingsFromUI('dev')"> SEC</span></label></div><div class="settingslabel">AUDIO</div><div class="musicset"><label class="musicrow"><span>BACKGROUND MUSIC</span><input id="devmusic" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="audiosub">REAL BACKGROUND TRACKS · SELECT + PREVIEW</div><div class="musictracks"><div class="musictrack"><input type="checkbox" name="musictrack" value="wholesome" checked onchange="updateMusicSettings()"><span>WHOLESOME</span><button class="trackpreview" type="button" data-track="wholesome" onclick="previewMusicTrack('wholesome',this)">▶</button></div><div class="musictrack"><input type="checkbox" name="musictrack" value="long-trail" checked onchange="updateMusicSettings()"><span>LONG TRAIL</span><button class="trackpreview" type="button" data-track="long-trail" onclick="previewMusicTrack('long-trail',this)">▶</button></div></div><label class="musicrow"><span>CHANGE EACH ROUND</span><input id="devmusicrotate" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>MUSIC VOLUME</span><div class="musicvol"><input id="devmusicvol" type="range" min="0" max="100" step="1" value="12" oninput="updateMusicSettings()"><span id="devmusicval" class="musicval">12%</span></div></div><label class="musicrow"><span>QUESTION VOICE</span><input id="devvoice" type="checkbox" checked onchange="updateMusicSettings()"></label><div class="musicrow"><span>VOICE VOLUME</span><div class="musicvol"><input id="devvoicevol" type="range" min="20" max="100" step="5" value="90" oninput="updateMusicSettings()"><span id="devvoiceval" class="musicval">90%</span></div></div><div class="musicrow"><span>VOICE SPEED</span><div class="musicvol"><input id="devvoicerate" type="range" min="75" max="115" step="1" value="96" oninput="updateMusicSettings()"><span id="devvoicerateval" class="musicval">96%</span></div></div><button class="previewbtn play" type="button" onclick="testQuestionVoice()">🔊 TEST QUESTION VOICE</button><div class="musicrow"><span>EFFECTS VOLUME</span><div class="musicvol"><input id="deveffectvol" type="range" min="0" max="100" step="5" value="80" oninput="updateMusicSettings()"><span id="deveffectval" class="musicval">80%</span></div></div><div class="audiosub">MUSIC: KEVIN MACLEOD · WIKIMEDIA COMMONS</div></div><button id="startdev" class="startdev" onclick="launchDev()">START 4-PLAYER TEST · CLASSIC</button><button class="previewbtn play" onclick="launchDevNew()">✨ START 4-PLAYER TEST · NEW DESIGN</button><div class="layoutlab"><div class="layoutlabtitle">LAYOUT LAB</div><div class="layoutlabrow"><button class="layoutlabbtn" onclick="openNewDesignPreview()">👁 QUESTION</button><button class="layoutlabbtn" onclick="openFactLayoutPreview()">💡 FACT</button><button class="layoutlabbtn" onclick="openLeaderboardPreview()">⚡ STANDINGS</button><button class="layoutlabbtn" onclick="openGlobalRankingPreview()">🌐 GLOBAL TOP 50</button><button class="layoutlabbtn" onclick="location.href='theme-difficulty-v2-test.html'">🎲 THEME + DIFFICULTY V2</button></div></div></div><div id="designpreview" class="designpreview"><div class="np-bg"></div><div class="np-brandline">THE QUIZGAME MASTER · v1.0.20</div><button class="np-back" onclick="closeNewDesignPreview()">← BACK TO DEVELOPMENT</button><div class="np-wrap"><div id="np-hero" class="np-hero"><img id="np-image" alt=""><div id="np-subjecthero" class="np-subjecthero"></div><div class="np-heroShade"></div><div class="np-meta"><div id="np-category" class="np-chip">GEOGRAPHY</div><div id="np-difficulty" class="np-chip diff">⚡ PRO</div></div><div id="np-answercount" class="np-answercount"><span>ANSWERS</span><b id="np-answercount-num">0</b></div><div class="np-side"><div class="np-sidehead"><span id="np-sideicon">🏆</span><b id="np-sidetitle">ROUND TOP 5</b></div><div id="np-sidebody"></div></div></div><div class="np-ticker"><div class="np-tlabel">🌐 GLOBAL RANKING</div><div class="np-twin"><div id="np-track" class="np-track"></div></div></div><div class="np-body"><div class="np-headrow"><div id="np-round" class="np-round">ROUND 1 · QUESTION 3/20</div><div id="np-reward" class="np-reward">★ +1</div></div><div class="np-bonushud"><span class="first">⚡ FIRST +1 ⭐</span><span class="streak">🔥 STREAK +1</span></div><div id="np-question" class="np-q"></div><div class="np-callout">💬 TYPE YOUR ANSWER IN CHAT: <b>A · B · C · D</b></div><div class="np-timerrow"><div id="np-seconds" class="np-seconds">18</div><div class="np-bar"><div id="np-barfill"></div></div></div><div id="np-answers" class="np-answers"></div><div class="np-note">V1 QUESTION LAYOUT · THE QUIZGAME MASTER</div></div></div></div><div id="factpreview" class="factpreview"><button class="fp-back" onclick="closeFactLayoutPreview()">← BACK TO DEVELOPMENT</button><div class="fp-wrap"><div class="fp-hero"><img id="fp-image" class="fp-heroimg" alt=""><div class="fp-heroShade"></div><div class="fp-meta"><div id="fp-category" class="fp-chip">LANDMARKS</div><div id="fp-difficulty" class="fp-chip diff">⚡ PRO</div></div><div class="fp-top"><div class="fp-tophead"><span>🏆</span><b>ROUND TOP 5</b></div><div id="fp-topbody"></div></div></div><div class="fp-body"><div id="fp-correct" class="fp-correct">✓ CORRECT ANSWER · <b>B</b></div><div id="fp-answer" class="fp-answer">EIFFEL TOWER</div><div id="fp-countryline" class="fp-countryline"></div><div class="fp-factcard"><div class="fp-facthead"><span class="fp-bulb">💡</span><span id="fp-facttag">DID YOU KNOW?</span></div><div id="fp-facttext" class="fp-facttext"></div></div><div class="fp-winners"><div class="fp-winhead"><span>⚡ FIRST CORRECT ANSWERS</span><span id="fp-questionreward">+1 ★</span></div><div id="fp-winrow" class="fp-winrow"></div></div></div></div></div><div id="globalpreview" class="globalpreview">
 <button class="gp-back" onclick="closeGlobalRankingPreview()">← BACK TO DEVELOPMENT</button>
 <button class="gp-replay" onclick="replayGlobalRankingPreview()">↻ REPLAY</button>
 <div id="gp-roundover" class="gp-roundover">
@@ -133,7 +133,7 @@ linear-gradient(180deg,#061521 0%,#020810 62%,#010509 100%)}
 <div id="cat" class="screen on"><div class="ey">NEXT CATEGORY</div><div class="reel"><div id="items"></div><div class="focus"></div></div><div id="difficulty" class="difficulty"><div class="dl">DIFFICULTY LEVEL</div><div id="rail" class="rail"></div><div id="ready" class="ready">GET READY...</div></div></div>
 <div id="question" class="screen"><div id="roundhud" class="roundhud">ROUND 1 · QUESTION 1/20</div><div class="timer"><div id="bar" class="bar"></div></div><div id="qt" class="q"></div><div id="visual" class="visual"></div><div id="answerprompt" class="prompt">💬 TYPE <b>A, B, C or D</b> IN THE COMMENTS</div><div class="answercount">ANSWERS: <b id="answercount">0</b></div><div id="answers" class="answers"></div></div>
 <div id="round" class="screen"><div class="roundtitle">⚡ ROUND STANDINGS</div><div id="roundsub" class="roundsub"></div><div id="roundanswer" class="roundanswer"></div><div id="roundstarstage" class="roundstarstage"><span class="roundstarhint">QUESTION ★ → PLAYER → ROUND TOTAL</span></div><div id="roundlist" class="roundlist"></div></div><div id="leaderboard" class="screen"><div class="leaderhead"><div id="leadertitle" class="leadertitle">🏆 GLOBAL LEADERBOARD</div><div id="leadersub" class="leadersub">ROUND COMPLETE</div></div><div id="leaderlist" class="leaderlist"></div></div><div id="reveal" class="screen"><div id="correctlabel" class="correct">✓ CORRECT ANSWER</div><div id="country" class="country"></div><div id="factpic" class="factpic">✨</div><div class="fact"><b id="facttag">QUICK FACT</b><span id="fact"></span></div></div>
-</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div id="liveonline" class="liveonline"><div class="liveonline-label"><span class="dot"></span><b id="liveonlinecount">0</b><span>ONLINE</span></div><div id="liveonlinewin" class="liveonlinewin"><div id="liveonlinetrack" class="liveonlinetrack"></div></div></div><div id="v2layoutfx" class="v2layoutfx"></div><iframe id="v2transitionframe" class="v2transitionframe" title="V2 challenge transition"></iframe><div class="version">THE QUIZGAME MASTER · v1.0.19</div></div>
+</div><div class="safe"><div>TikTok chat / interface safe zone</div></div><div id="devsim" class="devsim"><div class="devsimtitle">4-PLAYER ANSWER SIMULATOR</div><div class="devrow" data-player="1"><div class="devname">PLAYER 1</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(1,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(1,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(1,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(1,'D')">D</button></div><div class="devrow" data-player="2"><div class="devname">PLAYER 2</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(2,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(2,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(2,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(2,'D')">D</button></div><div class="devrow" data-player="3"><div class="devname">PLAYER 3</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(3,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(3,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(3,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(3,'D')">D</button></div><div class="devrow" data-player="4"><div class="devname">PLAYER 4</div><button class="chatbtn" data-answer="A" onclick="simulateAnswer(4,'A')">A</button><button class="chatbtn" data-answer="B" onclick="simulateAnswer(4,'B')">B</button><button class="chatbtn" data-answer="C" onclick="simulateAnswer(4,'C')">C</button><button class="chatbtn" data-answer="D" onclick="simulateAnswer(4,'D')">D</button></div></div><div id="livestatus" class="livestatus">TIKTOK: CONNECTING</div><div id="liveonline" class="liveonline"><div class="liveonline-label"><span class="dot"></span><b id="liveonlinecount">0</b><span>ONLINE</span></div><div id="liveonlinewin" class="liveonlinewin"><div id="liveonlinetrack" class="liveonlinetrack"></div></div></div><div id="v2layoutfx" class="v2layoutfx"></div><iframe id="v2transitionframe" class="v2transitionframe" title="V2 challenge transition"></iframe><div class="version">THE QUIZGAME MASTER · v1.0.20</div></div>
 <script>
 // Always fetch fresh game/data when opened from the fullscreen browser home page.
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
@@ -160,6 +160,7 @@ const DEFAULT_LEADER_ANIM={inMs:1120,outMs:1120,redFlightMs:680,gapMs:520,pointG
 const DEFAULT_SETTINGS={answerTime:30,questionsPerRound:20,percentSeconds:4,playerResultsSeconds:5.5,factEnabled:true,factSeconds:7,leaderboardSeconds:12,categories:[],leaderAnim:{...DEFAULT_LEADER_ANIM}};
 let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false;
 let liveWs=null,liveReconnectTimer=null,liveOpenTimer=null,liveConnectVariant=0,live4404Retries=0,liveAnswers=new Map(),liveSessionUsers=new Set(),liveParticipatedUsers=new Set(),livePresenceUsers=new Map(),liveKnownUsers=new Map(),liveViewerCount=0,liveViewerCountAt=0,liveViewerDelta=0,livePresenceDirty=false,liveChatEvents=0,liveRawEvents=0,liveLastEventType="",liveGameStarted=false,avatarCache=new Map();
+let liveAnalyticsSessionId="",liveAnalyticsSessionStartedAt=0,liveAnalyticsSeq=0,liveAnalyticsQuestionStartedAt=0,liveAnalyticsUsers=new Map(),liveAnalyticsPendingNew=new Set(),liveAnalyticsPendingLeft=new Set(),liveAnalyticsPendingChanged=new Set(),liveAnalyticsQuestionAnswerKeys=new Set(),liveAnalyticsQuestionFirstAnswerers=new Set(),liveAnalyticsQuestionAnswerMessages=0,liveAnalyticsQuestionEventTypes=new Map(),liveAnalyticsQueue=[],liveAnalyticsSending=false,liveAnalyticsRetryTimer=null;
 let devAnswers=new Map(),devAllTimePlayers=new Map();
 let correctStreaks=new Map(),firstCorrectHolderKey=null,firstCorrectPreviousHolderKey=null;
 let roundScores=new Map(),roundPlayers=new Map(),previousRoundRanks=new Map(),allTimePlayers=loadAllTime(),previousGlobalRanks=new Map();
@@ -2238,7 +2239,211 @@ function knownLiveKeyForUser(user){
   }
   return key;
 }
-function rememberLiveUser(user,active=true){
+
+function liveAnalyticsIso(ms){return ms?new Date(ms).toISOString():null}
+function liveAnalyticsMetaText(v,max=100){
+  if(v==null)return "";
+  let s=String(v).trim();
+  return s?s.slice(0,max):"";
+}
+function liveAnalyticsFindMeta(v,keys,depth=0,seen=new Set()){
+  if(!v||typeof v!=="object"||depth>3||seen.has(v))return "";
+  seen.add(v);
+  for(let k of keys){
+    if(Object.prototype.hasOwnProperty.call(v,k)){
+      let s=liveAnalyticsMetaText(v[k]);
+      if(s)return s;
+    }
+  }
+  for(let x of Object.values(v)){
+    if(x&&typeof x==="object"){
+      let s=liveAnalyticsFindMeta(x,keys,depth+1,seen);
+      if(s)return s;
+    }
+  }
+  return "";
+}
+function liveAnalyticsCountryCode(user,source){
+  let raw=liveAnalyticsFindMeta(user,["countryCode","country_code","countryIso","country_iso","iso2","iso_2"])||
+          liveAnalyticsFindMeta(source,["countryCode","country_code","countryIso","country_iso","iso2","iso_2"]);
+  raw=String(raw||"").trim().toUpperCase();
+  return /^[A-Z]{2,3}$/.test(raw)?raw:"";
+}
+function liveAnalyticsObserveUser(known,user,source,active=true,wasActive=false){
+  if(mode!=="live"||!known?.key)return;
+  let now=Date.now(),key=String(known.key),r=liveAnalyticsUsers.get(key),isNew=!r;
+  if(!r){
+    r={key,name:known.name||"PLAYER",firstSeen:now,lastSeen:now,active:false,activeSince:0,activeMs:0,leftAt:null,joinCount:0,chatCount:0,answerCount:0,firstAnswerAt:null,countryCode:"",region:"",language:"",entrySource:"",entryType:"",geoSource:"",dwellQuality:"estimated_presence"};
+    liveAnalyticsUsers.set(key,r);
+  }
+  r.name=known.name||r.name||"PLAYER";
+  r.lastSeen=now;
+  let cc=liveAnalyticsCountryCode(user,source);
+  let region=liveAnalyticsFindMeta(user,["region","regionName","region_name"])||liveAnalyticsFindMeta(source,["region","regionName","region_name"]);
+  let language=liveAnalyticsFindMeta(user,["language","lang","locale"])||liveAnalyticsFindMeta(source,["language","lang","locale"]);
+  let entrySource=liveAnalyticsFindMeta(source,["entrySource","entry_source","trafficSource","traffic_source"]);
+  let entryType=liveAnalyticsFindMeta(source,["entryType","entry_type"]);
+  if(cc){r.countryCode=cc;r.geoSource="tiktok_event"}
+  if(region){r.region=region.slice(0,100);if(!r.geoSource)r.geoSource="tiktok_event"}
+  if(language)r.language=language.slice(0,40);
+  if(entrySource)r.entrySource=entrySource.slice(0,100);
+  if(entryType)r.entryType=entryType.slice(0,100);
+  if(active&&!wasActive){
+    r.active=true;r.activeSince=now;r.leftAt=null;r.joinCount=(Number(r.joinCount)||0)+1;
+    if(isNew)liveAnalyticsPendingNew.add(key);
+  }else if(active){
+    r.active=true;
+    if(!r.activeSince)r.activeSince=now;
+  }
+  liveAnalyticsPendingChanged.add(key);
+}
+function liveAnalyticsLeave(key,sourceType="synthetic_leave"){
+  if(mode!=="live"||!key)return;
+  let r=liveAnalyticsUsers.get(String(key));
+  if(!r||!r.active)return;
+  let now=Date.now();
+  if(r.activeSince)r.activeMs=(Number(r.activeMs)||0)+Math.max(0,now-r.activeSince);
+  r.active=false;r.activeSince=0;r.leftAt=now;r.lastSeen=now;r.dwellQuality=String(sourceType||"synthetic_leave");
+  liveAnalyticsPendingLeft.add(String(key));
+  liveAnalyticsPendingChanged.add(String(key));
+}
+function liveAnalyticsRecordChat(key){
+  let r=liveAnalyticsUsers.get(String(key));
+  if(!r)return;
+  r.chatCount=(Number(r.chatCount)||0)+1;r.lastSeen=Date.now();
+  liveAnalyticsPendingChanged.add(String(key));
+}
+function liveAnalyticsRecordAnswer(key){
+  key=String(key||"");
+  if(!key)return;
+  liveAnalyticsQuestionAnswerMessages++;
+  let r=liveAnalyticsUsers.get(key);
+  if(!r)return;
+  r.lastSeen=Date.now();
+  if(!liveAnalyticsQuestionAnswerKeys.has(key)){
+    liveAnalyticsQuestionAnswerKeys.add(key);
+    if(!(Number(r.answerCount)>0)){
+      r.firstAnswerAt=Date.now();
+      liveAnalyticsQuestionFirstAnswerers.add(key);
+    }
+    r.answerCount=(Number(r.answerCount)||0)+1;
+  }
+  liveAnalyticsPendingChanged.add(key);
+}
+function liveAnalyticsRecordEvent(type){
+  if(mode!=="live")return;
+  let k=String(type||"UNKNOWN").slice(0,100);
+  liveAnalyticsQuestionEventTypes.set(k,(liveAnalyticsQuestionEventTypes.get(k)||0)+1);
+}
+function liveAnalyticsDwellMs(r,now=Date.now()){
+  let ms=Number(r?.activeMs)||0;
+  if(r?.active&&r.activeSince)ms+=Math.max(0,now-r.activeSince);
+  return Math.max(0,ms);
+}
+function liveAnalyticsDwellBuckets(now=Date.now()){
+  let b={lt5s:0,s5_15:0,s15_30:0,s30_60:0,m1_3:0,m3_10:0,m10_plus:0};
+  for(let r of liveAnalyticsUsers.values()){
+    if(r.active)continue;
+    let s=liveAnalyticsDwellMs(r,now)/1000;
+    if(s<5)b.lt5s++;else if(s<15)b.s5_15++;else if(s<30)b.s15_30++;else if(s<60)b.s30_60++;else if(s<180)b.m1_3++;else if(s<600)b.m3_10++;else b.m10_plus++;
+  }
+  return b;
+}
+function liveAnalyticsRetention(now=Date.now()){
+  let out={};
+  for(let sec of [5,15,30,60,180,600]){
+    let eligible=0,retained=0,ms=sec*1000;
+    for(let r of liveAnalyticsUsers.values()){
+      if(now-(Number(r.firstSeen)||now)<ms)continue;
+      eligible++;
+      if(liveAnalyticsDwellMs(r,now)>=ms)retained++;
+    }
+    out["s"+sec+"_eligible"]=eligible;
+    out["s"+sec+"_active"]=retained;
+  }
+  return out;
+}
+function liveAnalyticsVisitorSnapshot(r,now=Date.now()){
+  return {
+    user_key:r.key,display_name:r.name||"",first_seen:liveAnalyticsIso(r.firstSeen),last_seen:liveAnalyticsIso(r.lastSeen),
+    left_at:liveAnalyticsIso(r.leftAt),active:!!r.active,dwell_seconds:Math.round(liveAnalyticsDwellMs(r,now)/1000),
+    dwell_quality:r.dwellQuality||"estimated_presence",join_count:Number(r.joinCount)||0,chat_count:Number(r.chatCount)||0,
+    answers_count:Number(r.answerCount)||0,first_answer_at:liveAnalyticsIso(r.firstAnswerAt),
+    country_code:r.countryCode||"",region:r.region||"",geo_source:r.geoSource||"",language:r.language||"",
+    entry_source:r.entrySource||"",entry_type:r.entryType||""
+  };
+}
+function resetLiveAnalytics(){
+  liveAnalyticsSessionStartedAt=Date.now();
+  liveAnalyticsSessionId="tt-"+liveAnalyticsSessionStartedAt.toString(36)+"-"+Math.random().toString(36).slice(2,9);
+  liveAnalyticsSeq=0;liveAnalyticsQuestionStartedAt=0;
+  liveAnalyticsUsers.clear();liveAnalyticsPendingNew.clear();liveAnalyticsPendingLeft.clear();liveAnalyticsPendingChanged.clear();
+  liveAnalyticsQuestionAnswerKeys.clear();liveAnalyticsQuestionFirstAnswerers.clear();liveAnalyticsQuestionAnswerMessages=0;liveAnalyticsQuestionEventTypes.clear();
+  clearTimeout(liveAnalyticsRetryTimer);liveAnalyticsRetryTimer=null;
+}
+function startLiveAnalyticsQuestion(){
+  if(mode!=="live")return;
+  liveAnalyticsQuestionStartedAt=Date.now();
+  liveAnalyticsQuestionAnswerKeys.clear();liveAnalyticsQuestionFirstAnswerers.clear();liveAnalyticsQuestionAnswerMessages=0;liveAnalyticsQuestionEventTypes.clear();
+}
+function enqueueLiveAnalytics(payload){
+  liveAnalyticsQueue.push(payload);
+  if(liveAnalyticsQueue.length>24)liveAnalyticsQueue=liveAnalyticsQueue.slice(-24);
+  drainLiveAnalyticsQueue();
+}
+async function drainLiveAnalyticsQueue(){
+  if(liveAnalyticsSending||!liveAnalyticsQueue.length)return;
+  liveAnalyticsSending=true;
+  clearTimeout(liveAnalyticsRetryTimer);liveAnalyticsRetryTimer=null;
+  try{
+    let payload=liveAnalyticsQueue[0];
+    let r=await fetch(LIVE_BRIDGE+"/analytics/batch",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),keepalive:true,cache:"no-store"});
+    if(!r.ok)throw new Error("analytics "+r.status);
+    liveAnalyticsQueue.shift();
+    liveAnalyticsSending=false;
+    if(liveAnalyticsQueue.length)drainLiveAnalyticsQueue();
+  }catch(e){
+    liveAnalyticsSending=false;
+    liveAnalyticsRetryTimer=setTimeout(drainLiveAnalyticsQueue,8000);
+  }
+}
+function flushLiveAnalytics(q,submitted=[],correctLetter="",reason="question"){
+  if(mode!=="live"||!liveAnalyticsSessionId)return;
+  let now=Date.now(),seq=++liveAnalyticsSeq,counts={A:0,B:0,C:0,D:0},times=[];
+  for(let x of submitted){
+    if(counts[x.answer]!==undefined)counts[x.answer]++;
+    let t=Number(x.submittedAt)-Number(liveAnalyticsQuestionStartedAt);
+    if(Number.isFinite(t)&&t>=0)times.push(t);
+  }
+  let answerTiming={t_0_5s:0,t_5_10s:0,t_10_20s:0,t_20s_plus:0};
+  for(let t of times){if(t<5000)answerTiming.t_0_5s++;else if(t<10000)answerTiming.t_5_10s++;else if(t<20000)answerTiming.t_10_20s++;else answerTiming.t_20s_plus++}
+  let correct=correctLetter?submitted.filter(x=>x.answer===correctLetter).length:0;
+  let changed=[...liveAnalyticsPendingChanged].map(k=>liveAnalyticsUsers.get(k)).filter(Boolean).map(r=>liveAnalyticsVisitorSnapshot(r,now));
+  let qid=q?.qid||q?.id||q?.internal_id||null;
+  let payload={
+    schema_version:1,batch_id:liveAnalyticsSessionId+":"+seq,session_id:liveAnalyticsSessionId,sequence:seq,
+    captured_at:liveAnalyticsIso(now),session_started_at:liveAnalyticsIso(liveAnalyticsSessionStartedAt),session_ended_at:reason==="stream_end"?liveAnalyticsIso(now):null,
+    channel:LIVE_UNIQUE_IDS[liveConnectVariant]||LIVE_UNIQUE_IDS[0],reason,
+    question:q?{qid,category:q.category||"",difficulty:q.difficulty||"",type:q.type||"",round:currentRound,number:questionInRound,started_at:liveAnalyticsIso(liveAnalyticsQuestionStartedAt),ended_at:liveAnalyticsIso(now)}:{qid:null,round:currentRound,number:questionInRound,started_at:null,ended_at:liveAnalyticsIso(now)},
+    summary:{
+      viewer_count:currentOnlinePlayerCount(),reported_viewer_count:Number(liveViewerCount)||0,presence_count:livePresenceUsers.size,
+      unique_visitors_total:liveAnalyticsUsers.size,unique_answerers_total:[...liveAnalyticsUsers.values()].filter(r=>(Number(r.answerCount)||0)>0).length,
+      new_visitors:liveAnalyticsPendingNew.size,left_visitors:liveAnalyticsPendingLeft.size,question_answerers:liveAnalyticsQuestionAnswerKeys.size,
+      answer_messages:liveAnalyticsQuestionAnswerMessages,first_time_answerers:liveAnalyticsQuestionFirstAnswerers.size,
+      correct_answers:correct,wrong_answers:Math.max(0,submitted.length-correct),avg_response_ms:times.length?Math.round(times.reduce((a,b)=>a+b,0)/times.length):null,
+      raw_event_total:liveRawEvents,chat_event_total:liveChatEvents
+    },
+    answers:{...counts,...answerTiming},
+    dwell:liveAnalyticsDwellBuckets(now),retention:liveAnalyticsRetention(now),
+    event_types:Object.fromEntries(liveAnalyticsQuestionEventTypes),
+    visitors:changed,
+    question_answers:submitted.map(x=>({user_key:String(x.key||""),answer:x.answer||"",submitted_at:liveAnalyticsIso(x.submittedAt),response_ms:Math.max(0,Math.round(Number(x.submittedAt)-Number(liveAnalyticsQuestionStartedAt)))||0}))
+  };
+  liveAnalyticsPendingNew.clear();liveAnalyticsPendingLeft.clear();liveAnalyticsPendingChanged.clear();
+  enqueueLiveAnalytics(payload);
+}
+function flushLiveAnalyticsFinal(reason="stream_end"){flushLiveAnalytics(null,[],"",reason)}
+function rememberLiveUser(user,active=true,source=null){
   let key=knownLiveKeyForUser(user),name=liveUserName(user);
   if(!key||name==="unknown")return null;
   let prev=liveKnownUsers.get(key)||{};
@@ -2247,6 +2452,7 @@ function rememberLiveUser(user,active=true){
   let next={key,name:name||prev.name||"PLAYER",avatar:liveUserAvatar(user)||prev.avatar||"",identities,joinedAt:prev.joinedAt||now,lastSeen:now};
   liveKnownUsers.set(key,next);
   liveSessionUsers.add(key);
+  liveAnalyticsObserveUser(next,user,source,active,wasActive);
   if(active){
     livePresenceUsers.set(key,next);
     if(!wasActive){
@@ -2258,10 +2464,11 @@ function rememberLiveUser(user,active=true){
   pushLiveOnlineCount();
   return next;
 }
-function removeLivePresenceUser(user){
+function removeLivePresenceUser(user,sourceType="synthetic_leave"){
   let key=knownLiveKeyForUser(user);
   let removed=key?livePresenceUsers.delete(key):false;
   if(removed){
+    liveAnalyticsLeave(key,sourceType);
     livePresenceDirty=true;
     if(liveViewerCountAt>0)liveViewerDelta--;
     removeUnplayedPresenceFromRound(key);
@@ -2320,6 +2527,7 @@ function handleLiveMessage(msg){
   if(mode!=="live"||!msg)return;
   let type=liveEventType(msg)||"UNKNOWN",d=msg.data||msg;
   liveLastEventType=type;
+  liveAnalyticsRecordEvent(type);
 
   let countEvent=isLiveRoomUserType(type);
   let viewers=countEvent?findViewerCountDeep(d):null;
@@ -2337,11 +2545,11 @@ function handleLiveMessage(msg){
   if(joinEvent||leaveEvent){
     let presenceUser=findLiveUserDeep(d);
     if(leaveEvent){
-      if(presenceUser)removeLivePresenceUser(presenceUser);
+      if(presenceUser)removeLivePresenceUser(presenceUser,"synthetic_leave");
       setLiveStatus("PRESENCE · "+currentOnlinePlayerCount()+" ONLINE","ok");
       return;
     }
-    if(presenceUser)rememberLiveUser(presenceUser,true);
+    if(presenceUser)rememberLiveUser(presenceUser,true,d);
   }
 
   let chat=findLiveChatDeep(d);
@@ -2361,7 +2569,8 @@ function handleLiveMessage(msg){
   }
 
   liveChatEvents++;
-  let user=chat.user,known=rememberLiveUser(user,true),key=known?.key||knownLiveKeyForUser(user);
+  let user=chat.user,known=rememberLiveUser(user,true,chat.source||d),key=known?.key||knownLiveKeyForUser(user);
+  if(key)liveAnalyticsRecordChat(key);
 
   let online=currentOnlinePlayerCount();
   setLiveStatus("CHAT ✓ · "+liveChatEvents+" MSG"+(online>0?" · "+online+" ONLINE":""),"ok");
@@ -2373,12 +2582,14 @@ function handleLiveMessage(msg){
   liveParticipatedUsers.add(key);
   let rp=roundPlayers.get(key)||{};
   roundPlayers.set(key,{name:known?.name||liveUserName(user)||rp.name||"PLAYER",avatar:known?.avatar||liveUserAvatar(user)||rp.avatar||"",presenceOnly:false});
+  let submittedAt=Date.now();
   liveAnswers.set(key,{
     key,answer,
     name:known?.name||liveUserName(user),
     avatar:known?.avatar||liveUserAvatar(user),
-    submittedAt:Date.now()
+    submittedAt
   });
+  liveAnalyticsRecordAnswer(key);
   refreshLiveRoundVisuals();
 }
 function animatePercent(el,target,duration=1500){
@@ -3285,7 +3496,7 @@ async function connectTikTok(startGameWhenReady=false,variant=liveConnectVariant
         liveConnectFailed("NOT LIVE · 4404 · BOTH IDS CHECKED");
         return;
       }
-      if(ev.code===4005){liveConnectFailed("STREAM ENDED · 4005");return}
+      if(ev.code===4005){flushLiveAnalyticsFinal("stream_end");liveConnectFailed("STREAM ENDED · 4005");return}
       if(!liveGameStarted&&startGameWhenReady){
         liveConnectFailed("WS CLOSED · "+ev.code);
         return;
@@ -3342,6 +3553,7 @@ function updateLiveVersionChoice(){
 function launchLive(){
   primeQuestionVoice();
   stopMusic();
+  resetLiveAnalytics();
   devQuestionLayout=document.querySelector('input[name="liveversion"]:checked')?.value==="classic"?"classic":"new";
   liveSessionUsers.clear();
   liveParticipatedUsers.clear();
@@ -3434,6 +3646,7 @@ function difficulty(q){let ix=rankIndex[q.difficulty];$("rail").innerHTML=ranks.
 function question(){
   resetAnswers();
   state="q";
+  startLiveAnalyticsQuestion();
   syncActivePresenceIntoRound();
   let q=Q[i],a=shuffleAnswers(q);
   q._shown=a;
@@ -3555,6 +3768,7 @@ function reveal(){
   setTimeout(()=>tone(920,.12,.03),100);
 
   let scored=scoreQuestion(submitted,correctLetter,q);
+  flushLiveAnalytics(q,submitted,correctLetter,"question");
   let roundEnds=questionInRound>=questionsPerRound;
 
   let tRound=gameSettings.percentSeconds*1000;
@@ -3617,4 +3831,6 @@ function reveal(){
 }
 document.body.onclick=()=>{audio||=new(window.AudioContext||window.webkitAudioContext)()};
 Promise.all(["../data/questions-flags.json","../data/questions-landmarks.json"].map(x=>freshFetch(x).then(r=>r.json()))).then(ds=>{ALLQ=ds.flatMap(d=>d.questions.map(q=>({...q,category:d.category})));Q=[...ALLQ];loadCloudState()}).catch(e=>{document.body.innerHTML="<pre style='color:white;padding:20px'>Could not load question data. Run via a web server, not file://\n"+e+"</pre>"});
+
+window.addEventListener("pagehide",()=>{if(mode==="live"&&liveAnalyticsSessionId)flushLiveAnalyticsFinal("pagehide")});
 </script></body></html>
