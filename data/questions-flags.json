@@ -19,7 +19,8 @@
       ],
       "correct": "Japan",
       "fact": "Japan has more than 5 million vending machines — you can buy almost anything from one.",
-      "fact_tag": "WEIRD"
+      "fact_tag": "WEIRD",
+      "qid": "Q001"
     },
     {
       "id": "flags_002",
@@ -47,7 +48,8 @@
       ],
       "correct": "Brazil",
       "fact": "Brazil is so huge that its easternmost point is closer to Africa than to its western border.",
-      "fact_tag": "WOW"
+      "fact_tag": "WOW",
+      "qid": "Q002"
     },
     {
       "id": "flags_003",
@@ -66,7 +68,8 @@
       ],
       "correct": "Switzerland",
       "fact": "Switzerland accidentally crossed into Liechtenstein during a 2007 military exercise. Liechtenstein treated it as a minor mishap.",
-      "fact_tag": "HISTORY"
+      "fact_tag": "HISTORY",
+      "qid": "Q003"
     },
     {
       "id": "flags_004",
@@ -94,7 +97,8 @@
       ],
       "correct": "India",
       "fact": "India has a floating post office on Dal Lake in Srinagar.",
-      "fact_tag": "WEIRD"
+      "fact_tag": "WEIRD",
+      "qid": "Q004"
     },
     {
       "id": "flags_005",
@@ -113,7 +117,8 @@
       ],
       "correct": "Portugal",
       "fact": "Portugal and England have the world's oldest diplomatic alliance still in force.",
-      "fact_tag": "HISTORY"
+      "fact_tag": "HISTORY",
+      "qid": "Q005"
     },
     {
       "id": "flags_006",
@@ -141,7 +146,8 @@
       ],
       "correct": "Iceland",
       "fact": "Iceland has no established mosquito population.",
-      "fact_tag": "WEIRD"
+      "fact_tag": "WEIRD",
+      "qid": "Q006"
     },
     {
       "id": "flags_007",
@@ -160,7 +166,8 @@
       ],
       "correct": "Philippines",
       "fact": "The Philippines has more than 7,000 islands, and the official count has changed as mapping improved.",
-      "fact_tag": "WOW"
+      "fact_tag": "WOW",
+      "qid": "Q007"
     },
     {
       "id": "flags_008",
@@ -179,7 +186,8 @@
       ],
       "correct": "Bhutan",
       "fact": "Bhutan is famous for using Gross National Happiness as a development philosophy alongside economic measures.",
-      "fact_tag": "WOW"
+      "fact_tag": "WOW",
+      "qid": "Q008"
     },
     {
       "id": "flags_009",
@@ -207,7 +215,8 @@
       ],
       "correct": "Mozambique",
       "fact": "Mozambique is the only national flag featuring a modern assault rifle.",
-      "fact_tag": "WEIRD"
+      "fact_tag": "WEIRD",
+      "qid": "Q009"
     },
     {
       "id": "flags_010",
@@ -226,7 +235,8 @@
       ],
       "correct": "Kiribati",
       "fact": "Kiribati is the only country with territory in all four hemispheres.",
-      "fact_tag": "WOW"
+      "fact_tag": "WOW",
+      "qid": "Q010"
     }
   ]
 }
