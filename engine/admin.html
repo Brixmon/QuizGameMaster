@@ -20,7 +20,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.9</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.10</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -181,7 +181,7 @@ function applyLang(){document.documentElement.lang=lang;document.querySelectorAl
 function media(q){if(q.type==="flag_to_country"&&q.asset?.code)return{src:"https://flagcdn.com/w320/"+q.asset.code+".png",flag:true,path:"FlagCDN"};if(q.type==="country_to_flag"){const a=(q.answers||[]).find(x=>(x.country||x.name)===q.correct);return{src:a?.code?"https://flagcdn.com/w320/"+String(a.code).toLowerCase()+".png":"",flag:true,path:"FlagCDN"}}return{src:q.asset?.image||"",flag:false,path:q.asset?.image||""}}
 function originMeta(q){
  const raw=String(q.created_by||q.origin||q.source_type||"").toLowerCase();
- if(raw.includes("user")||raw.includes("gatis")||raw.includes("manual"))return{icon:"🧑",label:lang==="lv"?"Tavs jautājums":"Your question",kind:"ok"};
+ if(raw.includes("user")||raw.includes("gatis")||raw.includes("manual"))return{icon:"👨🏻‍🦱",label:lang==="lv"?"Tavs jautājums":"Your question",kind:"ok"};
  if(raw.includes("ai")||raw.includes("chatgpt")||raw.includes("assistant"))return{icon:"🤖",label:lang==="lv"?"AI / ChatGPT jautājums":"AI / ChatGPT question",kind:"info"};
  return{icon:"◇",label:lang==="lv"?"Autors nav marķēts":"Creator not tagged",kind:"warn"};
 }
