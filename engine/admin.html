@@ -21,11 +21,11 @@
 .usecards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.usecard{padding:13px;border:1px solid #244052;border-radius:12px;background:#091721}.usecard.active{border-color:#45c4ff88;background:#10283a}.usecard .useicon{font-size:25px}.usecard b{display:block;margin-top:6px}.usecard small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}.usebadge{display:inline-block;margin-top:8px;padding:3px 7px;border-radius:999px;font-size:9px;font-weight:1000;border:1px solid #ffffff22}.usebadge.now{color:var(--green);border-color:#57df9a55}.usebadge.later{color:#9ab1c1}
 .settingsbar{position:sticky;bottom:10px;z-index:25;margin-top:14px;padding:10px 12px;border:1px solid #31536a;border-radius:13px;background:#091722ee;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 10px 30px #0007}.settingsstatus{color:var(--muted);font-size:12px}.settingsstatus.ok{color:var(--green)}.settingsstatus.warn{color:var(--orange)}.settingsstatus.bad{color:var(--red)}
 .settingsstep{margin-top:14px}.settingsstephead{margin-bottom:10px}.settingsstephead h3{margin:0;font-size:18px}.settingsstephead p{margin:4px 0 0;color:var(--muted);font-size:12px}
-.usagechoices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.usagechoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .usagechoice{position:relative;min-height:142px;padding:15px;border:1px solid #28485c;border-radius:15px;background:linear-gradient(180deg,#0e1f2b,#0a1721);cursor:pointer;transition:.18s ease;text-align:left;color:var(--text)}
 .usagechoice:hover{transform:translateY(-1px);border-color:#4a7896}.usagechoice.selected{border-color:var(--blue);box-shadow:0 0 0 1px #45c4ff44,0 8px 25px #0004;background:linear-gradient(180deg,#123047,#0a1a26)}
 .usagechoice .bigicon{font-size:31px}.usagechoice b{display:block;margin-top:8px;font-size:15px}.usagechoice small{display:block;margin-top:5px;color:var(--muted);line-height:1.4}
-.modebadge{display:inline-block;margin-top:10px;padding:4px 7px;border:1px solid #ffffff22;border-radius:999px;font-size:9px;font-weight:1000}.modebadge.ready{color:var(--green);border-color:#57df9a55}.modebadge.soon{color:#b5c8d6}
+.modebadge{display:inline-block;margin-top:10px;padding:4px 7px;border:1px solid #ffffff22;border-radius:999px;font-size:9px;font-weight:1000}.modebadge.ready{color:var(--green);border-color:#57df9a55}.modebadge.next{color:var(--gold);border-color:#ffd45e66;background:#3a301266}.modebadge.soon{color:#b5c8d6}
 .settingsconfig{display:none}.settingsconfig.show{display:block}
 .settingsbasic{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .settingsmore{margin-top:12px;border:1px solid var(--line);border-radius:15px;background:#0b1822;overflow:hidden}.settingsmore>summary{cursor:pointer;padding:15px 16px;font-weight:1000;list-style:none}.settingsmore>summary::-webkit-details-marker{display:none}.settingsmore>summary:after{content:"▼";float:right;color:var(--muted);font-size:11px}.settingsmore[open]>summary:after{content:"▲"}.settingsmorebody{padding:0 14px 14px}.advancedgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -45,7 +45,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.20</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.21</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -135,6 +135,11 @@
      <div class="bigicon">📱</div><b>TikTok LIVE</b>
      <small id="usageTikTokText">Skatītāji atbild LIVE komentāros. Šis režīms darbojas jau tagad.</small>
      <span class="modebadge ready" id="usageTikTokBadge">GATAVS</span>
+    </button>
+    <button class="usagechoice" type="button" data-usage-mode="tv">
+     <div class="bigicon">📺</div><b id="usageTvTitle">TV / spēle mājās</b>
+     <small id="usageTvText">Spēle uz TV. Noskenē QR kodu un telefons kļūst par A / B / C / D pulti.</small>
+     <span class="modebadge next" id="usageTvBadge">NĀKAMAIS</span>
     </button>
     <button class="usagechoice" type="button" data-usage-mode="stream">
      <div class="bigicon">▶️</div><b>YouTube / Twitch LIVE</b>
@@ -595,10 +600,10 @@ const SETTINGS_USAGE_KEY="qgm_settings_usage_mode_v1";
 function getUsageMode(){
  const cloud=String(state.gameState?.settings?.usageMode||"").toLowerCase();
  const local=String(localStorage.getItem(SETTINGS_USAGE_KEY)||"").toLowerCase();
- return ["tiktok","stream","event"].includes(local)?local:(["tiktok","stream","event"].includes(cloud)?cloud:"");
+ return ["tiktok","tv","stream","event"].includes(local)?local:(["tiktok","tv","stream","event"].includes(cloud)?cloud:"");
 }
 function selectUsageMode(mode){
- if(!["tiktok","stream","event"].includes(mode))return;
+ if(!["tiktok","tv","stream","event"].includes(mode))return;
  localStorage.setItem(SETTINGS_USAGE_KEY,mode);
  renderUsageMode();
  markSettingsDirty();
@@ -611,6 +616,7 @@ function renderUsageMode(){
   if(!mode){hint.style.display="none";hint.textContent="";return}
   hint.style.display="block";
   if(mode==="tiktok")hint.textContent=lang==="lv"?"✓ TikTok LIVE izvēlēts. Zemāk ir tikai galvenie spēles iestatījumi.":"✓ TikTok LIVE selected. Only the main game settings are shown below.";
+  if(mode==="tv")hint.textContent=lang==="lv"?"📺 TV režīms: spēle būs uz lielā ekrāna, bet spēlētāji ar QR kodu pieslēgs telefonus kā pultis. Pašu TV režīmu būvēsim kā nākamo.":"📺 TV mode: the game will run on the big screen while players join by QR code and use their phones as remotes. TV mode is the next one we will build.";
   if(mode==="stream")hint.textContent=lang==="lv"?"YouTube / Twitch pieslēgumu vēl būvēsim, bet pašas viktorīnas noteikumus vari sagatavot jau tagad.":"YouTube / Twitch connection is coming later, but you can already prepare the quiz rules.";
   if(mode==="event")hint.textContent=lang==="lv"?"Pasākumu režīma atbilžu ievadi vēl būvēsim, bet pašas viktorīnas noteikumus vari sagatavot jau tagad.":"Event answer input is coming later, but you can already prepare the quiz rules.";
  }
@@ -645,6 +651,9 @@ function renderSettings(){
  const adv=document.querySelector("#advancedSummary");if(adv)adv.textContent=lv?"⚙ Papildu iestatījumi":"⚙ Advanced settings";
  const tt=document.querySelector("#usageTikTokText");if(tt)tt.textContent=lv?"Skatītāji atbild LIVE komentāros. Šis režīms darbojas jau tagad.":"Viewers answer in LIVE comments. This mode works now.";
  const tb=document.querySelector("#usageTikTokBadge");if(tb)tb.textContent=lv?"GATAVS":"READY";
+ const tvt=document.querySelector("#usageTvTitle");if(tvt)tvt.textContent=lv?"TV / spēle mājās":"TV / play at home";
+ const tvx=document.querySelector("#usageTvText");if(tvx)tvx.textContent=lv?"Spēle uz TV. Noskenē QR kodu un telefons kļūst par A / B / C / D pulti.":"Play on the TV. Scan a QR code and your phone becomes an A / B / C / D remote.";
+ const tvb=document.querySelector("#usageTvBadge");if(tvb)tvb.textContent=lv?"NĀKAMAIS":"NEXT";
  const stx=document.querySelector("#usageStreamText");if(stx)stx.textContent=lv?"Tā pati viktorīna ar citas platformas čata pieslēgumu.":"The same quiz with another platform's chat connection.";
  const sb=document.querySelector("#usageStreamBadge");if(sb)sb.textContent=lv?"DRĪZUMĀ":"COMING SOON";
  const et=document.querySelector("#usageEventTitle");if(et)et.textContent=lv?"Pasākums / projektors":"Event / projector";
