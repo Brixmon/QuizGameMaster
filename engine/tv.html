@@ -15,10 +15,10 @@ button{font:inherit}.shell{min-height:100vh;padding:22px 28px 28px}.screen{displ
 .status{position:absolute;left:24px;bottom:18px;color:#7995a8;font-size:12px}
 @media(max-width:900px){.shell{padding:16px}.lobbybox{grid-template-columns:1fr}.playerspanel{min-height:320px}.roompanel{grid-template-columns:180px 1fr}.qrbox{width:180px;height:180px}.gamebody{grid-template-columns:1fr}.visual{min-height:42vh}.answers{grid-template-columns:1fr 1fr}.scoreboard{grid-template-columns:1fr 1fr}}
 
-/* 0.3.5: keep the complete game composition inside the TV viewport */
+/* 0.3.6: keep the complete game composition inside the TV viewport */
 html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:16px 22px 18px;overflow:hidden}.screen{height:calc(100vh - 34px);min-height:0}.gamebody{height:calc(100vh - 105px);min-height:0;padding-top:12px}.visual{height:100%;min-height:0}.qpanel{height:100%;overflow:hidden}.question{font-size:clamp(24px,2.5vw,42px)}.answers{min-height:0;overflow:hidden}.answer{min-height:0}.progress{margin-top:8px}.gamehead{min-height:28px}
 
-/* 0.3.5: persistent competition leaderboard on the TV right rail */
+/* 0.3.6: persistent competition leaderboard on the TV right rail */
 .gamebody{grid-template-columns:minmax(0,1.08fr) minmax(360px,.72fr) minmax(250px,.42fr)}
 .leaderrail{min-width:0;border:1px solid #29495e;border-radius:20px;background:linear-gradient(180deg,#0e2230,#07131c);padding:16px 14px;display:flex;flex-direction:column;overflow:hidden}
 .leaderrail h3{margin:0;font-size:19px;letter-spacing:.08em}.leadersub{font-size:11px;color:#7f9bad;margin:4px 0 12px}.leaderrows{display:flex;flex-direction:column;gap:8px;overflow:hidden}.leaderrow{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:8px;border:1px solid #203c4e;background:#0a1923;border-radius:12px;padding:9px 10px;min-height:45px}.leaderrow.top{border-color:#735f28;background:#241e0c}.leaderplace{font-weight:1000;color:#8fb0c4;text-align:center}.leaderrow.top .leaderplace{color:var(--gold)}.leadername{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.leaderpts{font-weight:1000;color:var(--gold);white-space:nowrap}.leaderempty{color:#68869a;text-align:center;padding:28px 5px}.leaderdelta{font-size:11px;color:var(--green);margin-left:3px}
@@ -32,7 +32,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.3.5</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.3.6</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -291,7 +291,7 @@ function poll(){
    if(r&&room&&r.code===room.code&&r.hostId===hostId){
     var phaseChanged=r.phase!==room.phase,qChanged=r.qid!==room.qid;room=r;
     if(room.phase==="lobby")renderLobby();
-    if(room.phase==="question"){if(phaseChanged||qChanged)renderQuestion();else renderAnswerCount();var pc=0,ac=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))pc++;for(k in (room.answers||{}))if(Object.prototype.hasOwnProperty.call(room.answers,k))ac++;/* 0.3.5: never reveal early when everybody answered; the shared deadline owns the cycle */}
+    if(room.phase==="question"){if(phaseChanged||qChanged)renderQuestion();else renderAnswerCount();var pc=0,ac=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))pc++;for(k in (room.answers||{}))if(Object.prototype.hasOwnProperty.call(room.answers,k))ac++;/* 0.3.6: never reveal early when everybody answered; the shared deadline owns the cycle */}
     if(room.phase==="reveal"){if(phaseChanged)renderReveal();if(room.nextAt&&now()>=room.nextAt&&!transitioning)nextQuestion()}
     if(room.phase==="final"&&phaseChanged)renderFinal();
     $("status").innerHTML="TV browser OK · Room "+room.code
