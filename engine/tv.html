@@ -47,11 +47,60 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  #game.show .leaderrail{right:10px !important;width:clamp(180px,32vw,260px) !important}
 }
 
-/* Shared TikTok gameplay language, adapted only for 16:9 */
-.stage{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 18%,#17466c 0,#0a2236 32%,#04101b 62%,#02070d 100%);overflow:hidden}
-.stage.show{display:flex}.stageinner{position:relative;width:100vw;height:100vh;text-align:center}.stagekicker{position:absolute;top:5vh;left:0;right:0;color:#75dfff;font-size:clamp(15px,1.15vw,22px);font-weight:1000;letter-spacing:.19em}.stagetitle{position:absolute;top:9vh;left:0;right:0;font-size:clamp(38px,4vw,72px);line-height:1;font-weight:1000}.stagehint{position:absolute;bottom:7vh;left:0;right:0;color:#91aabc;font-size:clamp(13px,1vw,18px);font-weight:900;letter-spacing:.12em}
-.themetrack{position:absolute;left:-8vw;right:-8vw;top:20vh;height:58vh;overflow:hidden;perspective:1100px}.themecard{position:absolute;left:50%;top:48%;width:min(24vw,380px);height:min(42vh,360px);border-radius:24px;border:1px solid #ffffff18;background:linear-gradient(180deg,#0d304bdb,#071723ed);box-shadow:0 12px 35px #0008;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;opacity:.25;transform:translate(-50%,-50%) scale(.72);transition:left .12s linear,transform .12s linear,opacity .12s linear,border-color .25s,box-shadow .25s}.themecard .ico{font-size:clamp(54px,6vw,94px);width:1.45em;height:1.45em;border-radius:50%;display:grid;place-items:center;background:#061522;border:1px solid #65dfff45;box-shadow:inset 0 0 28px #299cff15}.themecard b{font-size:clamp(24px,2.5vw,42px);margin-top:18px;letter-spacing:.04em}.themecard.selected{opacity:1;transform:translate(-50%,-50%) scale(1.08);border-color:#69e2ff88;box-shadow:0 0 28px #299cff44,0 18px 45px #0008}.themecard.locked{border-color:#ffd45ed9;box-shadow:0 0 12px #fff2b8aa,0 0 34px #ffd45e66,0 20px 50px #0009}.themecard.dimmed{opacity:.12;filter:saturate(.5) brightness(.7)}
-.diffrail{position:absolute;left:7vw;right:7vw;top:31vh;height:42vh;display:flex;gap:1.2vw;justify-content:center;align-items:center}.diffrank{flex:1;max-width:250px;padding:26px 8px;border-radius:20px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:.12s}.diffrank span{display:block;font-size:clamp(40px,4vw,70px);margin-bottom:8px}.diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-10px) scale(1.08);box-shadow:0 0 34px #ffd45e44}
+.themezone{position:absolute;left:-5%;right:-5%;top:11.5vh;height:38vh;overflow:hidden;perspective:1100px}
+.themezone:before,.themezone:after{content:"";position:absolute;top:0;bottom:0;width:10%;z-index:20;pointer-events:none}
+.themezone:before{left:0;background:linear-gradient(90deg,#06121f,transparent)}
+.themezone:after{right:0;background:linear-gradient(-90deg,#06121f,transparent)}
+.themewheelring{position:absolute;left:50%;top:17.2vh;width:76vh;height:36vh;transform:translate(-50%,-50%);border:1px solid #53dfff14;border-radius:50%;box-shadow:inset 0 0 2vh #299cff08;pointer-events:none}
+.themewheelring:before,.themewheelring:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #53dfff0b}
+.themewheelring:before{width:86%;height:72%}.themewheelring:after{width:66%;height:50%}
+.themetrack{position:absolute;inset:0;will-change:transform;transform-style:preserve-3d}
+.themecard{position:absolute;width:18.4vh;height:24.5vh;border-radius:2vh;border:1px solid #ffffff18;background:
+  linear-gradient(180deg,#0d304bdb,#071723ed);box-shadow:0 .8vh 2.2vh #0006;overflow:hidden;
+  transform:translate(-50%,-50%) scale(.82);opacity:.42;transition:border-color .35s,box-shadow .35s,filter .35s;transform-origin:center}
+.themecard:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,#48d8ff16,transparent 44%,#ffd45e0c)}
+.themecard .icon{position:absolute;left:50%;top:4vh;transform:translateX(-50%);width:8.2vh;height:8.2vh;border-radius:50%;display:grid;place-items:center;
+  font-size:4.6vh;background:#061522;border:1px solid #65dfff45;box-shadow:inset 0 0 2vh #299cff15,0 0 1.2vh #299cff0d}
+.themecard .label{position:absolute;left:1vh;right:1vh;top:14vh;text-align:center;font-size:1.52vh;font-weight:1000;letter-spacing:.06em}
+.themecard .desc{position:absolute;left:1vh;right:1vh;top:17.2vh;text-align:center;color:#89a8bb;font-size:.67vh;font-weight:900;letter-spacing:.08em;line-height:1.35}
+.themecard .tag{position:absolute;bottom:1.15vh;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.28vh .58vh;border-radius:.7vh;background:#42cfff0c;border:1px solid #4ddaff33;color:#77ddff;font-size:.58vh;font-weight:1000;letter-spacing:.12em}
+.themecard.selected{opacity:1;filter:none;border-color:#69e2ff88;box-shadow:0 0 1.7vh #299cff33,0 1vh 3vh #0007}
+.themecard.selected .icon{border-color:#8de9ff99;box-shadow:inset 0 0 2vh #299cff22,0 0 1.5vh #4adfff44}
+.themecard.locked{z-index:60;border-color:#ffd45ed9;box-shadow:0 0 .7vh #fff2b8aa,0 0 2.1vh #ffd45e66,0 1.2vh 3.2vh #0008;filter:brightness(1.08) saturate(1.08);transition:border-color .35s,box-shadow .35s,filter .35s}
+.themecard.locked .icon{transform:translateX(-50%) scale(1.08);border-color:#ffd45e99;box-shadow:inset 0 0 2vh #ffd45e1c,0 0 1.45vh #ffd45e55}
+.themecard.locked .tag{color:#ffe58a;border-color:#ffd45e77;background:#ffd45e14}
+.themecard.dimmed{opacity:.18;filter:saturate(.55) brightness(.72)}
+@keyframes themeLock{0%{transform:scale(.9)}58%{transform:scale(1.14)}100%{transform:scale(1.08)}}
+.focusbracket{position:absolute;z-index:11;left:50%;top:3.8vh;width:20.6vh;height:27vh;transform:translateX(-50%);pointer-events:none;border-radius:2.25vh}
+.focusbracket:before,.focusbracket:after{content:"";position:absolute;inset:0;border-radius:2.25vh}
+.focusbracket:before{border:1px solid #51dfff28}
+.focusbracket:after{inset:-.35vh;border:1px solid #51dfff10}.focusbracket.locked:before{border-color:#ffd45e99;box-shadow:inset 0 0 1.6vh #ffd45e16,0 0 1.7vh #ffd45e35}.focusbracket.locked:after{border-color:#ffd45e44;box-shadow:0 0 2.7vh #ffd45e22}
+.lockline{position:absolute;left:50%;top:34.4vh;transform:translateX(-50%);min-width:14vh;text-align:center;opacity:0}
+.lockline.show{animation:lockIn .48s ease forwards}
+.lockline b{display:block;color:#ffd45e;font-size:.78vh;letter-spacing:.17em}
+.lockline span{display:block;margin-top:.23vh;color:#91aabc;font-size:.59vh;font-weight:900;letter-spacing:.09em}
+@keyframes lockIn{from{opacity:0;transform:translate(-50%,.5vh)}to{opacity:1;transform:translate(-50%,0)}}
+
+
+
+/* TV v0.6.0: canonical TikTok V2 component + responsive 16:9 geometry */
+#themeStage .stageinner,#difficultyStage .stageinner{position:relative;width:min(96vw,1700px);height:min(94vh,900px);overflow:hidden}
+#themeStage .themezone{left:-2%;right:-2%;top:19%;height:62%}
+#themeStage .themewheelring{top:50%;width:min(92vw,1500px);height:52vh}
+#themeStage .focusbracket{top:7%;width:min(23vw,360px);height:47vh}
+#themeStage .lockline{top:88%}
+#themeStage .themecard{width:min(20vw,320px);height:min(39vh,350px);border-radius:24px}
+#themeStage .themecard .icon{top:12%;width:10vh;height:10vh;font-size:5.5vh}
+#themeStage .themecard .label{top:57%;font-size:clamp(22px,2.1vw,38px)}
+#themeStage .themecard .desc{top:72%;font-size:clamp(11px,.9vw,16px)}
+#themeStage .themecard .tag{bottom:7%;font-size:clamp(10px,.75vw,14px)}
+#difficultyStage .diffzone{position:absolute;left:8%;right:8%;top:24%;height:58%;overflow:hidden}
+#difficultyStage .level{font-size:clamp(16px,1.4vw,25px)}
+@media(max-aspect-ratio:4/3){
+ #themeStage .themecard{width:29vw}
+ #themeStage .focusbracket{width:32vw}
+}
+
 .awardstage{align-items:center}.awardbox{width:min(1300px,94vw)}.awardanswer{font-size:clamp(20px,1.8vw,30px);color:#9cb5c5;margin-bottom:20px}.awardanswer b{color:#55e59c}.awardlist{display:flex;flex-direction:column;gap:10px;max-width:1050px;margin:0 auto}.awardrow{display:grid;grid-template-columns:68px 1fr auto;align-items:center;gap:14px;min-height:72px;padding:9px 16px;border-radius:18px;border:1px solid #ffffff1f;background:#071824e8;text-align:left;transition:transform .8s cubic-bezier(.16,.8,.22,1)}.awardrow.top1{border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8)}.awardavatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#15344a;border:1px solid #4b7793;font-size:22px;font-weight:1000}.awardname{font-size:clamp(18px,1.5vw,27px);font-weight:1000}.awardbadges{font-size:14px;color:#d7efff;margin-top:3px}.awardscore{font-size:clamp(20px,1.7vw,30px);font-weight:1000;color:#ffd45e;white-space:nowrap}.awarddelta{display:inline-block;margin-left:10px;color:#55e59c}.awarddelta.neg{color:#ff6f7d}.gamebody{grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr)}.leaderrail{display:none!important}
 </style>
 </head>
@@ -62,7 +111,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.4</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.0</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -116,10 +165,16 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   </div>
  </section>
 
- <section class="stage" id="themeStage"><div class="stageinner"><div class="stagekicker">ROUND <span id="themeRound">1</span></div><div class="stagetitle">CHOOSE THE THEME</div><div class="themetrack" id="themeTrack"></div><div class="stagehint">ONE GAME · ADAPTED FOR TV</div></div></section>
- <section class="stage" id="difficultyStage"><div class="stageinner"><div class="stagekicker" id="diffTheme">GEOGRAPHY</div><div class="stagetitle">DIFFICULTY</div><div class="diffrail" id="difficultyRail"></div></div></section>
+ <section class="stage" id="themeStage"><div class="stageinner">
+  <div class="head"><div class="kicker">THEME SELECTION</div><div class="title">CHOOSE THE THEME</div><div class="roundpill">ROUND <span id="themeRound">1</span></div></div>
+  <div class="themezone"><div class="themewheelring"></div><div class="themetrack" id="themeTrack"></div><div class="focusbracket" id="focusbracket"></div><div class="lockline" id="lockline"><b>THEME LOCKED</b><span>GET READY</span></div></div>
+ </div></section>
+ <section class="stage" id="difficultyStage"><div class="stageinner">
+  <div class="head"><div class="kicker" id="diffTheme">GEOGRAPHY</div><div class="title">DIFFICULTY</div></div>
+  <div class="diffzone"><div id="difficultyRail"></div></div>
+ </div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.4 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.0 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -179,15 +234,15 @@ function showThemeSelection(done){
  if(!themes.length){done("QUIZ","newbie");return}
  for(i=0;i<copies;i++)for(j=0;j<themes.length;j++)items.push(themes[j]);
  center=Math.floor(items.length/2);
- for(i=0;i<items.length;i++)html+='<div class="themecard" data-theme="'+esc(items[i])+'"><div class="ico">'+categoryIcon(items[i])+'</div><b>'+esc(items[i])+'</b></div>';
+ for(i=0;i<items.length;i++)html+='<div class="themecard" data-theme="'+esc(items[i])+'"><div class="icon">'+categoryIcon(items[i])+'</div><div class="label">'+esc(items[i])+'</div><div class="desc">QUIZ CATEGORY</div><div class="tag">LIVE GAME</div></div>';
  $("themeTrack").innerHTML=html;$("themeRound").innerHTML="1";stage("themeStage");
  var cards=$("themeTrack").children,start=0,target=center+(Math.floor(Math.random()*themes.length)),pos=start,t0=now(),dur=4300;
  function draw(p,locked){
   var n,d,x,scale,op;
   for(n=0;n<cards.length;n++){
-   d=n-p;x=50+d*25;scale=Math.max(.62,1-Math.abs(d)*.16);op=Math.max(.08,1-Math.abs(d)*.32);
-   cards[n].style.left=x+"%";cards[n].style.opacity=op;cards[n].style.transform="translate(-50%,-50%) scale("+scale+")";
-   cards[n].className="themecard"+(Math.abs(d)<.45?" selected":"")+(locked&&n===target?" locked":"")+(locked&&n!==target?" dimmed":"")
+   d=n-p;x=50+d*22;scale=Math.max(.62,1-Math.abs(d)*.16);op=Math.max(.08,1-Math.abs(d)*.32);
+   cards[n].style.left=x+"%";cards[n].style.top=(50+Math.min(13,Math.abs(d)*4))+"%";cards[n].style.opacity=op;cards[n].style.transform="translate(-50%,-50%) scale("+scale+") rotate("+(-d*2.2)+"deg)";
+   cards[n].className="themecard"+(Math.abs(d)<.45?" selected":"")+(locked&&n===target?" locked":"")+(locked&&n!==target?" dimmed":"");if(locked){$("focusbracket").className="focusbracket locked";$("lockline").className="lockline show"}
   }
  }
  function spin(){
