@@ -62,7 +62,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.2</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.3</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -119,7 +119,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="stage" id="themeStage"><div class="stageinner"><div class="stagekicker">ROUND <span id="themeRound">1</span></div><div class="stagetitle">CHOOSE THE THEME</div><div class="themetrack" id="themeTrack"></div><div class="stagehint">ONE GAME · ADAPTED FOR TV</div></div></section>
  <section class="stage" id="difficultyStage"><div class="stageinner"><div class="stagekicker" id="diffTheme">GEOGRAPHY</div><div class="stagetitle">DIFFICULTY</div><div class="diffrail" id="difficultyRail"></div></div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.2 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.3 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -190,6 +190,53 @@ function showDifficultySelection(theme,done){
   }
  }
  tick()
+}
+function joinLink(code){
+ var h=location.href.split("#")[0].split("?")[0];
+ h=h.substring(0,h.lastIndexOf("/")+1)+"remote.html?room="+encodeURIComponent(code);
+ return h
+}
+function saveNewRoom(cb){
+ getState(function(e,base){
+  if(e)return cb(e);
+  var settings={},k;
+  if(base&&base.settings){for(k in base.settings)if(Object.prototype.hasOwnProperty.call(base.settings,k))settings[k]=base.settings[k]}
+  settings[ROOM_KEY]=room;
+  putState(base||{},settings,function(e2){cb(e2)})
+ })
+}
+function createRoom(){
+ if(timerHandle){clearInterval(timerHandle);timerHandle=null}
+ if(pollTimer){clearTimeout(pollTimer);pollTimer=null}
+ if(stageTimer){clearTimeout(stageTimer);stageTimer=null}
+ hideStages();transitioning=false;hostId=randomId();
+ var ids=[],i;for(i=0;i<questions.length;i++)ids.push(questions[i].qid);
+ room={code:randomCode(),hostId:hostId,mode:"party",roundId:randomId(),phase:"lobby",createdAt:now(),updatedAt:now(),sequence:shuffle(ids),index:-1,qid:"",players:{},scores:{},streaks:{},answers:{},firstHolder:null,lastResults:{},questionStartedAt:0,answerDeadline:0,nextAt:0,answerSeconds:30};
+ $("status").innerHTML="Creating room…";
+ getState(function(e,base){
+  if(e){$("status").innerHTML="Cloud error: "+esc(e.message);return}
+  var s=(base&&base.settings)||{},sec=Number(s.answerTime)||30;
+  room.answerSeconds=Math.max(5,Math.min(120,sec));
+  var settings={},k;for(k in s)if(Object.prototype.hasOwnProperty.call(s,k))settings[k]=s[k];
+  settings[ROOM_KEY]=room;
+  putState(base||{},settings,function(e2){
+   if(e2){$("status").innerHTML="Save error: "+esc(e2.message);return}
+   renderLobby();show("lobby");$("status").innerHTML="TV browser OK · Room "+room.code;schedulePoll()
+  })
+ })
+}
+function renderLobby(){
+ if(!room)return;
+ $("roomCode").innerHTML=esc(room.code);
+ var url=joinLink(room.code);
+ $("joinUrl").innerHTML=esc(url);
+ $("qr").src="https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=0&data="+encodeURIComponent(url);
+ var rows=[],k,p;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k)){p=room.players[k];rows.push(p)}
+ $("playerCount").innerHTML=rows.length;$("startBtn").disabled=rows.length===0;
+ if(!rows.length){$("playerList").className="empty";$("playerList").innerHTML="Waiting for phones…";return}
+ $("playerList").className="playergrid";
+ var html="",i,n;for(i=0;i<rows.length;i++){n=(rows[i].name||"PLAYER");html+='<div class="player"><div class="avatar">'+esc(n.charAt(0).toUpperCase())+'</div><div class="pname">'+esc(n)+'</div></div>'}
+ $("playerList").innerHTML=html
 }
 function answerLabel(a){if(typeof a==="string")return a;return a?(a.country||a.name||""):""}
 function correctLetter(q){var a=q.answers||[],i;for(i=0;i<a.length;i++)if(answerLabel(a[i])===q.correct)return "ABCD".charAt(i);return "A"}
