@@ -20,7 +20,8 @@
       "correct": "France",
       "fact": "On sunny days, the top of the Eiffel Tower can move about 15 cm as the iron heats unevenly.",
       "fact_tag": "WOW",
-      "qid": "Q011"
+      "qid": "Q011",
+      "created_by": "ai"
     },
     {
       "id": "landmark_colosseum_001",
@@ -40,7 +41,8 @@
       "correct": "Rome",
       "fact": "The Colosseum had underground lifts that could suddenly raise animals and performers into the arena.",
       "fact_tag": "WOW",
-      "qid": "Q012"
+      "qid": "Q012",
+      "created_by": "ai"
     },
     {
       "id": "landmark_pisa_001",
@@ -60,7 +62,8 @@
       "correct": "Italy",
       "fact": "It isn't a standalone tower — it's the bell tower of Pisa Cathedral.",
       "fact_tag": "WOW",
-      "qid": "Q013"
+      "qid": "Q013",
+      "created_by": "ai"
     },
     {
       "id": "landmark_christ_redeemer_001",
@@ -80,7 +83,8 @@
       "correct": "Rio de Janeiro",
       "fact": "The statue stands on the summit of Mount Corcovado, overlooking Rio.",
       "fact_tag": "WOW",
-      "qid": "Q014"
+      "qid": "Q014",
+      "created_by": "ai"
     },
     {
       "id": "landmark_petra_001",
@@ -100,7 +104,8 @@
       "correct": "Jordan",
       "fact": "Petra survived in the desert using an advanced system of channels, dams and water storage.",
       "fact_tag": "WOW",
-      "qid": "Q015"
+      "qid": "Q015",
+      "created_by": "ai"
     },
     {
       "id": "landmark_sagrada_001",
@@ -120,7 +125,8 @@
       "correct": "19th century",
       "fact": "Construction began in 1882 — and Antoni Gaudí wasn't the original architect.",
       "fact_tag": "HISTORY",
-      "qid": "Q016"
+      "qid": "Q016",
+      "created_by": "ai"
     },
     {
       "id": "landmark_sydney_001",
@@ -140,7 +146,8 @@
       "correct": "1 million",
       "fact": "Its roofs are covered with exactly 1,056,006 tiles made in Sweden.",
       "fact_tag": "WOW",
-      "qid": "Q017"
+      "qid": "Q017",
+      "created_by": "ai"
     },
     {
       "id": "landmark_angkor_001",
@@ -160,7 +167,8 @@
       "correct": "Cambodia",
       "fact": "Angkor Wat is the world's largest religious structure by area.",
       "fact_tag": "WOW",
-      "qid": "Q018"
+      "qid": "Q018",
+      "created_by": "ai"
     },
     {
       "id": "landmark_moai_001",
@@ -180,7 +188,8 @@
       "correct": "Easter Island",
       "fact": "Nearly 900 monumental Moai statues have been recorded on Easter Island.",
       "fact_tag": "WOW",
-      "qid": "Q019"
+      "qid": "Q019",
+      "created_by": "ai"
     },
     {
       "id": "landmark_jetavanaramaya_001",
@@ -200,7 +209,8 @@
       "correct": "Sri Lanka",
       "fact": "It was originally about 122 metres tall and was built using roughly 93 million bricks.",
       "fact_tag": "WOW",
-      "qid": "Q020"
+      "qid": "Q020",
+      "created_by": "ai"
     }
   ]
 }
