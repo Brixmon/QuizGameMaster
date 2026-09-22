@@ -20,7 +20,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.13</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.14</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -181,7 +181,7 @@ let qDragging=null,qResizing=false;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const nice=s=>String(s||"").replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());
 const DIFF_META={newbie:["🌱","NEWBIE",1],rookie:["🎯","ROOKIE",2],pro:["⚡","PRO",3],ninja:["🥷","NINJA",4],master:["👑","MASTER",5]};
-function diffBadge(d){const x=DIFF_META[String(d||"").toLowerCase()]||["•",nice(d),0];return pill(x[0]+" "+x[1],"info")}
+function diffBadge(d){const x=DIFF_META[String(d||"").toLowerCase()]||["•",nice(d),0];return pill(x[0]+" "+x[1]+" · +"+x[2]+" ★","info")}
 const CATEGORY_META={
  flags:{label:"FLAGS",icon:"🌍",desc:"IDENTIFY THE COUNTRY",tag:"WORLD FLAGS"},
  landmarks:{label:"LANDMARKS",icon:"🏛️",desc:"NAME THE PLACE",tag:"ICONIC PLACES"}
