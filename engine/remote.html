@@ -80,8 +80,21 @@ let roomCode=new URLSearchParams(location.search).get("room")||"",pid="",playerN
 function randomId(){try{if(window.crypto&&typeof window.crypto.randomUUID==="function")return window.crypto.randomUUID()}catch(e){}return "p-"+Date.now()+"-"+Math.random().toString(36).slice(2)}
 function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("show",x.id===id))}
 function cleanCode(v){return String(v||"").replace(/\D/g,"").slice(0,4)}
-async function getState(){const r=await fetch(BRIDGE+"/game/state?_="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("Cloud "+r.status);return r.json()}
-async function putState(base,settings){const r=await fetch(BRIDGE+"/game/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings,players:(base?.players&&typeof base.players==="object")?base.players:{}})});if(!r.ok)throw Error("Save "+r.status)}
+async function getState(){
+ const r=await fetch(BRIDGE+"/game/state",{cache:"no-store"});
+ if(!r.ok){
+  let body="";try{body=(await r.text()).replace(/[\r\n]+/g," ").slice(0,140)}catch(e){}
+  throw Error("Cloud "+r.status+(body?" · "+body:""));
+ }
+ return r.json()
+}
+async function putState(base,settings){
+ const r=await fetch(BRIDGE+"/game/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings,players:(base?.players&&typeof base.players==="object")?base.players:{}})});
+ if(!r.ok){
+  let body="";try{body=(await r.text()).replace(/[\r\n]+/g," ").slice(0,140)}catch(e){}
+  throw Error("Save "+r.status+(body?" · "+body:""))
+ }
+}
 function storedPid(code){let key="qgm_tv_pid_"+code,v=localStorage.getItem(key);if(!v){v=randomId();localStorage.setItem(key,v)}return v}
 function scoreOf(r){return Number(r&&r.scores?r.scores[pid]:0)||0}
 function answerLabel(a){return typeof a==="string"?a:(a?(a.country||a.name||""):"")}
@@ -169,5 +182,5 @@ $("nameInput").value=localStorage.getItem("qgm_tv_name")||"";
 loadQuestions();
 setTimeout(function(){if(roomCode&&playerName&&pid&&!pollTimer)schedulePoll()},1000);
 </script>
-<div style="position:fixed;right:8px;bottom:5px;font:10px Arial;color:#ffffff55;z-index:99">REMOTE v0.3.2</div></body>
+<div style="position:fixed;right:8px;bottom:5px;font:10px Arial;color:#ffffff55;z-index:99">REMOTE v0.3.3</div></body>
 </html>
