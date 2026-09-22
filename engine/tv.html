@@ -46,6 +46,16 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  #game.show .qpanel{display:none !important}
  #game.show .leaderrail{right:10px !important;width:clamp(180px,32vw,260px) !important}
 }
+
+/* Shared QuizGame Master gameplay language — adapted from TikTok 9:16 to TV 16:9 */
+.stage{position:absolute;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#17384d 0,#07141f 48%,#030a10 100%);overflow:hidden}
+.stage.show{display:flex}.stageinner{width:min(1500px,94vw);text-align:center}.stagekicker{font-size:clamp(16px,1.35vw,24px);font-weight:1000;letter-spacing:.16em;color:#8eabba}.stagetitle{font-size:clamp(48px,6vw,104px);line-height:1;margin:14px 0 28px;font-weight:1000}.stagehint{font-size:clamp(15px,1.2vw,21px);color:#91aaba;font-weight:800;letter-spacing:.08em}
+.themetrack{display:flex;gap:18px;justify-content:center;align-items:stretch;margin:24px auto 0}.themecard{width:min(27vw,390px);min-height:220px;border-radius:24px;border:1px solid #ffffff1d;background:linear-gradient(180deg,#102a3b,#07141e);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:25px;opacity:.42;transform:scale(.88);transition:.32s}.themecard .ico{font-size:62px}.themecard b{font-size:clamp(25px,2.3vw,42px);margin-top:12px}.themecard.hot{opacity:1;transform:scale(1.08);border-color:#ffd45e;box-shadow:0 0 42px #ffd45e33;background:linear-gradient(180deg,#463b13,#10202b)}
+.diffrail{display:flex;gap:14px;justify-content:center;align-items:center;margin:32px auto 0;max-width:1250px}.diffrank{flex:1;min-width:0;padding:20px 8px;border-radius:18px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:.28s}.diffrank span{display:block;font-size:clamp(34px,3vw,58px);margin-bottom:6px}.diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-8px) scale(1.07);box-shadow:0 0 30px #ffd45e35}
+.awardstage{align-items:center}.awardbox{width:min(1300px,94vw)}.awardanswer{font-size:clamp(20px,1.8vw,30px);color:#9cb5c5;margin-bottom:20px}.awardanswer b{color:#55e59c}.awardlist{display:flex;flex-direction:column;gap:10px;max-width:1050px;margin:0 auto}.awardrow{display:grid;grid-template-columns:68px 1fr auto;align-items:center;gap:14px;min-height:72px;padding:9px 16px;border-radius:18px;border:1px solid #ffffff1f;background:#071824e8;text-align:left;transition:transform .8s cubic-bezier(.16,.8,.22,1)}.awardrow.top1{border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8)}.awardavatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#15344a;border:1px solid #4b7793;font-size:22px;font-weight:1000}.awardname{font-size:clamp(18px,1.5vw,27px);font-weight:1000}.awardbadges{font-size:14px;color:#d7efff;margin-top:3px}.awardscore{font-size:clamp(20px,1.7vw,30px);font-weight:1000;color:#ffd45e;white-space:nowrap}.awarddelta{display:inline-block;margin-left:10px;color:#55e59c;animation:awardPop .75s cubic-bezier(.2,1.5,.35,1)}.awarddelta.neg{color:#ff6f7d}@keyframes awardPop{0%{transform:translateY(18px) scale(.5);opacity:0}60%{transform:translateY(-4px) scale(1.22);opacity:1}100%{transform:none;opacity:1}}
+.flystar{position:fixed;z-index:80;pointer-events:none;font-size:42px;filter:drop-shadow(0 0 10px #ffd45e);animation:starFlight 1.05s cubic-bezier(.18,.68,.24,1) forwards}@keyframes starFlight{0%{transform:translate(-50%,-50%) scale(.45) rotate(0);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(360deg);opacity:.05}}
+.gamebody{grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr)}.leaderrail{display:none!important}
+@media(max-width:1000px){.themecard{min-height:170px}.awardrow{min-height:60px}.diffrank{padding:14px 5px}}
 </style>
 </head>
 <body>
@@ -55,7 +65,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.4.4</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.0</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -109,14 +119,17 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   </div>
  </section>
 
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.4.4 · GAME v1.0.33</div>
+ <section class="stage" id="themeStage"><div class="stageinner"><div class="stagekicker">ROUND <span id="themeRound">1</span></div><div class="stagetitle">CHOOSE THE THEME</div><div class="themetrack" id="themeTrack"></div><div class="stagehint">ONE GAME · ADAPTED FOR TV</div></div></section>
+ <section class="stage" id="difficultyStage"><div class="stageinner"><div class="stagekicker" id="diffTheme">GEOGRAPHY</div><div class="stagetitle">DIFFICULTY</div><div class="diffrail" id="difficultyRail"></div></div></section>
+ <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.0 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
 var BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
 var ROOM_KEY="tvPrototype";
 var RANKS={newbie:["🌱","NEWBIE",1],rookie:["🎯","ROOKIE",2],pro:["⚡","PRO",3],ninja:["🥷","NINJA",4],master:["👑","MASTER",5]};
-var questions=[],qmap={},room=null,hostId="",pollTimer=null,timerHandle=null,transitioning=false;
+var questions=[],qmap={},room=null,hostId="",pollTimer=null,timerHandle=null,transitioning=false,stageTimer=null;
 
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]})}
@@ -126,6 +139,31 @@ function randomCode(){return String(Math.floor(1000+Math.random()*9000))}
 function flagUrl(code){return "https://flagcdn.com/w640/"+String(code||"").toLowerCase()+".png"}
 function shuffle(a){var out=a.slice(),i,j,t;for(i=out.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=out[i];out[i]=out[j];out[j]=t}return out}
 function show(id){var a=document.querySelectorAll(".screen"),i;for(i=0;i<a.length;i++)a[i].className=a[i].className.replace(/\s*show\b/g,"")+(a[i].id===id?" show":"")}
+function hideStages(){var a=document.querySelectorAll(".stage"),i;for(i=0;i<a.length;i++)a[i].className=a[i].className.replace(/\s*show\b/g,"")}
+function stage(id){hideStages();$(id).className+=" show"}
+function categoryLabel(q){return String(q&&q.category||"QUIZ").toUpperCase()}
+function categoryIcon(name){name=String(name||"").toLowerCase();if(name.indexOf("flag")>=0)return "🏳️";if(name.indexOf("land")>=0)return "🌍";return "🎯"}
+function availableThemes(){
+ var seen={},out=[],i,n;for(i=0;i<questions.length;i++){n=categoryLabel(questions[i]);if(!seen[n]){seen[n]=1;out.push(n)}}return out
+}
+function sequenceForTheme(theme){
+ var ids=[],i;for(i=0;i<questions.length;i++)if(categoryLabel(questions[i])===theme)ids.push(questions[i].qid);
+ return shuffle(ids.length?ids:questions.map(function(q){return q.qid}))
+}
+function showThemeSelection(done){
+ var themes=availableThemes(),html="",i;for(i=0;i<themes.length;i++)html+='<div class="themecard" data-theme="'+esc(themes[i])+'"><div class="ico">'+categoryIcon(themes[i])+'</div><b>'+esc(themes[i])+'</b></div>';
+ $("themeTrack").innerHTML=html;$("themeRound").innerHTML="1";stage("themeStage");
+ var cards=$("themeTrack").children,step=0,total=Math.max(12,themes.length*7);
+ function tick(){for(var j=0;j<cards.length;j++)cards[j].className="themecard"+(j===step%cards.length?" hot":"");step++;if(step<total){stageTimer=setTimeout(tick,70+step*7)}else{var chosen=themes[(step-1)%themes.length];setTimeout(function(){showDifficultySelection(chosen,done)},650)}}
+ tick()
+}
+function showDifficultySelection(theme,done){
+ var keys=["newbie","rookie","pro","ninja","master"],html="",i,r;for(i=0;i<keys.length;i++){r=RANKS[keys[i]];html+='<div class="diffrank"><span>'+r[0]+'</span>'+r[1]+'<br>+'+r[2]+' ★</div>'}
+ $("difficultyRail").innerHTML=html;$("diffTheme").innerHTML=categoryIcon(theme)+" "+esc(theme);stage("difficultyStage");
+ var cards=$("difficultyRail").children,step=0,total=22;
+ function tick(){for(var j=0;j<cards.length;j++)cards[j].className="diffrank"+(j===step%cards.length?" hot":"");step++;if(step<total){stageTimer=setTimeout(tick,65+step*8)}else{var chosen=keys[(step-1)%keys.length];setTimeout(function(){hideStages();done(theme,chosen)},750)}}
+ tick()
+}
 function xhr(method,url,body,cb){
  var x=new XMLHttpRequest();
  x.open(method,url,true);
@@ -210,7 +248,7 @@ function correctLetter(q){var a=q.answers||[],i;for(i=0;i<a.length;i++)if(answer
 function getAnswerMs(){var s=Number(room&&room.answerSeconds);return isFinite(s)&&s>=5?s*1000:30000}
 function renderQuestion(){
  var q=qmap[room.qid];if(!q)return;
- show("game");$("reveal").className=$("reveal").className.replace(/\s*show\b/g,"");
+ hideStages();show("game");$("reveal").className=$("reveal").className.replace(/\s*show\b/g,"");
  var ix=Math.max(0,Number(room.index)||0),rank=RANKS[String(q.difficulty||"newbie").toLowerCase()]||RANKS.newbie;
  $("roundText").innerHTML="QUESTION "+(ix+1)+" / "+room.sequence.length;
  $("diffText").innerHTML=rank[0]+" "+rank[1]+" · +"+rank[2]+" ★";
@@ -267,7 +305,12 @@ function hostMutate(mutator,cb){
 }
 function startQuiz(){
  if(!room)return;$("status").innerHTML="Starting party…";var count=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))count++;if(!count)return;
- hostMutate(function(r){r.index=0;r.qid=r.sequence[0];r.phase="question";r.answers={};r.lastResults={};r.questionStartedAt=now();r.answerDeadline=now()+getAnswerMs();r.nextAt=0},function(e){if(e)$("status").innerHTML="Start error: "+esc(e.message);else renderQuestion()})
+ showThemeSelection(function(theme,difficulty){
+  var seq=sequenceForTheme(theme),preferred=[],rest=[],i,q;
+  for(i=0;i<seq.length;i++){q=qmap[seq[i]];if(String(q&&q.difficulty||"").toLowerCase()===difficulty)preferred.push(seq[i]);else rest.push(seq[i])}
+  seq=preferred.concat(rest);
+  hostMutate(function(r){r.selectedTheme=theme;r.selectedDifficulty=difficulty;r.sequence=seq;r.index=0;r.qid=seq[0];r.phase="question";r.answers={};r.lastResults={};r.questionStartedAt=now();r.answerDeadline=now()+getAnswerMs();r.nextAt=0},function(e){if(e)$("status").innerHTML="Start error: "+esc(e.message);else renderQuestion()})
+ })
 }
 function revealQuestion(){
  if(transitioning||!room||room.phase!=="question")return;transitioning=true;
@@ -297,7 +340,16 @@ function renderReveal(){
  var ranked=[],pid,p;for(pid in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,pid)){p=room.players[pid];ranked.push({pid:pid,name:p.name||"PLAYER",score:Number((room.scores||{})[pid])||0,delta:Number((room.lastResults||{})[pid]&&room.lastResults[pid].delta)||0})}
  ranked.sort(function(a,b){return b.score-a.score||a.name.localeCompare(b.name)});
  var html="";for(i=0;i<Math.min(8,ranked.length);i++){p=ranked[i];html+='<div class="score"><b>'+(i+1)+'. '+esc(p.name)+'</b><span>'+p.score+' ★ '+(p.delta?('('+(p.delta>0?'+':'')+p.delta+')'):'')+'</span></div>'}
- $("scoreboard").innerHTML=html;renderLeaderboard();$("reveal").className+=" show"
+ $("scoreboard").innerHTML=html;renderLeaderboard();renderAwardStage(ranked)
+}
+function renderAwardStage(ranked){
+ var q=qmap[room.qid];$("awardAnswer").innerHTML='CORRECT: <b>'+esc(room.correctLetter+" · "+room.correctLabel)+'</b>';
+ var html="",i,p,res,badges;
+ for(i=0;i<Math.min(10,ranked.length);i++){p=ranked[i];res=(room.lastResults||{})[p.pid]||{};badges=(res.firstBonus?"⚡ FIRST +1 ":"")+(res.streakBonus?"🔥 STREAK +"+res.streakBonus:"");html+='<div class="awardrow '+(i===0?"top1":"")+'" data-award="'+i+'"><div class="awardavatar">'+esc((p.name||"P").charAt(0).toUpperCase())+'</div><div><div class="awardname">'+esc(p.name)+'</div><div class="awardbadges">'+badges+'</div></div><div class="awardscore">'+p.score+' ★ <span class="awarddelta '+(p.delta<0?"neg":"")+'">'+(p.delta>0?"+":"")+p.delta+'</span></div></div>'}
+ $("awardList").innerHTML=html;stage("awardStage");
+ var rows=$("awardList").children;
+ for(i=0;i<rows.length;i++)(function(row,idx){setTimeout(function(){row.style.transform="translateX("+(idx%2?8:-8)+"px)";setTimeout(function(){row.style.transform=""},420)},idx*130)})(rows[i],i);
+ setTimeout(function(){hideStages()},Math.max(3600,Math.min(5600,2600+ranked.length*180)))
 }
 function nextQuestion(){
  if(transitioning||!room||room.phase!=="reveal")return;transitioning=true;
