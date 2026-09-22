@@ -158,7 +158,7 @@ let Q=[],ALLQ=[],i=0,state="menu",start,raf,last=-1,audio,mode=null,answerTime=3
 const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",LIVE_UNIQUE_IDS=["@the_quizgame_master","the_quizgame_master"];
 const DEFAULT_LEADER_ANIM={inMs:1120,outMs:1120,redFlightMs:680,gapMs:520,pointGapMs:210,startMs:420,greenHoldMs:700,phaseGapMs:650,redHoldMs:700,counterMs:520,sourceSize:64,flySize:30,trailLevel:6,trailSize:7,sadPitch:330,sadMs:620,crowdTravelMs:7600,crowdGapMs:900,crowdAwardPct:14,crowdStartPct:22,crowdEndSpeedPct:55,crowdSpeedPct:100,top5HoldSec:3};
 const DEFAULT_SETTINGS={answerTime:30,questionsPerRound:20,percentSeconds:4,playerResultsSeconds:5.5,factEnabled:true,factSeconds:7,leaderboardSeconds:12,categories:[],difficultyOverrides:{},leaderAnim:{...DEFAULT_LEADER_ANIM}};
-let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false;
+let gameSettings=loadLocalSettings(),cloudSaveTimer=null,cloudReady=false,bridgeAuxBlocked=false,bridgeAuxBlockReason="";
 let liveWs=null,liveReconnectTimer=null,liveOpenTimer=null,liveConnectVariant=0,live4404Retries=0,liveAnswers=new Map(),liveSessionUsers=new Set(),liveParticipatedUsers=new Set(),livePresenceUsers=new Map(),liveKnownUsers=new Map(),liveViewerCount=0,liveViewerCountAt=0,liveViewerDelta=0,livePresenceDirty=false,liveChatEvents=0,liveRawEvents=0,liveLastEventType="",liveGameStarted=false,avatarCache=new Map();
 let liveAnalyticsSessionId="",liveAnalyticsSessionStartedAt=0,liveAnalyticsSeq=0,liveAnalyticsQuestionStartedAt=0,liveAnalyticsUsers=new Map(),liveAnalyticsPendingNew=new Set(),liveAnalyticsPendingLeft=new Set(),liveAnalyticsPendingChanged=new Set(),liveAnalyticsQuestionAnswerKeys=new Set(),liveAnalyticsQuestionFirstAnswerers=new Set(),liveAnalyticsQuestionAnswerMessages=0,liveAnalyticsQuestionEventTypes=new Map(),liveAnalyticsQueue=[],liveAnalyticsSending=false,liveAnalyticsRetryTimer=null,liveAnalyticsGiftEvents=[],liveAnalyticsSubscriptionEvents=[],liveAnalyticsGiftCombos=new Map(),liveAnalyticsDonorKeys=new Set(),liveAnalyticsSubscriberKeys=new Set(),liveAnalyticsPendingDonors=new Set(),liveAnalyticsPendingNewDonors=new Set(),liveAnalyticsPendingSubscribers=new Set(),liveAnalyticsQuestionGiftEvents=0,liveAnalyticsQuestionGiftItems=0,liveAnalyticsQuestionGiftDiamonds=0,liveAnalyticsEngagementPending=new Set(),liveAnalyticsLikerKeys=new Set(),liveAnalyticsFollowerKeys=new Set(),liveAnalyticsSharerKeys=new Set(),liveAnalyticsQuestionLikeEvents=0,liveAnalyticsQuestionLikes=0,liveAnalyticsQuestionFollows=0,liveAnalyticsQuestionShares=0,liveAnalyticsRoomTotalLikes=0,liveAnalyticsFollowEvents=[],liveAnalyticsShareEvents=[],liveAnalyticsUnfollowEvents=[],liveAnalyticsViewerLastAt=0,liveAnalyticsViewerLastCount=0,liveAnalyticsViewerSecondsTotal=0,liveAnalyticsQuestionViewerSeconds=0,liveAnalyticsQuestionViewerMin=null,liveAnalyticsQuestionViewerMax=0;
 let devAnswers=new Map(),devAllTimePlayers=new Map();
@@ -723,9 +723,23 @@ function persistSettingsFromUI(source=mode==="dev"?"dev":"live"){
   scheduleCloudSave();
   applySettingsToUI();
 }
+function markBridgeAuxBlocked(reason="KV 429"){
+  bridgeAuxBlocked=true;
+  bridgeAuxBlockReason=String(reason||"KV 429");
+  cloudReady=false;
+  clearTimeout(cloudSaveTimer);
+  clearTimeout(liveAnalyticsRetryTimer);
+  liveAnalyticsRetryTimer=null;
+  setLeaderboardCloudStatus("LOCAL MODE · "+bridgeAuxBlockReason,"bad");
+}
+function bridgeResponseBlocked(r){
+  return r&&r.status===429;
+}
 async function loadCloudState(){
   try{
+    if(bridgeAuxBlocked)return;
     let r=await fetch(LIVE_BRIDGE+"/game/state",{cache:"no-store"});
+    if(bridgeResponseBlocked(r)){markBridgeAuxBlocked("KV LIMIT");return}
     if(!r.ok)throw new Error("cloud "+r.status);
     let j=await r.json();
     if(!j||!j.ok)throw new Error("cloud unavailable");
@@ -763,10 +777,12 @@ function saveAllTimeLocalOnly(){
 }
 function scheduleCloudSave(){
   clearTimeout(cloudSaveTimer);
+  if(bridgeAuxBlocked)return;
   cloudSaveTimer=setTimeout(saveCloudState,350);
 }
 async function saveCloudState(){
   gameSettings={...gameSettings,leaderAnim:{...cleanLeaderboardAnimSettings(leaderAnimSettings)}};
+  if(bridgeAuxBlocked){saveLocalSettings();saveAllTimeLocalOnly();return}
   saveLocalSettings();
   saveAllTimeLocalOnly();
   try{
@@ -775,6 +791,7 @@ async function saveCloudState(){
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({settings:gameSettings,players:Object.fromEntries(allTimePlayers)})
     });
+    if(bridgeResponseBlocked(r)){markBridgeAuxBlocked("KV LIMIT");return}
     cloudReady=r.ok;
     setLeaderboardCloudStatus(r.ok?"CLOUD SAVED":"CLOUD ERROR",r.ok?"ok":"bad");
   }catch(e){
@@ -2676,12 +2693,14 @@ function enqueueLiveAnalytics(payload){
   drainLiveAnalyticsQueue();
 }
 async function drainLiveAnalyticsQueue(){
+  if(bridgeAuxBlocked)return;
   if(liveAnalyticsSending||!liveAnalyticsQueue.length)return;
   liveAnalyticsSending=true;
   clearTimeout(liveAnalyticsRetryTimer);liveAnalyticsRetryTimer=null;
   try{
     let payload=liveAnalyticsQueue[0];
     let r=await fetch(LIVE_BRIDGE+"/analytics/batch",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),keepalive:true,cache:"no-store"});
+    if(bridgeResponseBlocked(r)){markBridgeAuxBlocked("KV LIMIT");liveAnalyticsSending=false;return}
     if(!r.ok)throw new Error("analytics "+r.status);
     liveAnalyticsQueue.shift();
     liveAnalyticsSending=false;
@@ -2811,8 +2830,10 @@ function liveUserAvatar(user){
 async function fetchProfileAvatar(name){
   if(!name||name==="unknown")return "";
   if(avatarCache.has(name))return avatarCache.get(name);
+  if(bridgeAuxBlocked)return "";
   try{
     let r=await fetch(LIVE_BRIDGE+"/profile?uniqueId="+encodeURIComponent(name),{cache:"force-cache"});
+    if(bridgeResponseBlocked(r)){markBridgeAuxBlocked("KV LIMIT");avatarCache.set(name,"");return ""}
     if(!r.ok)throw new Error("profile "+r.status);
     let j=await r.json(),u=imageUrlFromValue(j&&j.user?j.user:j);
     avatarCache.set(name,u||"");
@@ -3770,7 +3791,13 @@ async function connectTikTok(startGameWhenReady=false,variant=liveConnectVariant
   setLiveStatus("TOKEN REQUEST · "+uniqueId,"");
   try{
     let r=await fetch(LIVE_BRIDGE+"/token",{cache:"no-store"});
-    let j=await r.json();
+    if(r.status===429){
+      markBridgeAuxBlocked("KV LIMIT");
+      liveConnectFailed("CLOUDFLARE KV LIMIT · TOKEN 429 · RESET 03:00 RIGA");
+      return;
+    }
+    let raw=await r.text(),j={};
+    try{j=raw?JSON.parse(raw):{}}catch(e){}
     if(!r.ok||!j.ok||!j.token)throw new Error(j.message||("TOKEN HTTP "+r.status));
     setLiveStatus("TOKEN OK · OPENING WS · "+uniqueId,"");
 
@@ -3841,7 +3868,7 @@ async function connectTikTok(startGameWhenReady=false,variant=liveConnectVariant
     });
   }catch(e){
     liveConnectFailed("TOKEN/CONNECT ERROR");
-    if(liveGameStarted)liveReconnectTimer=setTimeout(()=>connectTikTok(false,liveConnectVariant),5000);
+    if(liveGameStarted&&!bridgeAuxBlocked)liveReconnectTimer=setTimeout(()=>connectTikTok(false,liveConnectVariant),5000);
   }
 }
 function shuffleAnswers(q){let a=q.answers.map(x=>typeof x==="string"?{country:x}:x);for(let n=a.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[a[n],a[j]]=[a[j],a[n]]}return a}
