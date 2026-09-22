@@ -47,15 +47,12 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  #game.show .leaderrail{right:10px !important;width:clamp(180px,32vw,260px) !important}
 }
 
-/* Shared QuizGame Master gameplay language — adapted from TikTok 9:16 to TV 16:9 */
-.stage{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#17384d 0,#07141f 48%,#030a10 100%);overflow:hidden}
-.stage.show{display:flex}.stageinner{width:min(1500px,94vw);text-align:center}.stagekicker{font-size:clamp(16px,1.35vw,24px);font-weight:1000;letter-spacing:.16em;color:#8eabba}.stagetitle{font-size:clamp(48px,6vw,104px);line-height:1;margin:14px 0 28px;font-weight:1000}.stagehint{font-size:clamp(15px,1.2vw,21px);color:#91aaba;font-weight:800;letter-spacing:.08em}
-.themetrack{display:flex;gap:18px;justify-content:center;align-items:stretch;margin:24px auto 0}.themecard{width:min(27vw,390px);min-height:220px;border-radius:24px;border:1px solid #ffffff1d;background:linear-gradient(180deg,#102a3b,#07141e);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:25px;opacity:.42;transform:scale(.88);transition:.32s}.themecard .ico{font-size:62px}.themecard b{font-size:clamp(25px,2.3vw,42px);margin-top:12px}.themecard.hot{opacity:1;transform:scale(1.08);border-color:#ffd45e;box-shadow:0 0 42px #ffd45e33;background:linear-gradient(180deg,#463b13,#10202b)}
-.diffrail{display:flex;gap:14px;justify-content:center;align-items:center;margin:32px auto 0;max-width:1250px}.diffrank{flex:1;min-width:0;padding:20px 8px;border-radius:18px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:.28s}.diffrank span{display:block;font-size:clamp(34px,3vw,58px);margin-bottom:6px}.diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-8px) scale(1.07);box-shadow:0 0 30px #ffd45e35}
-.awardstage{align-items:center}.awardbox{width:min(1300px,94vw)}.awardanswer{font-size:clamp(20px,1.8vw,30px);color:#9cb5c5;margin-bottom:20px}.awardanswer b{color:#55e59c}.awardlist{display:flex;flex-direction:column;gap:10px;max-width:1050px;margin:0 auto}.awardrow{display:grid;grid-template-columns:68px 1fr auto;align-items:center;gap:14px;min-height:72px;padding:9px 16px;border-radius:18px;border:1px solid #ffffff1f;background:#071824e8;text-align:left;transition:transform .8s cubic-bezier(.16,.8,.22,1)}.awardrow.top1{border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8)}.awardavatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#15344a;border:1px solid #4b7793;font-size:22px;font-weight:1000}.awardname{font-size:clamp(18px,1.5vw,27px);font-weight:1000}.awardbadges{font-size:14px;color:#d7efff;margin-top:3px}.awardscore{font-size:clamp(20px,1.7vw,30px);font-weight:1000;color:#ffd45e;white-space:nowrap}.awarddelta{display:inline-block;margin-left:10px;color:#55e59c;animation:awardPop .75s cubic-bezier(.2,1.5,.35,1)}.awarddelta.neg{color:#ff6f7d}@keyframes awardPop{0%{transform:translateY(18px) scale(.5);opacity:0}60%{transform:translateY(-4px) scale(1.22);opacity:1}100%{transform:none;opacity:1}}
-.flystar{position:fixed;z-index:80;pointer-events:none;font-size:42px;filter:drop-shadow(0 0 10px #ffd45e);animation:starFlight 1.05s cubic-bezier(.18,.68,.24,1) forwards}@keyframes starFlight{0%{transform:translate(-50%,-50%) scale(.45) rotate(0);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(360deg);opacity:.05}}
-.gamebody{grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr)}.leaderrail{display:none!important}
-@media(max-width:1000px){.themecard{min-height:170px}.awardrow{min-height:60px}.diffrank{padding:14px 5px}}
+/* Shared TikTok gameplay language, adapted only for 16:9 */
+.stage{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 18%,#17466c 0,#0a2236 32%,#04101b 62%,#02070d 100%);overflow:hidden}
+.stage.show{display:flex}.stageinner{position:relative;width:100vw;height:100vh;text-align:center}.stagekicker{position:absolute;top:5vh;left:0;right:0;color:#75dfff;font-size:clamp(15px,1.15vw,22px);font-weight:1000;letter-spacing:.19em}.stagetitle{position:absolute;top:9vh;left:0;right:0;font-size:clamp(38px,4vw,72px);line-height:1;font-weight:1000}.stagehint{position:absolute;bottom:7vh;left:0;right:0;color:#91aabc;font-size:clamp(13px,1vw,18px);font-weight:900;letter-spacing:.12em}
+.themetrack{position:absolute;left:-8vw;right:-8vw;top:20vh;height:58vh;overflow:hidden;perspective:1100px}.themecard{position:absolute;left:50%;top:48%;width:min(24vw,380px);height:min(42vh,360px);border-radius:24px;border:1px solid #ffffff18;background:linear-gradient(180deg,#0d304bdb,#071723ed);box-shadow:0 12px 35px #0008;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;opacity:.25;transform:translate(-50%,-50%) scale(.72);transition:left .12s linear,transform .12s linear,opacity .12s linear,border-color .25s,box-shadow .25s}.themecard .ico{font-size:clamp(54px,6vw,94px);width:1.45em;height:1.45em;border-radius:50%;display:grid;place-items:center;background:#061522;border:1px solid #65dfff45;box-shadow:inset 0 0 28px #299cff15}.themecard b{font-size:clamp(24px,2.5vw,42px);margin-top:18px;letter-spacing:.04em}.themecard.selected{opacity:1;transform:translate(-50%,-50%) scale(1.08);border-color:#69e2ff88;box-shadow:0 0 28px #299cff44,0 18px 45px #0008}.themecard.locked{border-color:#ffd45ed9;box-shadow:0 0 12px #fff2b8aa,0 0 34px #ffd45e66,0 20px 50px #0009}.themecard.dimmed{opacity:.12;filter:saturate(.5) brightness(.7)}
+.diffrail{position:absolute;left:7vw;right:7vw;top:31vh;height:42vh;display:flex;gap:1.2vw;justify-content:center;align-items:center}.diffrank{flex:1;max-width:250px;padding:26px 8px;border-radius:20px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:.12s}.diffrank span{display:block;font-size:clamp(40px,4vw,70px);margin-bottom:8px}.diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-10px) scale(1.08);box-shadow:0 0 34px #ffd45e44}
+.awardstage{align-items:center}.awardbox{width:min(1300px,94vw)}.awardanswer{font-size:clamp(20px,1.8vw,30px);color:#9cb5c5;margin-bottom:20px}.awardanswer b{color:#55e59c}.awardlist{display:flex;flex-direction:column;gap:10px;max-width:1050px;margin:0 auto}.awardrow{display:grid;grid-template-columns:68px 1fr auto;align-items:center;gap:14px;min-height:72px;padding:9px 16px;border-radius:18px;border:1px solid #ffffff1f;background:#071824e8;text-align:left;transition:transform .8s cubic-bezier(.16,.8,.22,1)}.awardrow.top1{border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8)}.awardavatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#15344a;border:1px solid #4b7793;font-size:22px;font-weight:1000}.awardname{font-size:clamp(18px,1.5vw,27px);font-weight:1000}.awardbadges{font-size:14px;color:#d7efff;margin-top:3px}.awardscore{font-size:clamp(20px,1.7vw,30px);font-weight:1000;color:#ffd45e;white-space:nowrap}.awarddelta{display:inline-block;margin-left:10px;color:#55e59c}.awarddelta.neg{color:#ff6f7d}.gamebody{grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr)}.leaderrail{display:none!important}
 </style>
 </head>
 <body>
@@ -65,7 +62,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.1</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.2</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -122,7 +119,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="stage" id="themeStage"><div class="stageinner"><div class="stagekicker">ROUND <span id="themeRound">1</span></div><div class="stagetitle">CHOOSE THE THEME</div><div class="themetrack" id="themeTrack"></div><div class="stagehint">ONE GAME · ADAPTED FOR TV</div></div></section>
  <section class="stage" id="difficultyStage"><div class="stageinner"><div class="stagekicker" id="diffTheme">GEOGRAPHY</div><div class="stagetitle">DIFFICULTY</div><div class="diffrail" id="difficultyRail"></div></div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.1 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.2 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -155,97 +152,44 @@ function sequenceForTheme(theme){
  return shuffle(ids.length?ids:all)
 }
 function showThemeSelection(done){
- var themes=availableThemes(),html="",i;for(i=0;i<themes.length;i++)html+='<div class="themecard" data-theme="'+esc(themes[i])+'"><div class="ico">'+categoryIcon(themes[i])+'</div><b>'+esc(themes[i])+'</b></div>';
+ var themes=availableThemes(),items=[],copies=7,i,j,html="",center;
+ if(!themes.length){done("QUIZ","newbie");return}
+ for(i=0;i<copies;i++)for(j=0;j<themes.length;j++)items.push(themes[j]);
+ center=Math.floor(items.length/2);
+ for(i=0;i<items.length;i++)html+='<div class="themecard" data-theme="'+esc(items[i])+'"><div class="ico">'+categoryIcon(items[i])+'</div><b>'+esc(items[i])+'</b></div>';
  $("themeTrack").innerHTML=html;$("themeRound").innerHTML="1";stage("themeStage");
- var cards=$("themeTrack").children,step=0,total=Math.max(12,themes.length*7);
- function tick(){for(var j=0;j<cards.length;j++)cards[j].className="themecard"+(j===step%cards.length?" hot":"");step++;if(step<total){stageTimer=setTimeout(tick,70+step*7)}else{var chosen=themes[(step-1)%themes.length];setTimeout(function(){showDifficultySelection(chosen,done)},650)}}
- tick()
+ var cards=$("themeTrack").children,start=0,target=center+(Math.floor(Math.random()*themes.length)),pos=start,t0=now(),dur=4300;
+ function draw(p,locked){
+  var n,d,x,scale,op;
+  for(n=0;n<cards.length;n++){
+   d=n-p;x=50+d*25;scale=Math.max(.62,1-Math.abs(d)*.16);op=Math.max(.08,1-Math.abs(d)*.32);
+   cards[n].style.left=x+"%";cards[n].style.opacity=op;cards[n].style.transform="translate(-50%,-50%) scale("+scale+")";
+   cards[n].className="themecard"+(Math.abs(d)<.45?" selected":"")+(locked&&n===target?" locked":"")+(locked&&n!==target?" dimmed":"")
+  }
+ }
+ function spin(){
+  var t=Math.min(1,(now()-t0)/dur),e=1-Math.pow(1-t,3.2);
+  pos=start+(target-start)*e;draw(pos,false);
+  if(t<1)stageTimer=setTimeout(spin,32);else{draw(target,true);stageTimer=setTimeout(function(){showDifficultySelection(items[target],done)},1100)}
+ }
+ draw(0,false);spin()
 }
 function showDifficultySelection(theme,done){
- var keys=["newbie","rookie","pro","ninja","master"],html="",i,r;for(i=0;i<keys.length;i++){r=RANKS[keys[i]];html+='<div class="diffrank"><span>'+r[0]+'</span>'+r[1]+'<br>+'+r[2]+' ★</div>'}
+ var keys=["newbie","rookie","pro","ninja","master"],html="",i,r;
+ for(i=0;i<keys.length;i++){r=RANKS[keys[i]];html+='<div class="diffrank"><span>'+r[0]+'</span>'+r[1]+'<br>+'+r[2]+' ★</div>'}
  $("difficultyRail").innerHTML=html;$("diffTheme").innerHTML=categoryIcon(theme)+" "+esc(theme);stage("difficultyStage");
- var cards=$("difficultyRail").children,step=0,total=22;
- function tick(){for(var j=0;j<cards.length;j++)cards[j].className="diffrank"+(j===step%cards.length?" hot":"");step++;if(step<total){stageTimer=setTimeout(tick,65+step*8)}else{var chosen=keys[(step-1)%keys.length];setTimeout(function(){hideStages();done(theme,chosen)},750)}}
+ var cards=$("difficultyRail").children,target=Math.floor(Math.random()*keys.length),step=0,total=36;
+ function tick(){
+  var hot=step%keys.length,j;
+  for(j=0;j<cards.length;j++)cards[j].className="diffrank"+(j===hot?" hot":"");
+  step++;
+  if(step<total)stageTimer=setTimeout(tick,55+step*5);
+  else{
+   for(j=0;j<cards.length;j++)cards[j].className="diffrank"+(j===target?" hot":"");
+   stageTimer=setTimeout(function(){hideStages();done(theme,keys[target])},1000)
+  }
+ }
  tick()
-}
-function xhr(method,url,body,cb){
- var x=new XMLHttpRequest();
- x.open(method,url,true);
- if(method==="PUT")x.setRequestHeader("Content-Type","application/json");
- x.onreadystatechange=function(){
-  if(x.readyState!==4)return;
-  if(x.status>=200&&x.status<300){
-   var data=null;try{data=JSON.parse(x.responseText)}catch(e){}
-   cb(null,data,x)
-  }else cb(new Error("HTTP "+x.status),null,x)
- };
- x.onerror=function(){cb(new Error("Network error"))};
- try{x.send(body?JSON.stringify(body):null)}catch(e){cb(e)}
-}
-function getState(cb){xhr("GET",BRIDGE+"/game/state?_="+now(),null,cb)}
-function putState(base,settings,cb){
- xhr("PUT",BRIDGE+"/game/state",{settings:settings,players:(base&&base.players&&typeof base.players==="object")?base.players:{}},cb)
-}
-function loadJson(url,cb){xhr("GET",url+(url.indexOf("?")>=0?"&":"?")+"_="+now(),null,cb)}
-function loadQuestions(cb){
- loadJson("../data/questions-flags.json",function(e,f){
-  if(e)return cb(e);
-  loadJson("../data/questions-landmarks.json",function(e2,l){
-   if(e2)return cb(e2);
-   var i,q,arr=[];
-   for(i=0;i<(f.questions||[]).length;i++){q=f.questions[i];q.category=f.category;arr.push(q)}
-   for(i=0;i<(l.questions||[]).length;i++){q=l.questions[i];q.category=l.category;arr.push(q)}
-   questions=arr;qmap={};for(i=0;i<arr.length;i++)qmap[arr[i].qid]=arr[i];
-   cb(null)
-  })
- })
-}
-function joinLink(code){
- var h=location.href.split("#")[0].split("?")[0];
- h=h.substring(0,h.lastIndexOf("/")+1)+"remote.html?room="+encodeURIComponent(code);
- return h
-}
-function saveNewRoom(cb){
- getState(function(e,base){
-  if(e)return cb(e);
-  var settings={};var k;
-  if(base&&base.settings){for(k in base.settings)if(Object.prototype.hasOwnProperty.call(base.settings,k))settings[k]=base.settings[k]}
-  settings[ROOM_KEY]=room;
-  putState(base||{},settings,function(e2){cb(e2)})
- })
-}
-function createRoom(){
- if(timerHandle){clearInterval(timerHandle);timerHandle=null}
- if(pollTimer){clearTimeout(pollTimer);pollTimer=null}
- transitioning=false;hostId=randomId();
- var ids=[],i;for(i=0;i<questions.length;i++)ids.push(questions[i].qid);
- room={code:randomCode(),hostId:hostId,mode:"party",roundId:randomId(),phase:"lobby",createdAt:now(),updatedAt:now(),sequence:shuffle(ids),index:-1,qid:"",players:{},scores:{},streaks:{},answers:{},firstHolder:null,lastResults:{},questionStartedAt:0,answerDeadline:0,nextAt:0,answerSeconds:30};
- $("status").innerHTML="Creating room…";
- getState(function(e,base){
-  if(e){$("status").innerHTML="Cloud error: "+esc(e.message);return}
-  var s=(base&&base.settings)||{},sec=Number(s.answerTime)||30;
-  room.answerSeconds=Math.max(5,Math.min(120,sec));
-  var settings={},k;for(k in s)if(Object.prototype.hasOwnProperty.call(s,k))settings[k]=s[k];
-  settings[ROOM_KEY]=room;
-  putState(base||{},settings,function(e2){
-   if(e2){$("status").innerHTML="Save error: "+esc(e2.message);return}
-   renderLobby();show("lobby");$("status").innerHTML="TV browser OK · Room "+room.code;schedulePoll()
-  })
- })
-}
-function renderLobby(){
- if(!room)return;
- $("roomCode").innerHTML=esc(room.code);
- var url=joinLink(room.code);
- $("joinUrl").innerHTML=esc(url);
- $("qr").src="https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=0&data="+encodeURIComponent(url);
- var rows=[],k,p;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k)){p=room.players[k];rows.push(p)}
- $("playerCount").innerHTML=rows.length;
- $("startBtn").disabled=rows.length===0;
- if(!rows.length){$("playerList").className="empty";$("playerList").innerHTML="Waiting for phones…";return}
- $("playerList").className="playergrid";
- var html="",i,n;for(i=0;i<rows.length;i++){n=(rows[i].name||"PLAYER");html+='<div class="player"><div class="avatar">'+esc(n.charAt(0).toUpperCase())+'</div><div class="pname">'+esc(n)+'</div></div>'}
- $("playerList").innerHTML=html
 }
 function answerLabel(a){if(typeof a==="string")return a;return a?(a.country||a.name||""):""}
 function correctLetter(q){var a=q.answers||[],i;for(i=0;i<a.length;i++)if(answerLabel(a[i])===q.correct)return "ABCD".charAt(i);return "A"}
