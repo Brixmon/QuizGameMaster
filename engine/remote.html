@@ -99,15 +99,10 @@ function enableAnswers(){
 async function mutateRoom(mutator,verify){
  if(writing)return false;writing=true;
  try{
-  for(let attempt=0;attempt<4;attempt++){
-   const base=await getState(),settings={...(base.settings||{})},latest=settings[ROOM_KEY];
-   if(!latest||String(latest.code)!==String(roomCode))throw Error("Room not found");
-   const next=JSON.parse(JSON.stringify(latest));mutator(next);next.updatedAt=Date.now();settings[ROOM_KEY]=next;await putState(base,settings);
-   const check=await getState(),saved=check&&check.settings?check.settings[ROOM_KEY]:null;
-   if(saved&&String(saved.code)===String(roomCode)&&(!verify||verify(saved))){room=saved;return true}
-   await new Promise(r=>setTimeout(r,150+attempt*120))
-  }
-  throw Error("Try again")
+  const base=await getState(),settings={...(base.settings||{})},latest=settings[ROOM_KEY];
+  if(!latest||String(latest.code)!==String(roomCode))throw Error("Room not found");
+  const next=JSON.parse(JSON.stringify(latest));mutator(next);next.updatedAt=Date.now();settings[ROOM_KEY]=next;
+  await putState(base,settings);room=next;return true
  }finally{writing=false}
 }
 async function join(){
@@ -119,7 +114,7 @@ async function join(){
   const ok=await mutateRoom(r=>{r.players=r.players||{};r.players[pid]={name:playerName,joinedAt:(r.players[pid]&&r.players[pid].joinedAt)||Date.now(),lastSeen:Date.now()}},r=>!!r.players?.[pid]);
   if(!ok)throw Error("Could not join");
   localStorage.setItem("qgm_tv_name",playerName);$("roomHeader").textContent="ROOM "+roomCode+" · "+playerName.toUpperCase();show("waitView");render(room);schedulePoll()
- }catch(e){$("joinStatus").textContent=e.message==="Room not found"?"Room not found. Check the TV code.":"Could not join. Try again."}
+ }catch(e){$("joinStatus").textContent=e.message==="Room not found"?"Room not found. Check the TV code.":"Join failed: "+(e.message||"connection error")}
  finally{$("joinBtn").disabled=false}
 }
 async function submit(letter){
@@ -174,5 +169,5 @@ $("nameInput").value=localStorage.getItem("qgm_tv_name")||"";
 loadQuestions();
 setTimeout(function(){if(roomCode&&playerName&&pid&&!pollTimer)schedulePoll()},1000);
 </script>
-<div style="position:fixed;right:8px;bottom:5px;font:10px Arial;color:#ffffff55;z-index:99">REMOTE v0.3.1</div></body>
+<div style="position:fixed;right:8px;bottom:5px;font:10px Arial;color:#ffffff55;z-index:99">REMOTE v0.3.2</div></body>
 </html>
