@@ -62,7 +62,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.3</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.4</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -119,7 +119,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="stage" id="themeStage"><div class="stageinner"><div class="stagekicker">ROUND <span id="themeRound">1</span></div><div class="stagetitle">CHOOSE THE THEME</div><div class="themetrack" id="themeTrack"></div><div class="stagehint">ONE GAME · ADAPTED FOR TV</div></div></section>
  <section class="stage" id="difficultyStage"><div class="stageinner"><div class="stagekicker" id="diffTheme">GEOGRAPHY</div><div class="stagetitle">DIFFICULTY</div><div class="diffrail" id="difficultyRail"></div></div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.3 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.4 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -138,6 +138,29 @@ function shuffle(a){var out=a.slice(),i,j,t;for(i=out.length-1;i>0;i--){j=Math.f
 function show(id){var a=document.querySelectorAll(".screen"),i;for(i=0;i<a.length;i++)a[i].className=a[i].className.replace(/\s*show\b/g,"")+(a[i].id===id?" show":"")}
 function hideStages(){var a=document.querySelectorAll(".stage"),i;for(i=0;i<a.length;i++)a[i].className=a[i].className.replace(/\s*show\b/g,"")}
 function stage(id){hideStages();$(id).className+=" show"}
+function xhr(method,url,body,cb){
+ var x=new XMLHttpRequest();x.open(method,url,true);
+ if(method==="PUT")x.setRequestHeader("Content-Type","application/json");
+ x.onreadystatechange=function(){if(x.readyState!==4)return;if(x.status>=200&&x.status<300){var d=null;try{d=JSON.parse(x.responseText)}catch(e){}cb(null,d,x)}else cb(new Error("HTTP "+x.status),null,x)};
+ x.onerror=function(){cb(new Error("Network error"))};
+ try{x.send(body?JSON.stringify(body):null)}catch(e){cb(e)}
+}
+function getState(cb){xhr("GET",BRIDGE+"/game/state?_="+now(),null,cb)}
+function putState(base,settings,cb){xhr("PUT",BRIDGE+"/game/state",{settings:settings,players:(base&&base.players&&typeof base.players==="object")?base.players:{}},cb)}
+function loadJson(url,cb){xhr("GET",url+(url.indexOf("?")>=0?"&":"?")+"_="+now(),null,cb)}
+function loadQuestions(cb){
+ loadJson("../data/questions-flags.json",function(e,f){
+  if(e)return cb(e);
+  loadJson("../data/questions-landmarks.json",function(e2,l){
+   if(e2)return cb(e2);
+   var i,q,arr=[];
+   for(i=0;i<(f.questions||[]).length;i++){q=f.questions[i];q.category=f.category;arr.push(q)}
+   for(i=0;i<(l.questions||[]).length;i++){q=l.questions[i];q.category=l.category;arr.push(q)}
+   questions=arr;qmap={};for(i=0;i<arr.length;i++)qmap[arr[i].qid]=arr[i];
+   cb(null)
+  })
+ })
+}
 function categoryLabel(q){return String(q&&q.category||"QUIZ").toUpperCase()}
 function categoryIcon(name){name=String(name||"").toLowerCase();if(name.indexOf("flag")>=0)return "🏳️";if(name.indexOf("land")>=0)return "🌍";return "🎯"}
 function availableThemes(){
