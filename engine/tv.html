@@ -83,7 +83,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 
 
 
-/* TV v0.7.6: canonical TikTok V2 component + responsive 16:9 geometry */
+/* TV v0.7.7: canonical TikTok V2 component + responsive 16:9 geometry */
 #themeStage .stageinner,#difficultyStage .stageinner{position:relative;width:min(96vw,1700px);height:min(94vh,900px);overflow:hidden}
 #themeStage .themezone{left:-2%;right:-2%;top:19%;height:62%}
 #themeStage .themewheelring{top:50%;width:min(92vw,1500px);height:52vh}
@@ -151,7 +151,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 #awardStage .awardbadges{display:block!important;font-size:14px!important;color:#7ddfff!important;margin-top:5px!important}
 #awardStage .awardscore{display:block!important;position:absolute!important;right:18px!important;top:23px!important;font-size:25px!important;color:#ffd45e!important;font-weight:bold!important}
 
-/* TV v0.7.6 UNIVERSAL LEGACY RENDERER
+/* TV v0.7.7 UNIVERSAL LEGACY RENDERER
    Core gameplay must remain graphical without Grid/Flex/clamp/min()/CSS variables/transforms. */
 html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#04101a;color:#fff;font-family:Arial,sans-serif}
 .shell{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:auto!important;height:auto!important;min-height:0!important;padding:0!important;overflow:hidden!important}
@@ -254,7 +254,7 @@ html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.7.6</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.7.7</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -317,7 +317,7 @@ html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#
   <div class="diffzone"><div id="difficultyRail"></div></div>
  </div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.7.6 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.7.7 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -327,6 +327,14 @@ var RANKS={newbie:["🌱","NEWBIE",1],rookie:["🎯","ROOKIE",2],pro:["⚡","PRO
 var questions=[],qmap={},room=null,hostId="",pollTimer=null,timerHandle=null,transitioning=false,stageTimer=null,introBusy=false;
 
 function $(id){return document.getElementById(id)}
+function dbg(s){
+ try{
+  var el=document.getElementById("debugLines");if(!el)return;
+  var t=new Date(),ts=("0"+t.getHours()).slice(-2)+":"+("0"+t.getMinutes()).slice(-2)+":"+("0"+t.getSeconds()).slice(-2);
+  var old=el.innerHTML||"";el.innerHTML=ts+" "+esc(s)+"<br>"+old.split("<br>").slice(0,9).join("<br>")
+ }catch(e){}
+}
+
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]})}
 function now(){return new Date().getTime()}
 function randomId(){return "id-"+now()+"-"+Math.random().toString(36).slice(2)}
@@ -337,10 +345,11 @@ function show(id){var a=document.querySelectorAll(".screen"),i;for(i=0;i<a.lengt
 function hideStages(){var a=document.querySelectorAll(".stage"),i;for(i=0;i<a.length;i++){a[i].className=a[i].className.replace(/\s*show\b/g,"");a[i].style.display="none"}}
 function stage(id){hideStages();$(id).className+=" show";$(id).style.display="block"}
 function xhr(method,url,body,cb){
+ dbg("HTTP "+method+" "+url.replace(BRIDGE,"BRIDGE"));
  var x=new XMLHttpRequest();x.open(method,url,true);
  if(method==="PUT")x.setRequestHeader("Content-Type","application/json");
- x.onreadystatechange=function(){if(x.readyState!==4)return;if(x.status>=200&&x.status<300){var d=null;try{d=JSON.parse(x.responseText)}catch(e){}cb(null,d,x)}else cb(new Error("HTTP "+x.status),null,x)};
- x.onerror=function(){cb(new Error("Network error"))};
+ x.onreadystatechange=function(){if(x.readyState!==4)return;if(x.status>=200&&x.status<300){dbg("HTTP OK "+x.status);var d=null;try{d=JSON.parse(x.responseText)}catch(e){}cb(null,d,x)}else{dbg("HTTP FAIL "+x.status);cb(new Error("HTTP "+x.status),null,x)}};
+ x.onerror=function(){dbg("HTTP NETWORK ERROR");cb(new Error("Network error"))};
  try{x.send(body?JSON.stringify(body):null)}catch(e){cb(e)}
 }
 function getState(cb){xhr("GET",BRIDGE+"/game/state?_="+now(),null,cb)}
@@ -438,16 +447,16 @@ function createRoom(){
  hideStages();transitioning=false;introBusy=false;hostId=randomId();
  var ids=[],i;for(i=0;i<questions.length;i++)ids.push(questions[i].qid);
  room={code:randomCode(),hostId:hostId,mode:"party",roundId:randomId(),phase:"lobby",createdAt:now(),updatedAt:now(),sequence:shuffle(ids),index:-1,qid:"",players:{},scores:{},streaks:{},answers:{},firstHolder:null,lastResults:{},questionStartedAt:0,answerDeadline:0,nextAt:0,answerSeconds:30};
- renderLobby();show("lobby");$("status").innerHTML="Room "+room.code+" · connecting cloud…";
+ dbg("LOCAL ROOM "+room.code+" CREATED");renderLobby();show("lobby");$("status").innerHTML="Room "+room.code+" · connecting cloud…";
  getState(function(e,base){
-  if(e){$("status").innerHTML="Room "+room.code+" · cloud unavailable";return}
+  if(e){dbg("GET STATE FAIL: "+e.message);$("status").innerHTML="Room "+room.code+" · cloud unavailable";return}
   var s=(base&&base.settings)||{},sec=Number(s.answerTime)||30;
   room.answerSeconds=Math.max(5,Math.min(120,sec));
   var settings={},k;for(k in s)if(Object.prototype.hasOwnProperty.call(s,k))settings[k]=s[k];
   settings[ROOM_KEY]=room;
   putState(base||{},settings,function(e2){
-   if(e2){$("status").innerHTML="Room "+room.code+" · cloud save failed";return}
-   $("status").innerHTML="TV browser OK · Room "+room.code;schedulePoll()
+   if(e2){dbg("ROOM SAVE FAIL: "+e2.message);$("status").innerHTML="Room "+room.code+" · cloud save failed";return}
+   dbg("ROOM "+room.code+" SAVED TO CLOUD");$("status").innerHTML="TV browser OK · Room "+room.code;schedulePoll()
   })
  })
 }
@@ -610,11 +619,11 @@ function poll(){
    var r=j&&j.settings?j.settings[ROOM_KEY]:null;
    if(r&&room&&r.code===room.code&&r.hostId===hostId){
     var phaseChanged=r.phase!==room.phase,qChanged=r.qid!==room.qid;room=r;
-    if(room.phase==="lobby")renderLobby();
-    if(room.phase==="intro"){$("status").innerHTML="TV browser OK · selecting theme";}
-    if(room.phase==="question"){if(phaseChanged||qChanged)renderQuestion();else renderAnswerCount();var pc=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))pc++;$("gamePlayers").innerHTML=pc;if(room.answerDeadline&&now()>=room.answerDeadline&&!transitioning)revealQuestion()}
-    if(room.phase==="reveal"){if(phaseChanged)renderReveal();if(room.nextAt&&now()>=room.nextAt&&!transitioning)nextQuestion()}
-    if(room.phase==="final"&&phaseChanged)renderFinal();
+    if(room.phase==="lobby"){var pc0=0,pk0;for(pk0 in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,pk0))pc0++;dbg("POLL LOBBY players="+pc0);renderLobby();}
+    if(room.phase==="intro"){dbg("PHASE intro");$("status").innerHTML="TV browser OK · selecting theme";}
+    if(room.phase==="question"){if(phaseChanged||qChanged){dbg("PHASE question qid="+room.qid);renderQuestion();}else renderAnswerCount();var pc=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))pc++;$("gamePlayers").innerHTML=pc;if(room.answerDeadline&&now()>=room.answerDeadline&&!transitioning)revealQuestion()}
+    if(room.phase==="reveal"){if(phaseChanged){dbg("PHASE reveal");renderReveal();}if(room.nextAt&&now()>=room.nextAt&&!transitioning)nextQuestion()}
+    if(room.phase==="final"&&phaseChanged){dbg("PHASE final");renderFinal();}
     $("status").innerHTML="TV browser OK · Room "+room.code
    }
   }
@@ -631,5 +640,10 @@ $("status").innerHTML="TV browser OK · loading questions…";
 loadQuestions(function(e){if(e){$("status").innerHTML="Question load error: "+esc(e.message);return}createRoom()});
 })();
 </script>
+
+<div id="debugPanel" style="position:fixed;left:8px;bottom:28px;width:46%;max-height:42%;overflow:hidden;z-index:20000;background:#000;border:2px solid #ffcc00;padding:8px;color:#7CFF7C;font:13px/1.25 monospace;text-align:left;opacity:.94">
+ <div style="color:#ffdf55;font-weight:bold">QGM DEBUG · TV v0.7.7</div>
+ <div id="debugLines">BOOT…</div>
+</div>
 </body>
 </html>
