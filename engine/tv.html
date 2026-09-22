@@ -26,6 +26,26 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 @media(max-width:700px){.gamebody{grid-template-columns:minmax(0,1fr) minmax(170px,34%)}.qpanel{display:none}.leaderrail{display:flex}}
 .leaderrail{padding:12px 10px}.leaderrow{padding:7px 8px}.answer{font-size:17px}
 .tvversion{position:fixed;left:12px;bottom:10px;z-index:9999;padding:7px 11px;border:1px solid #4d7893;border-radius:9px;background:#06131ddd;color:#dff6ff;font-size:14px;font-weight:1000;letter-spacing:.05em;box-shadow:0 2px 10px #0008;pointer-events:none}
+
+/* 0.4.4 HARD FIX: leaderboard is fixed to the TV viewport, independent of game grid/breakpoints */
+#game.show .leaderrail{
+ display:flex !important;
+ position:fixed !important;
+ top:92px !important;
+ right:18px !important;
+ bottom:24px !important;
+ width:clamp(210px,24vw,390px) !important;
+ height:auto !important;
+ z-index:50 !important;
+ box-sizing:border-box !important;
+ background:#071923f2 !important;
+}
+#game.show .gamebody{padding-right:clamp(225px,25vw,405px) !important;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr) !important}
+@media(max-width:850px){
+ #game.show .gamebody{padding-right:clamp(190px,34vw,280px) !important;grid-template-columns:1fr !important}
+ #game.show .qpanel{display:none !important}
+ #game.show .leaderrail{right:10px !important;width:clamp(180px,32vw,260px) !important}
+}
 </style>
 </head>
 <body>
@@ -35,7 +55,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.4.3</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.4.4</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -89,7 +109,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   </div>
  </section>
 
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.4.3 · GAME v1.0.32</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.4.4 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -212,7 +232,7 @@ function renderQuestion(){
   flag=(q.type==="country_to_flag"&&code)?'<img src="'+flagUrl(code)+'" alt="">':"";
   html+='<div class="answer '+(q.type==="country_to_flag"?"flagchoice":"")+'" data-letter="'+"ABCD".charAt(i)+'"><div class="letter">'+"ABCD".charAt(i)+'</div>'+flag+(q.type==="country_to_flag"?"":'<span>'+esc(label)+'</span>')+'</div>'
  }
- $("answers").innerHTML=html;renderAnswerCount();startTimerVisual()
+ $("answers").innerHTML=html;renderAnswerCount();renderLeaderboard();startTimerVisual()
 }
 function renderLeaderboard(){
  var el=$("leaderRows");if(!el)return;
