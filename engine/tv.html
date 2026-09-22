@@ -15,14 +15,15 @@ button{font:inherit}.shell{min-height:100vh;padding:22px 28px 28px}.screen{displ
 .status{position:absolute;left:24px;bottom:18px;color:#7995a8;font-size:12px}
 @media(max-width:700px){.shell{padding:16px}.lobbybox{grid-template-columns:1fr}.playerspanel{min-height:320px}.roompanel{grid-template-columns:180px 1fr}.qrbox{width:180px;height:180px}.gamebody{grid-template-columns:1fr}.visual{min-height:42vh}.answers{grid-template-columns:1fr 1fr}.scoreboard{grid-template-columns:1fr 1fr}.leaderrail{display:none}}
 
-/* 0.3.8: keep the complete game composition inside the TV viewport */
+/* 0.3.9: keep the complete game composition inside the TV viewport */
 html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:16px 22px 18px;overflow:hidden}.screen{height:calc(100vh - 34px);min-height:0}.gamebody{height:calc(100vh - 105px);min-height:0;padding-top:12px}.visual{height:100%;min-height:0}.qpanel{height:100%;overflow:hidden}.question{font-size:clamp(24px,2.5vw,42px)}.answers{min-height:0;overflow:hidden}.answer{min-height:0}.progress{margin-top:8px}.gamehead{min-height:28px}
 
-/* 0.3.8: persistent competition leaderboard on the TV right rail */
-.gamebody{grid-template-columns:minmax(0,1.08fr) minmax(360px,.72fr) minmax(250px,.42fr)}
-.leaderrail{min-width:0;border:1px solid #29495e;border-radius:20px;background:linear-gradient(180deg,#0e2230,#07131c);padding:16px 14px;display:flex;flex-direction:column;overflow:hidden}
-.leaderrail h3{margin:0;font-size:19px;letter-spacing:.08em}.leadersub{font-size:11px;color:#7f9bad;margin:4px 0 12px}.leaderrows{display:flex;flex-direction:column;gap:8px;overflow:hidden}.leaderrow{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:8px;border:1px solid #203c4e;background:#0a1923;border-radius:12px;padding:9px 10px;min-height:45px}.leaderrow.top{border-color:#735f28;background:#241e0c}.leaderplace{font-weight:1000;color:#8fb0c4;text-align:center}.leaderrow.top .leaderplace{color:var(--gold)}.leadername{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.leaderpts{font-weight:1000;color:var(--gold);white-space:nowrap}.leaderempty{color:#68869a;text-align:center;padding:28px 5px}.leaderdelta{font-size:11px;color:var(--green);margin-left:3px}
-@media(max-width:1100px) and (min-width:701px){.gamebody{grid-template-columns:minmax(0,1fr) minmax(280px,.65fr) minmax(190px,.38fr);gap:12px}.leaderrail{padding:12px 10px}.leaderrow{padding:7px 8px}.answer{font-size:17px}}
+/* 0.3.9: adaptive TV composition; leaderboard is a first-class column */
+.gamebody{grid-template-columns:minmax(0,5fr) minmax(260px,3fr) minmax(210px,2fr);gap:clamp(10px,1.2vw,22px)}
+.leaderrail{min-width:0;border:1px solid #29495e;border-radius:20px;background:linear-gradient(180deg,#0e2230,#07131c);padding:clamp(10px,1vw,16px);display:flex;flex-direction:column;overflow:hidden}
+.leaderrail h3{margin:0;font-size:clamp(15px,1.3vw,20px);letter-spacing:.06em}.leadersub{font-size:11px;color:#7f9bad;margin:4px 0 12px}.leaderrows{display:flex;flex-direction:column;gap:clamp(5px,.6vh,8px);overflow:hidden}.leaderrow{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:7px;border:1px solid #203c4e;background:#0a1923;border-radius:11px;padding:clamp(6px,.7vh,9px) 8px;min-height:38px}.leaderrow.top{border-color:#735f28;background:#241e0c}.leaderplace{font-weight:1000;color:#8fb0c4;text-align:center}.leaderrow.top .leaderplace{color:var(--gold)}.leadername{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.leaderpts{font-weight:1000;color:var(--gold);white-space:nowrap}.leaderempty{color:#68869a;text-align:center;padding:28px 5px}.leaderdelta{font-size:11px;color:var(--green);margin-left:3px}
+@media(max-width:850px) and (min-width:701px){.gamebody{grid-template-columns:minmax(0,1fr) minmax(180px,32%)}.qpanel{display:none}.leaderrail{display:flex}}
+.leaderrail{padding:12px 10px}.leaderrow{padding:7px 8px}.answer{font-size:17px}}
 </style>
 </head>
 <body>
@@ -32,7 +33,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.3.8</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.3.9</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -302,7 +303,7 @@ function poll(){
   schedulePoll()
  })
 }
-function schedulePoll(){if(pollTimer)clearTimeout(pollTimer);pollTimer=setTimeout(poll,200)}
+function schedulePoll(){if(pollTimer)clearTimeout(pollTimer);pollTimer=setTimeout(poll,100)}
 $("fullBtn").onclick=function(){try{var el=document.documentElement;if(!document.fullscreenElement&&el.requestFullscreen)el.requestFullscreen();else if(document.exitFullscreen)document.exitFullscreen()}catch(e){}};
 $("newRoomBtn").onclick=function(){createRoom()};
 $("startBtn").onclick=function(){startQuiz()};
