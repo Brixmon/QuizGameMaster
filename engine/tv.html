@@ -22,8 +22,8 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 .gamebody{grid-template-columns:minmax(0,5fr) minmax(260px,3fr) minmax(210px,2fr);gap:clamp(10px,1.2vw,22px)}
 .leaderrail{min-width:0;border:1px solid #29495e;border-radius:20px;background:linear-gradient(180deg,#0e2230,#07131c);padding:clamp(10px,1vw,16px);display:flex;flex-direction:column;overflow:hidden}
 .leaderrail h3{margin:0;font-size:clamp(15px,1.3vw,20px);letter-spacing:.06em}.leadersub{font-size:11px;color:#7f9bad;margin:4px 0 12px}.leaderrows{display:flex;flex-direction:column;gap:clamp(5px,.6vh,8px);overflow:hidden}.leaderrow{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:7px;border:1px solid #203c4e;background:#0a1923;border-radius:11px;padding:clamp(6px,.7vh,9px) 8px;min-height:38px}.leaderrow.top{border-color:#735f28;background:#241e0c}.leaderplace{font-weight:1000;color:#8fb0c4;text-align:center}.leaderrow.top .leaderplace{color:var(--gold)}.leadername{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.leaderpts{font-weight:1000;color:var(--gold);white-space:nowrap}.leaderempty{color:#68869a;text-align:center;padding:28px 5px}.leaderdelta{font-size:11px;color:var(--green);margin-left:3px}
-@media(max-width:850px) and (min-width:701px){.gamebody{grid-template-columns:minmax(0,1fr) minmax(180px,32%)}.qpanel{display:none}.leaderrail{display:flex}}
-.leaderrail{padding:12px 10px}.leaderrow{padding:7px 8px}.answer{font-size:17px}}
+@media(max-width:850px) and (min-width:701px){.gamebody{grid-template-columns:minmax(0,1fr) minmax(180px,32%)}.qpanel{display:none}.leaderrail{display:flex}}\n@media(max-width:700px){.gamebody{grid-template-columns:minmax(0,1fr) minmax(170px,34%)}.qpanel{display:none}.leaderrail{display:flex}}
+.leaderrail{padding:12px 10px}.leaderrow{padding:7px 8px}.answer{font-size:17px}
 .tvversion{position:fixed;left:12px;bottom:10px;z-index:9999;padding:7px 11px;border:1px solid #4d7893;border-radius:9px;background:#06131ddd;color:#dff6ff;font-size:14px;font-weight:1000;letter-spacing:.05em;box-shadow:0 2px 10px #0008;pointer-events:none}
 </style>
 </head>
@@ -34,7 +34,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.4.1</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.4.2</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -88,7 +88,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   </div>
  </section>
 
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.4.1 · GAME v1.0.30</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.4.2 · GAME v1.0.31</div>
 </div>
 <script>
 (function(){
