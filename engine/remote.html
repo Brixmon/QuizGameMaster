@@ -129,7 +129,7 @@ async function submit(letter){
  $("locked").textContent="Sending "+letter+"…";
  try{
   const ok=await mutateRoom(r=>{
-   if(r.phase!=="question"||r.qid!==qid)throw Error("Question closed");
+   if(r.phase!=="question"||r.qid!==qid||Date.now()>=Number(r.answerDeadline||0))throw Error("Question closed");
    r.answers=r.answers||{};r.answers[pid]={letter,qid,at:Date.now()};if(r.players&&r.players[pid])r.players[pid].lastSeen=Date.now()
   },r=>r.answers&&r.answers[pid]&&r.answers[pid].qid===qid&&r.answers[pid].letter===letter);
   if(ok){$("locked").textContent="";if(navigator.vibrate)navigator.vibrate(30)}
@@ -148,7 +148,7 @@ function render(r){
   const q=questions[r.qid];$("phoneQuestion").textContent=q&&q.question?q.question:"Loading question…";renderPhoneVisual(q);if(q&&q.answers){document.querySelectorAll(".ans").forEach(function(b,i){var s=b.querySelector("span");if(s)s.textContent=answerLabel(q.answers[i]||"")})}
   if(isNew){lastQid=r.qid;$("locked").textContent="";enableAnswers()}
   if(answered){$("locked").textContent="";document.querySelectorAll(".ans").forEach(b=>{b.disabled=true;b.classList.toggle("selected",b.dataset.letter===mine.letter)})}
-  else if(!writing){document.querySelectorAll(".ans").forEach(b=>b.disabled=false)}
+  else if(!writing){document.querySelectorAll(".ans").forEach(b=>b.disabled=Date.now()>=Number(r.answerDeadline||0))}
  }
  if(r.phase==="reveal"){
   const res=r.lastResults?r.lastResults[pid]:null,good=!!(res&&res.correct);show("resultView");$("resultView").classList.toggle("good",good);$("resultView").classList.toggle("bad",!good);
@@ -166,7 +166,7 @@ async function poll(){
  }catch(e){}
  schedulePoll()
 }
-function schedulePoll(){clearTimeout(pollTimer);pollTimer=setTimeout(poll,650)}
+function schedulePoll(){clearTimeout(pollTimer);pollTimer=setTimeout(poll,200)}
 document.querySelectorAll(".ans").forEach(b=>b.onclick=()=>submit(b.dataset.letter));
 $("joinBtn").onclick=join;$("roomInput").addEventListener("input",e=>e.target.value=cleanCode(e.target.value));$("nameInput").addEventListener("keydown",e=>{if(e.key==="Enter")join()});
 if(roomCode){roomCode=cleanCode(roomCode);$("roomInput").value=roomCode;$("roomField").style.display="none";$("roomHeader").textContent="ROOM "+roomCode}
