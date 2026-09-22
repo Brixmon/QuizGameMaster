@@ -83,7 +83,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 
 
 
-/* TV v0.6.1: canonical TikTok V2 component + responsive 16:9 geometry */
+/* TV v0.6.2: canonical TikTok V2 component + responsive 16:9 geometry */
 #themeStage .stageinner,#difficultyStage .stageinner{position:relative;width:min(96vw,1700px);height:min(94vh,900px);overflow:hidden}
 #themeStage .themezone{left:-2%;right:-2%;top:19%;height:62%}
 #themeStage .themewheelring{top:50%;width:min(92vw,1500px);height:52vh}
@@ -107,6 +107,16 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 .stage{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:none;background:radial-gradient(circle at 50% 18%,#17466c 0,#0a2236 32%,#04101b 58%,#02070d 100%);color:#f6fbff;overflow:hidden}
 .stage.show{display:block}
 .stage .stageinner{display:block}
+
+/* v0.6.2 Philips-safe carousel motion */
+#themeStage .themecard{transition:left .18s linear,top .18s linear,transform .18s linear,opacity .18s linear,border-color .35s,box-shadow .35s!important}
+#themeStage .focusbracket{display:block!important;opacity:1!important;border:2px solid #51dfff55!important;box-shadow:0 0 30px #299cff22!important}
+#themeStage .focusbracket.locked{border-color:#ffd45e!important;box-shadow:0 0 18px #fff2b888,0 0 45px #ffd45e55!important}
+#themeStage .lockline.show{opacity:1!important}
+#difficultyStage #difficultyRail{display:flex!important;gap:1.2vw;justify-content:center;align-items:center;height:100%}
+#difficultyStage .diffrank{display:block!important;flex:1;max-width:250px;padding:26px 8px;border-radius:20px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:transform .16s,background .16s,border-color .16s,color .16s}
+#difficultyStage .diffrank span{display:block;font-size:clamp(40px,4vw,70px);margin-bottom:8px}
+#difficultyStage .diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-10px) scale(1.08);box-shadow:0 0 34px #ffd45e44}
 </style>
 </head>
 <body>
@@ -116,7 +126,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.1</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.2</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -179,7 +189,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   <div class="diffzone"><div id="difficultyRail"></div></div>
  </div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.1 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.2 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -235,27 +245,32 @@ function sequenceForTheme(theme){
  return shuffle(ids.length?ids:all)
 }
 function showThemeSelection(done){
- var themes=availableThemes(),items=[],copies=7,i,j,html="",center;
+ var themes=availableThemes(),items=[],copies=9,i,j,html="",target,pos=0,ticks=0,maxTicks=86,timer=null;
  if(!themes.length){done("QUIZ","newbie");return}
  for(i=0;i<copies;i++)for(j=0;j<themes.length;j++)items.push(themes[j]);
- center=Math.floor(items.length/2);
- for(i=0;i<items.length;i++)html+='<div class="themecard" data-theme="'+esc(items[i])+'"><div class="icon">'+categoryIcon(items[i])+'</div><div class="label">'+esc(items[i])+'</div><div class="desc">QUIZ CATEGORY</div><div class="tag">LIVE GAME</div></div>';
- $("themeTrack").innerHTML=html;$("themeRound").innerHTML="1";stage("themeStage");
- var cards=$("themeTrack").children,start=0,target=center+(Math.floor(Math.random()*themes.length)),pos=start,t0=now(),dur=4300;
+ target=Math.floor(items.length/2)+Math.floor(Math.random()*themes.length);
+ for(i=0;i<items.length;i++)html+='<div class="themecard"><div class="icon">'+categoryIcon(items[i])+'</div><div class="label">'+esc(items[i])+'</div><div class="desc">QUIZ CATEGORY</div><div class="tag">LIVE GAME</div></div>';
+ $("themeTrack").innerHTML=html;$("themeRound").innerHTML="1";$("focusbracket").className="focusbracket";$("lockline").className="lockline";stage("themeStage");
+ var cards=$("themeTrack").children;
  function draw(p,locked){
-  var n,d,x,scale,op;
+  var n,d,x,sc,op;
   for(n=0;n<cards.length;n++){
-   d=n-p;x=50+d*22;scale=Math.max(.62,1-Math.abs(d)*.16);op=Math.max(.08,1-Math.abs(d)*.32);
-   cards[n].style.left=x+"%";cards[n].style.top=(50+Math.min(13,Math.abs(d)*4))+"%";cards[n].style.opacity=op;cards[n].style.transform="translate(-50%,-50%) scale("+scale+") rotate("+(-d*2.2)+"deg)";
-   cards[n].className="themecard"+(Math.abs(d)<.45?" selected":"")+(locked&&n===target?" locked":"")+(locked&&n!==target?" dimmed":"");if(locked){$("focusbracket").className="focusbracket locked";$("lockline").className="lockline show"}
+   d=n-p;x=50+d*23;sc=Math.max(.60,1-Math.abs(d)*.15);op=Math.max(.07,1-Math.abs(d)*.28);
+   cards[n].style.left=x+"%";cards[n].style.top=(49+Math.min(12,Math.abs(d)*3.5))+"%";cards[n].style.opacity=op;
+   cards[n].style.transform="translate(-50%,-50%) scale("+sc+") rotate("+(-d*2)+"deg)";
+   cards[n].className="themecard"+(Math.abs(d)<.48?" selected":"")+(locked&&n===target?" locked":"")+(locked&&n!==target?" dimmed":"")
   }
  }
- function spin(){
-  var t=Math.min(1,(now()-t0)/dur),e=1-Math.pow(1-t,3.2);
-  pos=start+(target-start)*e;draw(pos,false);
-  if(t<1)stageTimer=setTimeout(spin,32);else{draw(target,true);stageTimer=setTimeout(function(){showDifficultySelection(items[target],done)},1100)}
- }
- draw(0,false);spin()
+ draw(0,false);
+ timer=setInterval(function(){
+  ticks++;
+  var t=ticks/maxTicks,ease=1-Math.pow(1-Math.min(1,t),3.15);
+  pos=target*ease;draw(pos,false);
+  if(ticks>=maxTicks){
+   clearInterval(timer);draw(target,true);$("focusbracket").className="focusbracket locked";$("lockline").className="lockline show";
+   stageTimer=setTimeout(function(){showDifficultySelection(items[target],done)},1300)
+  }
+ },55)
 }
 function showDifficultySelection(theme,done){
  var keys=["newbie","rookie","pro","ninja","master"],html="",i,r;
