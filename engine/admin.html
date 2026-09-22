@@ -20,11 +20,22 @@
 .ruleline{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #18303f;font-size:12px}.ruleline:first-child{border-top:0}.ruleline strong{color:#dff6ff}
 .usecards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.usecard{padding:13px;border:1px solid #244052;border-radius:12px;background:#091721}.usecard.active{border-color:#45c4ff88;background:#10283a}.usecard .useicon{font-size:25px}.usecard b{display:block;margin-top:6px}.usecard small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}.usebadge{display:inline-block;margin-top:8px;padding:3px 7px;border-radius:999px;font-size:9px;font-weight:1000;border:1px solid #ffffff22}.usebadge.now{color:var(--green);border-color:#57df9a55}.usebadge.later{color:#9ab1c1}
 .settingsbar{position:sticky;bottom:10px;z-index:25;margin-top:14px;padding:10px 12px;border:1px solid #31536a;border-radius:13px;background:#091722ee;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 10px 30px #0007}.settingsstatus{color:var(--muted);font-size:12px}.settingsstatus.ok{color:var(--green)}.settingsstatus.warn{color:var(--orange)}.settingsstatus.bad{color:var(--red)}
+.settingsstep{margin-top:14px}.settingsstephead{margin-bottom:10px}.settingsstephead h3{margin:0;font-size:18px}.settingsstephead p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.usagechoices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.usagechoice{position:relative;min-height:142px;padding:15px;border:1px solid #28485c;border-radius:15px;background:linear-gradient(180deg,#0e1f2b,#0a1721);cursor:pointer;transition:.18s ease;text-align:left;color:var(--text)}
+.usagechoice:hover{transform:translateY(-1px);border-color:#4a7896}.usagechoice.selected{border-color:var(--blue);box-shadow:0 0 0 1px #45c4ff44,0 8px 25px #0004;background:linear-gradient(180deg,#123047,#0a1a26)}
+.usagechoice .bigicon{font-size:31px}.usagechoice b{display:block;margin-top:8px;font-size:15px}.usagechoice small{display:block;margin-top:5px;color:var(--muted);line-height:1.4}
+.modebadge{display:inline-block;margin-top:10px;padding:4px 7px;border:1px solid #ffffff22;border-radius:999px;font-size:9px;font-weight:1000}.modebadge.ready{color:var(--green);border-color:#57df9a55}.modebadge.soon{color:#b5c8d6}
+.settingsconfig{display:none}.settingsconfig.show{display:block}
+.settingsbasic{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.settingsmore{margin-top:12px;border:1px solid var(--line);border-radius:15px;background:#0b1822;overflow:hidden}.settingsmore>summary{cursor:pointer;padding:15px 16px;font-weight:1000;list-style:none}.settingsmore>summary::-webkit-details-marker{display:none}.settingsmore>summary:after{content:"▼";float:right;color:var(--muted);font-size:11px}.settingsmore[open]>summary:after{content:"▲"}.settingsmorebody{padding:0 14px 14px}.advancedgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modehint{margin:12px 0 0;padding:10px 12px;border-radius:11px;border:1px solid #29485d;background:#0d2230;color:#bdd7e7;font-size:12px}
+
 @media(max-width:950px){.app{grid-template-columns:185px 1fr}.main{padding:20px 16px}.uploadgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:720px){
  body{padding-bottom:76px}.app{display:block}.side{position:relative;height:auto;padding:14px 12px 11px;border-right:0;border-bottom:1px solid var(--line)}.nav{position:fixed;left:0;right:0;bottom:0;z-index:150;display:flex;gap:5px;overflow-x:auto;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#07131df7;border-top:1px solid var(--line);backdrop-filter:blur(14px);scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{min-width:100px;text-align:center;padding:9px 6px;font-size:10px;white-space:nowrap}.nav button.active{box-shadow:inset 0 3px var(--blue)}
  .main{padding:14px 10px 20px}.top{display:block}.top h1{font-size:23px}.actions{display:grid;grid-template-columns:1fr 1fr;margin-top:11px}.langs{grid-column:1/-1}.langs button{flex:1}.head{display:block;margin-top:18px}.toolbar{display:grid;grid-template-columns:1fr;margin-top:9px}.toolbar input,.toolbar select{width:100%;min-width:0}.metrics{grid-template-columns:1fr 1fr}.tablewrap{display:none}.mobilecards{display:grid;gap:9px}.qcard{border:1px solid var(--line);border-radius:13px;padding:12px;background:#0b1822}.qcardtop{display:flex;gap:10px;align-items:center}.qcard .thumb{width:66px;height:48px}.qcard h3{margin:0;font-size:14px}.qcard p{margin:8px 0 0;color:#dcebf5;font-size:13px}.qcardmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
- .settingsgrid{grid-template-columns:1fr}.settingcard.span2{grid-column:auto}.settingrow{grid-template-columns:1fr 95px;gap:10px}.scoregrid{grid-template-columns:repeat(2,1fr)}.usecards{grid-template-columns:1fr}.settingsbar{bottom:82px}
+ .settingsgrid{grid-template-columns:1fr}.settingcard.span2{grid-column:auto}.settingrow{grid-template-columns:1fr 95px;gap:10px}.scoregrid{grid-template-columns:repeat(2,1fr)}.usecards{grid-template-columns:1fr}.settingsbar{bottom:82px}.usagechoices,.settingsbasic,.advancedgrid{grid-template-columns:1fr}.usagechoice{min-height:118px}
  .modal{padding:0}.modal.show{align-items:flex-end}.box{width:100%;max-height:93vh;overflow:auto;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.answerpeek{padding:0;align-items:flex-end!important}.answerbox{width:100%;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.audioquick{padding:0;align-items:flex-end!important}.audioquickbox{width:100%;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.copyfield{grid-template-columns:1fr}.copyfield .btn{width:100%}.gameanswers{grid-template-columns:1fr 1fr;gap:8px}.gameanswer{min-height:74px;padding:8px;font-size:13px}.gameletter{width:38px;height:38px;flex-basis:38px;font-size:16px}.gameflagchoice{width:78px;height:52px}.boxtop{position:sticky;top:-15px;z-index:4;background:#0b1822;padding:10px 0 8px}.detailgrid,.formgrid,.uploadgrid{grid-template-columns:1fr}.detail.span2{grid-column:auto}.assetrow{align-items:flex-start}
 }
 @media(max-width:410px){.metrics{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.langs{grid-column:auto}}
@@ -34,7 +45,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.19</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.20</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -110,89 +121,118 @@
 
  <section id="settings" class="section">
   <div class="head">
-   <div><h2 data-t="settings">Iestatījumi</h2><p data-t="settingsSub">Galvenie spēles noteikumi vienuviet — bez tehniskiem terminiem.</p></div>
+   <div><h2 data-t="settings">Iestatījumi</h2><p id="settingsTopSub">Sākumā izvēlies, kur viktorīnu izmantosi. Pārējo parādīsim pēc tam.</p></div>
    <div class="toolbar"><span class="pill info" id="settingsCloudBadge">Cloud</span></div>
   </div>
 
-  <div class="notice" id="settingsIntro">Šeit maini to, kā pati viktorīna darbojas. Iestatījumi nav piesaistīti tikai TikTok — tie ir spēles noteikumi.</div>
-
-  <div class="settingsgrid">
-   <div class="settingcard">
-    <h3 id="setGameTitle">🎮 Spēles gaita</h3>
-    <p id="setGameSub">Cik gara ir spēle un cik laika spēlētājiem ir atbildēt.</p>
-    <div class="settingrow">
-     <div><b id="setQuestionsLabel">Jautājumi raundā</b><small id="setQuestionsHelp">Pēc šī skaita tiek parādīts raunda rezultāts.</small></div>
-     <input id="setQuestionsPerRound" type="number" min="1" max="100" step="1">
-    </div>
-    <div class="settingrow">
-     <div><b id="setAnswerTimeLabel">Laiks atbildei</b><small id="setAnswerTimeHelp">Sekundes vienam jautājumam.</small></div>
-     <input id="setAnswerTime" type="number" min="5" max="120" step="1">
-    </div>
-    <div class="settingrow">
-     <div><b id="setFactsLabel">Rādīt faktu pēc jautājuma</b><small id="setFactsHelp">Pēc pareizās atbildes parāda īsu fakta ekrānu.</small></div>
-     <label class="settingtoggle"><input id="setFactEnabled" type="checkbox"><span id="setFactsToggleText">IESLĒGTS</span></label>
-    </div>
-    <div class="settingrow">
-     <div><b id="setFactTimeLabel">Fakta ekrāna ilgums</b><small id="setFactTimeHelp">Cik sekundes fakts paliek ekrānā.</small></div>
-     <input id="setFactSeconds" type="number" min="2" max="30" step="0.5">
-    </div>
+  <div class="settingsstep">
+   <div class="settingsstephead">
+    <h3 id="usageStepTitle">1. Kur izmantosi viktorīnu?</h3>
+    <p id="usageStepSub">Izvēlies vienu variantu. To jebkurā brīdī varēsi nomainīt.</p>
    </div>
-
-   <div class="settingcard">
-    <h3 id="setContentTitle">🗂️ Jautājumu saturs</h3>
-    <p id="setContentSub">Izvēlies, kuras kategorijas spēle drīkst izmantot.</p>
-    <div class="categorychecks" id="setCategories"></div>
-    <div class="notice" id="setCategoriesHelp" style="margin-top:12px">Ja atzīmētas visas kategorijas, spēle tās miksē kopā. Vismaz vienai jāpaliek ieslēgtai.</div>
+   <div class="usagechoices">
+    <button class="usagechoice" type="button" data-usage-mode="tiktok">
+     <div class="bigicon">📱</div><b>TikTok LIVE</b>
+     <small id="usageTikTokText">Skatītāji atbild LIVE komentāros. Šis režīms darbojas jau tagad.</small>
+     <span class="modebadge ready" id="usageTikTokBadge">GATAVS</span>
+    </button>
+    <button class="usagechoice" type="button" data-usage-mode="stream">
+     <div class="bigicon">▶️</div><b>YouTube / Twitch LIVE</b>
+     <small id="usageStreamText">Tā pati viktorīna ar citas platformas čata pieslēgumu.</small>
+     <span class="modebadge soon" id="usageStreamBadge">DRĪZUMĀ</span>
+    </button>
+    <button class="usagechoice" type="button" data-usage-mode="event">
+     <div class="bigicon">🖥️</div><b id="usageEventTitle">Pasākums / projektors</b>
+     <small id="usageEventText">Viktorīna uz lielā ekrāna ar citu atbilžu ievades veidu.</small>
+     <span class="modebadge soon" id="usageEventBadge">DRĪZUMĀ</span>
+    </button>
    </div>
-
-   <div class="settingcard">
-    <h3 id="setResultsTitle">🏆 Rezultātu ekrāni</h3>
-    <p id="setResultsSub">Cik ilgi skatītāji redz atbilžu un reitinga rezultātus.</p>
-    <div class="settingrow">
-     <div><b id="setPercentLabel">Atbilžu sadalījums</b><small id="setPercentHelp">A/B/C/D procentu ekrāna ilgums.</small></div>
-     <input id="setPercentSeconds" type="number" min="2" max="30" step="0.5">
-    </div>
-    <div class="settingrow">
-     <div><b id="setPlayerResultsLabel">Spēlētāju rezultāti</b><small id="setPlayerResultsHelp">Pareizi/nepareizi un iegūtās zvaigznes.</small></div>
-     <input id="setPlayerResultsSeconds" type="number" min="2" max="30" step="0.5">
-    </div>
-    <div class="settingrow">
-     <div><b id="setLeaderboardLabel">Raunda reitings</b><small id="setLeaderboardHelp">Cik ilgi redzams reitings pēc raunda.</small></div>
-     <input id="setLeaderboardSeconds" type="number" min="3" max="60" step="0.5">
-    </div>
-   </div>
-
-   <div class="settingcard">
-    <h3 id="setScoreTitle">⭐ Punktu noteikumi</h3>
-    <p id="setScoreSub">Pašreizējā punktu sistēma. Nākamajā etapā šo bloku padarīsim pilnībā regulējamu.</p>
-    <div class="scoregrid">
-     <div class="scorechip"><b>🌱 NEWBIE</b><span>+1 ★</span></div>
-     <div class="scorechip"><b>🎯 ROOKIE</b><span>+2 ★</span></div>
-     <div class="scorechip"><b>⚡ PRO</b><span>+3 ★</span></div>
-     <div class="scorechip"><b>🥷 NINJA</b><span>+4 ★</span></div>
-     <div class="scorechip"><b>👑 MASTER</b><span>+5 ★</span></div>
-    </div>
-    <div style="margin-top:10px">
-     <div class="ruleline"><span id="setWrongLabel">Nepareiza atbilde</span><strong>−1 ★</strong></div>
-     <div class="ruleline"><span id="setFirstLabel">Pirmais pareizais</span><strong>+1 ★</strong></div>
-     <div class="ruleline"><span id="setStreakLabel">Sērija no 3 pareizām</span><strong>🔥 +1, +2, +3…</strong></div>
-    </div>
-   </div>
-
-   <div class="settingcard span2">
-    <h3 id="setUseTitle">🌐 Kur spēli var izmantot</h3>
-    <p id="setUseSub">Spēles noteikumus turam atsevišķi no platformas. TikTok ir pirmais pieslēgums, nevis visas sistēmas pamats.</p>
-    <div class="usecards">
-     <div class="usecard active"><div class="useicon">📱</div><b>LIVE čats</b><small id="useLiveText">Pašlaik darbojas ar TikTok LIVE komentāriem.</small><span class="usebadge now" id="useLiveBadge">DARBOJAS</span></div>
-     <div class="usecard"><div class="useicon">▶️</div><b>YouTube / Twitch</b><small id="useOtherText">Tas pats spēles dzinējs; vajadzīgs tikai cits čata pieslēgums.</small><span class="usebadge later" id="useOtherBadge">VĒLĀK</span></div>
-     <div class="usecard"><div class="useicon">🖥️</div><b id="useEventTitle">Pasākums / projektors</b><small id="useEventText">Tas pats quiz ekrāns ar citu atbilžu ievades veidu.</small><span class="usebadge later" id="useEventBadge">VĒLĀK</span></div>
-    </div>
-   </div>
+   <div class="modehint" id="usageModeHint" style="display:none"></div>
   </div>
 
-  <div class="settingsbar">
-   <div class="settingsstatus" id="settingsStatus">Iestatījumi ielādēti no Cloud.</div>
-   <button class="btn primary" id="saveSettingsBtn" type="button">💾 Saglabāt iestatījumus</button>
+  <div class="settingsconfig" id="settingsConfig">
+   <div class="settingsstep" style="margin-top:22px">
+    <div class="settingsstephead">
+     <h3 id="basicStepTitle">2. Pamatlietas</h3>
+     <p id="basicStepSub">Tikai tas, kas vajadzīgs, lai viktorīnu palaistu. Sīkākus iestatījumus vari atvērt zemāk.</p>
+    </div>
+
+    <div class="settingsbasic">
+     <div class="settingcard">
+      <h3 id="setGameTitle">🎮 Spēles gaita</h3>
+      <p id="setGameSub">Cik gara ir spēle un cik laika spēlētājiem ir atbildēt.</p>
+      <div class="settingrow">
+       <div><b id="setQuestionsLabel">Jautājumi raundā</b><small id="setQuestionsHelp">Pēc šī skaita tiek parādīts raunda rezultāts.</small></div>
+       <input id="setQuestionsPerRound" type="number" min="1" max="100" step="1">
+      </div>
+      <div class="settingrow">
+       <div><b id="setAnswerTimeLabel">Laiks atbildei</b><small id="setAnswerTimeHelp">Sekundes vienam jautājumam.</small></div>
+       <input id="setAnswerTime" type="number" min="5" max="120" step="1">
+      </div>
+      <div class="settingrow">
+       <div><b id="setFactsLabel">Rādīt faktu pēc jautājuma</b><small id="setFactsHelp">Pēc pareizās atbildes parāda īsu fakta ekrānu.</small></div>
+       <label class="settingtoggle"><input id="setFactEnabled" type="checkbox"><span id="setFactsToggleText">IESLĒGTS</span></label>
+      </div>
+      <div class="settingrow">
+       <div><b id="setFactTimeLabel">Fakta ekrāna ilgums</b><small id="setFactTimeHelp">Cik sekundes fakts paliek ekrānā.</small></div>
+       <input id="setFactSeconds" type="number" min="2" max="30" step="0.5">
+      </div>
+     </div>
+
+     <div class="settingcard">
+      <h3 id="setContentTitle">🗂️ Jautājumu saturs</h3>
+      <p id="setContentSub">Izvēlies, kuras kategorijas spēle drīkst izmantot.</p>
+      <div class="categorychecks" id="setCategories"></div>
+      <div class="notice" id="setCategoriesHelp" style="margin-top:12px">Ja atzīmētas visas kategorijas, spēle tās miksē kopā. Vismaz vienai jāpaliek ieslēgtai.</div>
+     </div>
+    </div>
+
+    <details class="settingsmore" id="advancedSettings">
+     <summary id="advancedSummary">⚙ Papildu iestatījumi</summary>
+     <div class="settingsmorebody">
+      <div class="advancedgrid">
+       <div class="settingcard">
+        <h3 id="setResultsTitle">🏆 Rezultātu ekrāni</h3>
+        <p id="setResultsSub">Cik ilgi skatītāji redz atbilžu un reitinga rezultātus.</p>
+        <div class="settingrow">
+         <div><b id="setPercentLabel">Atbilžu sadalījums</b><small id="setPercentHelp">A/B/C/D procentu ekrāna ilgums.</small></div>
+         <input id="setPercentSeconds" type="number" min="2" max="30" step="0.5">
+        </div>
+        <div class="settingrow">
+         <div><b id="setPlayerResultsLabel">Spēlētāju rezultāti</b><small id="setPlayerResultsHelp">Pareizi/nepareizi un iegūtās zvaigznes.</small></div>
+         <input id="setPlayerResultsSeconds" type="number" min="2" max="30" step="0.5">
+        </div>
+        <div class="settingrow">
+         <div><b id="setLeaderboardLabel">Raunda reitings</b><small id="setLeaderboardHelp">Cik ilgi redzams reitings pēc raunda.</small></div>
+         <input id="setLeaderboardSeconds" type="number" min="3" max="60" step="0.5">
+        </div>
+       </div>
+
+       <div class="settingcard">
+        <h3 id="setScoreTitle">⭐ Punktu noteikumi</h3>
+        <p id="setScoreSub">Pašreizējā punktu sistēma.</p>
+        <div class="scoregrid">
+         <div class="scorechip"><b>🌱 NEWBIE</b><span>+1 ★</span></div>
+         <div class="scorechip"><b>🎯 ROOKIE</b><span>+2 ★</span></div>
+         <div class="scorechip"><b>⚡ PRO</b><span>+3 ★</span></div>
+         <div class="scorechip"><b>🥷 NINJA</b><span>+4 ★</span></div>
+         <div class="scorechip"><b>👑 MASTER</b><span>+5 ★</span></div>
+        </div>
+        <div style="margin-top:10px">
+         <div class="ruleline"><span id="setWrongLabel">Nepareiza atbilde</span><strong>−1 ★</strong></div>
+         <div class="ruleline"><span id="setFirstLabel">Pirmais pareizais</span><strong>+1 ★</strong></div>
+         <div class="ruleline"><span id="setStreakLabel">Sērija no 3 pareizām</span><strong>🔥 +1, +2, +3…</strong></div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </details>
+   </div>
+
+   <div class="settingsbar">
+    <div class="settingsstatus" id="settingsStatus">Iestatījumi ielādēti no Cloud.</div>
+    <button class="btn primary" id="saveSettingsBtn" type="button">💾 Saglabāt iestatījumus</button>
+   </div>
   </div>
  </section>
 </main>
@@ -551,6 +591,30 @@ function setSettingText(){
  Object.entries(map).forEach(([id,k])=>{const e=document.querySelector("#"+id);if(e)e.textContent=t[k]});
  const b=document.querySelector("#saveSettingsBtn");if(b)b.textContent=t.save;
 }
+const SETTINGS_USAGE_KEY="qgm_settings_usage_mode_v1";
+function getUsageMode(){
+ const cloud=String(state.gameState?.settings?.usageMode||"").toLowerCase();
+ const local=String(localStorage.getItem(SETTINGS_USAGE_KEY)||"").toLowerCase();
+ return ["tiktok","stream","event"].includes(local)?local:(["tiktok","stream","event"].includes(cloud)?cloud:"");
+}
+function selectUsageMode(mode){
+ if(!["tiktok","stream","event"].includes(mode))return;
+ localStorage.setItem(SETTINGS_USAGE_KEY,mode);
+ renderUsageMode();
+ markSettingsDirty();
+}
+function renderUsageMode(){
+ const mode=getUsageMode(),config=document.querySelector("#settingsConfig"),hint=document.querySelector("#usageModeHint");
+ document.querySelectorAll("[data-usage-mode]").forEach(x=>x.classList.toggle("selected",x.dataset.usageMode===mode));
+ if(config)config.classList.toggle("show",!!mode);
+ if(hint){
+  if(!mode){hint.style.display="none";hint.textContent="";return}
+  hint.style.display="block";
+  if(mode==="tiktok")hint.textContent=lang==="lv"?"✓ TikTok LIVE izvēlēts. Zemāk ir tikai galvenie spēles iestatījumi.":"✓ TikTok LIVE selected. Only the main game settings are shown below.";
+  if(mode==="stream")hint.textContent=lang==="lv"?"YouTube / Twitch pieslēgumu vēl būvēsim, bet pašas viktorīnas noteikumus vari sagatavot jau tagad.":"YouTube / Twitch connection is coming later, but you can already prepare the quiz rules.";
+  if(mode==="event")hint.textContent=lang==="lv"?"Pasākumu režīma atbilžu ievadi vēl būvēsim, bet pašas viktorīnas noteikumus vari sagatavot jau tagad.":"Event answer input is coming later, but you can already prepare the quiz rules.";
+ }
+}
 function renderSettings(){
  setSettingText();
  const s=state.gameState?.settings||{};
@@ -571,6 +635,21 @@ function renderSettings(){
    const m=CATEGORY_META[k.toLowerCase()]||{icon:"🎲",label:k.toUpperCase()};
    return '<label class="categorycheck"><input type="checkbox" data-setting-category="'+esc(k)+'" '+(selected.has(k)?"checked":"")+'><span>'+m.icon+" "+esc(m.label)+'</span></label>';
  }).join("");
+ renderUsageMode();
+ const lv=lang==="lv";
+ const topSub=document.querySelector("#settingsTopSub");if(topSub)topSub.textContent=lv?"Sākumā izvēlies, kur viktorīnu izmantosi. Pārējo parādīsim pēc tam.":"First choose where you will use the quiz. We will show the rest after that.";
+ const stepTitle=document.querySelector("#usageStepTitle");if(stepTitle)stepTitle.textContent=lv?"1. Kur izmantosi viktorīnu?":"1. Where will you use the quiz?";
+ const stepSub=document.querySelector("#usageStepSub");if(stepSub)stepSub.textContent=lv?"Izvēlies vienu variantu. To jebkurā brīdī varēsi nomainīt.":"Choose one option. You can change it at any time.";
+ const basicTitle=document.querySelector("#basicStepTitle");if(basicTitle)basicTitle.textContent=lv?"2. Pamatlietas":"2. Basics";
+ const basicSub=document.querySelector("#basicStepSub");if(basicSub)basicSub.textContent=lv?"Tikai tas, kas vajadzīgs, lai viktorīnu palaistu. Sīkākus iestatījumus vari atvērt zemāk.":"Only what you need to get the quiz running. More detailed settings are below.";
+ const adv=document.querySelector("#advancedSummary");if(adv)adv.textContent=lv?"⚙ Papildu iestatījumi":"⚙ Advanced settings";
+ const tt=document.querySelector("#usageTikTokText");if(tt)tt.textContent=lv?"Skatītāji atbild LIVE komentāros. Šis režīms darbojas jau tagad.":"Viewers answer in LIVE comments. This mode works now.";
+ const tb=document.querySelector("#usageTikTokBadge");if(tb)tb.textContent=lv?"GATAVS":"READY";
+ const stx=document.querySelector("#usageStreamText");if(stx)stx.textContent=lv?"Tā pati viktorīna ar citas platformas čata pieslēgumu.":"The same quiz with another platform's chat connection.";
+ const sb=document.querySelector("#usageStreamBadge");if(sb)sb.textContent=lv?"DRĪZUMĀ":"COMING SOON";
+ const et=document.querySelector("#usageEventTitle");if(et)et.textContent=lv?"Pasākums / projektors":"Event / projector";
+ const ex=document.querySelector("#usageEventText");if(ex)ex.textContent=lv?"Viktorīna uz lielā ekrāna ar citu atbilžu ievades veidu.":"Quiz on a big screen with another answer input method.";
+ const eb=document.querySelector("#usageEventBadge");if(eb)eb.textContent=lv?"DRĪZUMĀ":"COMING SOON";
  const badge=document.querySelector("#settingsCloudBadge");
  if(badge){badge.textContent=state.gameState?.ok?"● CLOUD":"○ CLOUD";badge.className="pill "+(state.gameState?.ok?"ok":"warn")}
  const st=document.querySelector("#settingsStatus");if(st){st.textContent=settingsText().loaded;st.className="settingsstatus "+(state.gameState?.ok?"ok":"warn")}
@@ -590,6 +669,7 @@ async function saveSettings(){
  const allCount=document.querySelectorAll("[data-setting-category]").length;
  const current=state.gameState?.settings&&typeof state.gameState.settings==="object"?state.gameState.settings:{};
  const next={...current,
+  usageMode:getUsageMode()||"tiktok",
   questionsPerRound:Math.round(numSetting(document.querySelector("#setQuestionsPerRound").value,20,1,100)),
   answerTime:numSetting(document.querySelector("#setAnswerTime").value,30,5,120),
   factEnabled:document.querySelector("#setFactEnabled").checked,
@@ -617,6 +697,7 @@ document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.quer
 ["search","catFilter","diffFilter"].forEach(id=>document.querySelector("#"+id).addEventListener(id==="search"?"input":"change",renderQuestions));document.querySelector("#resetColumns").onclick=()=>{qColOrder=QCOL_DEFAULT.slice();qColWidths={...QCOL_WIDTH_DEFAULT};qSort={key:"qid",dir:"asc"};localStorage.setItem("qgm_question_columns_v1",JSON.stringify(qColOrder));localStorage.setItem("qgm_question_widths_v1",JSON.stringify(qColWidths));localStorage.setItem("qgm_question_sort_v1",JSON.stringify(qSort));renderQuestions()};
 document.querySelector("#cloudBtn").onclick=connectCloud;
 document.querySelector("#saveSettingsBtn").onclick=saveSettings;
+document.querySelectorAll("[data-usage-mode]").forEach(x=>x.onclick=()=>selectUsageMode(x.dataset.usageMode));
 document.querySelector("#settings").addEventListener("input",e=>{if(e.target.matches("input,select")){if(e.target.id==="setFactEnabled")syncFactSettingUi();markSettingsDirty()}});
 document.querySelector("#settings").addEventListener("change",e=>{if(e.target.matches("input,select")){if(e.target.id==="setFactEnabled")syncFactSettingUi();markSettingsDirty()}});
 document.querySelector("#licFree").onchange=e=>{if(e.target.checked)document.querySelector("#licUnclear").checked=false};document.querySelector("#licUnclear").onchange=e=>{if(e.target.checked)document.querySelector("#licFree").checked=false};document.querySelector("#refreshBtn").onclick=load;document.querySelector("#lvBtn").onclick=()=>{lang="lv";localStorage.setItem("qgm_admin_lang",lang);renderAll()};document.querySelector("#enBtn").onclick=()=>{lang="en";localStorage.setItem("qgm_admin_lang",lang);renderAll()};document.querySelector("#close").onclick=()=>document.querySelector("#modal").classList.remove("show");document.querySelector("#apClose").onclick=()=>document.querySelector("#answerPeek").classList.remove("show");document.querySelector("#dqClose").onclick=()=>document.querySelector("#diffQuick").classList.remove("show");document.querySelector("#dqSave").onclick=()=>saveDifficulty(document.querySelector("#dqSelect").value);document.querySelector("#dqAuto").onclick=()=>{const v=document.querySelector("#dqAuto").dataset.suggested;if(v){document.querySelector("#dqSelect").value=v;saveDifficulty(v)}};document.addEventListener("click",e=>{const el=e.target.closest("[data-diff-open]");if(!el)return;e.preventDefault();e.stopPropagation();openDifficultyQuick(el.dataset.diffOpen)},true);document.querySelector("#aqClose").onclick=()=>document.querySelector("#audioQuick").classList.remove("show");document.querySelector("#aqCopy").onclick=copyQuickQuestion;document.querySelector("#aqUpload").onclick=uploadQuickAudio;document.querySelector("#audioQuick").onclick=e=>{if(e.target.id==="audioQuick")e.currentTarget.classList.remove("show")};document.querySelector("#answerPeek").onclick=e=>{if(e.target.id==="answerPeek")e.currentTarget.classList.remove("show")};document.querySelector("#modal").onclick=e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("show")};document.querySelectorAll("[data-kind]").forEach(b=>b.onclick=()=>upload(b.dataset.kind,b.dataset.input));
