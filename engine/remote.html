@@ -73,13 +73,13 @@ button,input{font:inherit}.wrap{min-height:100vh;padding:18px 14px calc(18px + e
 const BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",ROOM_KEY="tvPrototype";
 const $=id=>document.getElementById(id);
 let roomCode=new URLSearchParams(location.search).get("room")||"",pid="",playerName="",room=null,lastQid="",pollTimer=0,writing=false,questions={},questionsReady=false;
-function randomId(){return (crypto?.randomUUID?.()||("p-"+Date.now()+"-"+Math.random().toString(36).slice(2)))}
+function randomId(){try{if(window.crypto&&typeof window.crypto.randomUUID==="function")return window.crypto.randomUUID()}catch(e){}return "p-"+Date.now()+"-"+Math.random().toString(36).slice(2)}
 function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("show",x.id===id))}
 function cleanCode(v){return String(v||"").replace(/\D/g,"").slice(0,4)}
 async function getState(){const r=await fetch(BRIDGE+"/game/state?_="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("Cloud "+r.status);return r.json()}
 async function putState(base,settings){const r=await fetch(BRIDGE+"/game/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings,players:(base?.players&&typeof base.players==="object")?base.players:{}})});if(!r.ok)throw Error("Save "+r.status)}
 function storedPid(code){let key="qgm_tv_pid_"+code,v=localStorage.getItem(key);if(!v){v=randomId();localStorage.setItem(key,v)}return v}
-function scoreOf(r){return Number(r?.scores?.[pid])||0}
+function scoreOf(r){return Number(r&&r.scores?r.scores[pid]:0)||0}
 function answerLabel(a){return typeof a==="string"?a:(a?(a.country||a.name||""):"")}
 function flagUrl(code){return "https://flagcdn.com/w640/"+String(code||"").toLowerCase()+".png"}
 function renderPhoneVisual(q){const v=$("phoneVisual");v.innerHTML="";v.classList.remove("show");if(!q)return;if(q.type==="flag_to_country"&&q.asset&&q.asset.code){const im=document.createElement("img");im.className="flagmain";im.src=flagUrl(q.asset.code);v.appendChild(im)}else if(q.asset&&q.asset.image){const im=document.createElement("img");im.src=q.asset.image;v.appendChild(im)}else{const d=document.createElement("div");d.className="subject";d.textContent=q.subject||q.correct||"";if(!d.textContent)return;v.appendChild(d)}v.classList.add("show")}
@@ -99,7 +99,7 @@ async function mutateRoom(mutator,verify){
    const base=await getState(),settings={...(base.settings||{})},latest=settings[ROOM_KEY];
    if(!latest||String(latest.code)!==String(roomCode))throw Error("Room not found");
    const next=JSON.parse(JSON.stringify(latest));mutator(next);next.updatedAt=Date.now();settings[ROOM_KEY]=next;await putState(base,settings);
-   const check=await getState(),saved=check?.settings?.[ROOM_KEY];
+   const check=await getState(),saved=check&&check.settings?check.settings[ROOM_KEY]:null;
    if(saved&&String(saved.code)===String(roomCode)&&(!verify||verify(saved))){room=saved;return true}
    await new Promise(r=>setTimeout(r,150+attempt*120))
   }
@@ -112,7 +112,7 @@ async function join(){
  if(!playerName){$("joinStatus").textContent="Enter your name.";return}
  $("joinBtn").disabled=true;$("joinStatus").textContent="Joining…";pid=storedPid(roomCode);
  try{
-  const ok=await mutateRoom(r=>{r.players=r.players||{};r.players[pid]={name:playerName,joinedAt:r.players[pid]?.joinedAt||Date.now(),lastSeen:Date.now()}},r=>!!r.players?.[pid]);
+  const ok=await mutateRoom(r=>{r.players=r.players||{};r.players[pid]={name:playerName,joinedAt:(r.players[pid]&&r.players[pid].joinedAt)||Date.now(),lastSeen:Date.now()}},r=>!!r.players?.[pid]);
   if(!ok)throw Error("Could not join");
   localStorage.setItem("qgm_tv_name",playerName);$("roomHeader").textContent="ROOM "+roomCode+" · "+playerName.toUpperCase();show("waitView");render(room);schedulePoll()
  }catch(e){$("joinStatus").textContent=e.message==="Room not found"?"Room not found. Check the TV code.":"Could not join. Try again."}
@@ -147,17 +147,17 @@ function render(r){
   else if(!writing){document.querySelectorAll(".ans").forEach(b=>b.disabled=false)}
  }
  if(r.phase==="reveal"){
-  const res=r.lastResults?.[pid],good=!!res?.correct;show("resultView");$("resultView").classList.toggle("good",good);$("resultView").classList.toggle("bad",!good);
-  $("resultIcon").textContent=good?"✓":"✕";$("resultTitle").textContent=good?"Correct!":(res?.answer?"Not this time":"No answer");
-  const d=Number(res?.delta)||0;$("resultDelta").textContent=(d>0?"+":"")+d+" ★";$("correctLine").textContent="Correct answer: "+(r.correctLetter||"")+" · "+(r.correctLabel||"")
+  const res=r.lastResults?r.lastResults[pid]:null,good=!!(res&&res.correct);show("resultView");$("resultView").classList.toggle("good",good);$("resultView").classList.toggle("bad",!good);
+  $("resultIcon").textContent=good?"✓":"✕";$("resultTitle").textContent=good?"Correct!":(res&&res.answer?"Not this time":"No answer");
+  const d=Number(res&&res.delta)||0;$("resultDelta").textContent=(d>0?"+":"")+d+" ★";$("correctLine").textContent="Correct answer: "+(r.correctLetter||"")+" · "+(r.correctLabel||"")
  }
  if(r.phase==="final")show("finalView")
 }
 async function poll(){
  try{
-  const j=await getState(),r=j?.settings?.[ROOM_KEY];
+  const j=await getState(),r=j&&j.settings?j.settings[ROOM_KEY]:null;
   if(!r||String(r.code)!==String(roomCode)){show("joinView");$("joinStatus").textContent="This room has ended.";return}
-  if(!r.players?.[pid]&&playerName){await mutateRoom(x=>{x.players=x.players||{};x.players[pid]={name:playerName,joinedAt:Date.now(),lastSeen:Date.now()}},x=>!!x.players?.[pid])}
+  if(!(r.players&&r.players[pid])&&playerName){await mutateRoom(x=>{x.players=x.players||{};x.players[pid]={name:playerName,joinedAt:Date.now(),lastSeen:Date.now()}},x=>!!x.players?.[pid])}
   render(r)
  }catch(e){}
  schedulePoll()
