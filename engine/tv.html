@@ -48,7 +48,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 }
 
 /* Shared QuizGame Master gameplay language — adapted from TikTok 9:16 to TV 16:9 */
-.stage{position:absolute;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#17384d 0,#07141f 48%,#030a10 100%);overflow:hidden}
+.stage{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#17384d 0,#07141f 48%,#030a10 100%);overflow:hidden}
 .stage.show{display:flex}.stageinner{width:min(1500px,94vw);text-align:center}.stagekicker{font-size:clamp(16px,1.35vw,24px);font-weight:1000;letter-spacing:.16em;color:#8eabba}.stagetitle{font-size:clamp(48px,6vw,104px);line-height:1;margin:14px 0 28px;font-weight:1000}.stagehint{font-size:clamp(15px,1.2vw,21px);color:#91aaba;font-weight:800;letter-spacing:.08em}
 .themetrack{display:flex;gap:18px;justify-content:center;align-items:stretch;margin:24px auto 0}.themecard{width:min(27vw,390px);min-height:220px;border-radius:24px;border:1px solid #ffffff1d;background:linear-gradient(180deg,#102a3b,#07141e);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:25px;opacity:.42;transform:scale(.88);transition:.32s}.themecard .ico{font-size:62px}.themecard b{font-size:clamp(25px,2.3vw,42px);margin-top:12px}.themecard.hot{opacity:1;transform:scale(1.08);border-color:#ffd45e;box-shadow:0 0 42px #ffd45e33;background:linear-gradient(180deg,#463b13,#10202b)}
 .diffrail{display:flex;gap:14px;justify-content:center;align-items:center;margin:32px auto 0;max-width:1250px}.diffrank{flex:1;min-width:0;padding:20px 8px;border-radius:18px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:.28s}.diffrank span{display:block;font-size:clamp(34px,3vw,58px);margin-bottom:6px}.diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-8px) scale(1.07);box-shadow:0 0 30px #ffd45e35}
@@ -65,7 +65,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.0</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.5.1</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -100,7 +100,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
     <div class="answers" id="answers"></div>
     <div class="answeredcount"><span id="answeredCount">0</span> answers received</div>
    </div>
-   <aside class="leaderrail"><h3>🏆 LEADERBOARD</h3><div class="leadersub">LIVE TOTAL SCORE</div><div class="leaderrows" id="leaderRows"></div></aside>
+   <aside class="leaderrail" style="display:none"><h3>🏆 LEADERBOARD</h3><div class="leadersub">LIVE TOTAL SCORE</div><div class="leaderrows" id="leaderRows"></div></aside>
   </div>
   <div class="reveal" id="reveal"><div class="revealbox">
    <h2>CORRECT ANSWER</h2>
@@ -122,7 +122,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="stage" id="themeStage"><div class="stageinner"><div class="stagekicker">ROUND <span id="themeRound">1</span></div><div class="stagetitle">CHOOSE THE THEME</div><div class="themetrack" id="themeTrack"></div><div class="stagehint">ONE GAME · ADAPTED FOR TV</div></div></section>
  <section class="stage" id="difficultyStage"><div class="stageinner"><div class="stagekicker" id="diffTheme">GEOGRAPHY</div><div class="stagetitle">DIFFICULTY</div><div class="diffrail" id="difficultyRail"></div></div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.0 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.5.1 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -147,8 +147,12 @@ function availableThemes(){
  var seen={},out=[],i,n;for(i=0;i<questions.length;i++){n=categoryLabel(questions[i]);if(!seen[n]){seen[n]=1;out.push(n)}}return out
 }
 function sequenceForTheme(theme){
- var ids=[],i;for(i=0;i<questions.length;i++)if(categoryLabel(questions[i])===theme)ids.push(questions[i].qid);
- return shuffle(ids.length?ids:questions.map(function(q){return q.qid}))
+ var ids=[],all=[],i;
+ for(i=0;i<questions.length;i++){
+  all.push(questions[i].qid);
+  if(categoryLabel(questions[i])===theme)ids.push(questions[i].qid)
+ }
+ return shuffle(ids.length?ids:all)
 }
 function showThemeSelection(done){
  var themes=availableThemes(),html="",i;for(i=0;i<themes.length;i++)html+='<div class="themecard" data-theme="'+esc(themes[i])+'"><div class="ico">'+categoryIcon(themes[i])+'</div><b>'+esc(themes[i])+'</b></div>';
@@ -304,12 +308,25 @@ function hostMutate(mutator,cb){
  })
 }
 function startQuiz(){
- if(!room)return;$("status").innerHTML="Starting party…";var count=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))count++;if(!count)return;
- showThemeSelection(function(theme,difficulty){
-  var seq=sequenceForTheme(theme),preferred=[],rest=[],i,q;
-  for(i=0;i<seq.length;i++){q=qmap[seq[i]];if(String(q&&q.difficulty||"").toLowerCase()===difficulty)preferred.push(seq[i]);else rest.push(seq[i])}
-  seq=preferred.concat(rest);
-  hostMutate(function(r){r.selectedTheme=theme;r.selectedDifficulty=difficulty;r.sequence=seq;r.index=0;r.qid=seq[0];r.phase="question";r.answers={};r.lastResults={};r.questionStartedAt=now();r.answerDeadline=now()+getAnswerMs();r.nextAt=0},function(e){if(e)$("status").innerHTML="Start error: "+esc(e.message);else renderQuestion()})
+ if(!room)return;
+ $("status").innerHTML="Starting party…";
+ var count=0,k;
+ for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))count++;
+ if(!count)return;
+ hostMutate(function(r){r.phase="intro";r.qid="";r.index=-1;r.answers={};r.lastResults={};r.nextAt=0},function(e){
+  if(e){$("status").innerHTML="Start error: "+esc(e.message);return}
+  showThemeSelection(function(theme,difficulty){
+   var seq=sequenceForTheme(theme),preferred=[],rest=[],i,q;
+   for(i=0;i<seq.length;i++){
+    q=qmap[seq[i]];
+    if(String(q&&q.difficulty||"").toLowerCase()===difficulty)preferred.push(seq[i]);else rest.push(seq[i])
+   }
+   seq=preferred.concat(rest);
+   hostMutate(function(r){
+    r.selectedTheme=theme;r.selectedDifficulty=difficulty;r.sequence=seq;r.index=0;r.qid=seq[0];
+    r.phase="question";r.answers={};r.lastResults={};r.questionStartedAt=now();r.answerDeadline=now()+getAnswerMs();r.nextAt=0
+   },function(e2){if(e2)$("status").innerHTML="Start error: "+esc(e2.message);else renderQuestion()})
+  })
  })
 }
 function revealQuestion(){
@@ -368,6 +385,7 @@ function poll(){
    if(r&&room&&r.code===room.code&&r.hostId===hostId){
     var phaseChanged=r.phase!==room.phase,qChanged=r.qid!==room.qid;room=r;
     if(room.phase==="lobby")renderLobby();
+    if(room.phase==="intro"){$("status").innerHTML="TV browser OK · selecting theme";}
     if(room.phase==="question"){if(phaseChanged||qChanged)renderQuestion();else renderAnswerCount();var pc=0,k;for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))pc++;$("gamePlayers").innerHTML=pc;if(room.answerDeadline&&now()>=room.answerDeadline&&!transitioning)revealQuestion()}
     if(room.phase==="reveal"){if(phaseChanged)renderReveal();if(room.nextAt&&now()>=room.nextAt&&!transitioning)nextQuestion()}
     if(room.phase==="final"&&phaseChanged)renderFinal();
