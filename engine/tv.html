@@ -83,7 +83,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 
 
 
-/* TV v0.7.0: canonical TikTok V2 component + responsive 16:9 geometry */
+/* TV v0.7.1: canonical TikTok V2 component + responsive 16:9 geometry */
 #themeStage .stageinner,#difficultyStage .stageinner{position:relative;width:min(96vw,1700px);height:min(94vh,900px);overflow:hidden}
 #themeStage .themezone{left:-2%;right:-2%;top:19%;height:62%}
 #themeStage .themewheelring{top:50%;width:min(92vw,1500px);height:52vh}
@@ -151,7 +151,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 #awardStage .awardbadges{display:block!important;font-size:14px!important;color:#7ddfff!important;margin-top:5px!important}
 #awardStage .awardscore{display:block!important;position:absolute!important;right:18px!important;top:23px!important;font-size:25px!important;color:#ffd45e!important;font-weight:bold!important}
 
-/* TV v0.7.0 UNIVERSAL LEGACY RENDERER
+/* TV v0.7.1 UNIVERSAL LEGACY RENDERER
    Core gameplay must remain graphical without Grid/Flex/clamp/min()/CSS variables/transforms. */
 html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#04101a;color:#fff;font-family:Arial,sans-serif}
 .shell{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:auto!important;height:auto!important;min-height:0!important;padding:0!important;overflow:hidden!important}
@@ -228,7 +228,7 @@ html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.7.0</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.7.1</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -291,14 +291,14 @@ html,body{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#
   <div class="diffzone"><div id="difficultyRail"></div></div>
  </div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.7.0 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.7.1 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
 var BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
 var ROOM_KEY="tvPrototype";
 var RANKS={newbie:["🌱","NEWBIE",1],rookie:["🎯","ROOKIE",2],pro:["⚡","PRO",3],ninja:["🥷","NINJA",4],master:["👑","MASTER",5]};
-var questions=[],qmap={},room=null,hostId="",pollTimer=null,timerHandle=null,transitioning=false,stageTimer=null;
+var questions=[],qmap={},room=null,hostId="",pollTimer=null,timerHandle=null,transitioning=false,stageTimer=null,introBusy=false;
 
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(ch){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]})}
@@ -499,14 +499,16 @@ function hostMutate(mutator,cb){
  })
 }
 function startQuiz(){
- if(!room)return;
+ if(!room||introBusy)return;
  $("status").innerHTML="Starting party…";
  var count=0,k;
  for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))count++;
  if(!count)return;
- stage("themeStage");$("themeTrack").innerHTML='<div style="position:absolute;left:0;right:0;top:45%;text-align:center;font-size:3vw;font-weight:1000;color:#75dfff">LOADING THEME WHEEL…</div>';
+ introBusy=true;
+ if(pollTimer){clearTimeout(pollTimer);pollTimer=null}
+ stage("themeStage");$("themeTrack").innerHTML='<div style="position:absolute;left:0;right:0;top:45%;text-align:center;font-size:30px;font-weight:bold;color:#75dfff">LOADING THEME WHEEL…</div>';
  hostMutate(function(r){r.phase="intro";r.qid="";r.index=-1;r.answers={};r.lastResults={};r.nextAt=0},function(e){
-  if(e){hideStages();$("status").innerHTML="Start error: "+esc(e.message);return}
+  if(e){introBusy=false;hideStages();$("status").innerHTML="Start error: "+esc(e.message);schedulePoll();return}
   showThemeSelection(function(theme,difficulty){
    var seq=sequenceForTheme(theme),preferred=[],rest=[],i,q;
    for(i=0;i<seq.length;i++){
@@ -517,7 +519,12 @@ function startQuiz(){
    hostMutate(function(r){
     r.selectedTheme=theme;r.selectedDifficulty=difficulty;r.sequence=seq;r.index=0;r.qid=seq[0];
     r.phase="question";r.answers={};r.lastResults={};r.questionStartedAt=now();r.answerDeadline=now()+getAnswerMs();r.nextAt=0
-   },function(e2){if(e2)$("status").innerHTML="Start error: "+esc(e2.message);else renderQuestion()})
+   },function(e2){
+    introBusy=false;
+    if(e2){$("status").innerHTML="Start error: "+esc(e2.message);show("lobby")}
+    else{hideStages();renderQuestion()}
+    schedulePoll()
+   })
   })
  })
 }
@@ -571,6 +578,7 @@ function renderFinal(){
  ranked.sort(function(a,b){return b.score-a.score||a.name.localeCompare(b.name)});var html="";for(i=0;i<ranked.length;i++)html+='<div class="finalrow"><div class="place">'+(i+1)+'</div><div class="finalname">'+esc(ranked[i].name)+'</div><div class="finalpts">'+ranked[i].score+' ★</div></div>';$("finalScores").innerHTML=html
 }
 function poll(){
+ if(introBusy)return;
  getState(function(e,j){
   if(!e){
    var r=j&&j.settings?j.settings[ROOM_KEY]:null;
@@ -587,7 +595,7 @@ function poll(){
   schedulePoll()
  })
 }
-function schedulePoll(){if(pollTimer)clearTimeout(pollTimer);pollTimer=setTimeout(poll,100)}
+function schedulePoll(){if(pollTimer)clearTimeout(pollTimer);if(introBusy){pollTimer=null;return}pollTimer=setTimeout(poll,350)}
 $("fullBtn").onclick=function(){try{var el=document.documentElement;if(!document.fullscreenElement&&el.requestFullscreen)el.requestFullscreen();else if(document.exitFullscreen)document.exitFullscreen()}catch(e){}};
 $("newRoomBtn").onclick=function(){createRoom()};
 $("startBtn").onclick=function(){startQuiz()};
