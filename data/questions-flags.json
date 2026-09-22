@@ -20,7 +20,8 @@
       "correct": "Japan",
       "fact": "Japan has more than 5 million vending machines — you can buy almost anything from one.",
       "fact_tag": "WEIRD",
-      "qid": "Q001"
+      "qid": "Q001",
+      "created_by": "ai"
     },
     {
       "id": "flags_002",
@@ -49,7 +50,8 @@
       "correct": "Brazil",
       "fact": "Brazil is so huge that its easternmost point is closer to Africa than to its western border.",
       "fact_tag": "WOW",
-      "qid": "Q002"
+      "qid": "Q002",
+      "created_by": "ai"
     },
     {
       "id": "flags_003",
@@ -69,7 +71,8 @@
       "correct": "Switzerland",
       "fact": "Switzerland accidentally crossed into Liechtenstein during a 2007 military exercise. Liechtenstein treated it as a minor mishap.",
       "fact_tag": "HISTORY",
-      "qid": "Q003"
+      "qid": "Q003",
+      "created_by": "ai"
     },
     {
       "id": "flags_004",
@@ -98,7 +101,8 @@
       "correct": "India",
       "fact": "India has a floating post office on Dal Lake in Srinagar.",
       "fact_tag": "WEIRD",
-      "qid": "Q004"
+      "qid": "Q004",
+      "created_by": "ai"
     },
     {
       "id": "flags_005",
@@ -118,7 +122,8 @@
       "correct": "Portugal",
       "fact": "Portugal and England have the world's oldest diplomatic alliance still in force.",
       "fact_tag": "HISTORY",
-      "qid": "Q005"
+      "qid": "Q005",
+      "created_by": "ai"
     },
     {
       "id": "flags_006",
@@ -147,7 +152,8 @@
       "correct": "Iceland",
       "fact": "Iceland has no established mosquito population.",
       "fact_tag": "WEIRD",
-      "qid": "Q006"
+      "qid": "Q006",
+      "created_by": "ai"
     },
     {
       "id": "flags_007",
@@ -167,7 +173,8 @@
       "correct": "Philippines",
       "fact": "The Philippines has more than 7,000 islands, and the official count has changed as mapping improved.",
       "fact_tag": "WOW",
-      "qid": "Q007"
+      "qid": "Q007",
+      "created_by": "ai"
     },
     {
       "id": "flags_008",
@@ -187,7 +194,8 @@
       "correct": "Bhutan",
       "fact": "Bhutan is famous for using Gross National Happiness as a development philosophy alongside economic measures.",
       "fact_tag": "WOW",
-      "qid": "Q008"
+      "qid": "Q008",
+      "created_by": "ai"
     },
     {
       "id": "flags_009",
@@ -216,7 +224,8 @@
       "correct": "Mozambique",
       "fact": "Mozambique is the only national flag featuring a modern assault rifle.",
       "fact_tag": "WEIRD",
-      "qid": "Q009"
+      "qid": "Q009",
+      "created_by": "ai"
     },
     {
       "id": "flags_010",
@@ -236,7 +245,8 @@
       "correct": "Kiribati",
       "fact": "Kiribati is the only country with territory in all four hemispheres.",
       "fact_tag": "WOW",
-      "qid": "Q010"
+      "qid": "Q010",
+      "created_by": "ai"
     }
   ]
 }
