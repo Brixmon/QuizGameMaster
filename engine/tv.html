@@ -83,7 +83,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 
 
 
-/* TV v0.6.2: canonical TikTok V2 component + responsive 16:9 geometry */
+/* TV v0.6.3: canonical TikTok V2 component + responsive 16:9 geometry */
 #themeStage .stageinner,#difficultyStage .stageinner{position:relative;width:min(96vw,1700px);height:min(94vh,900px);overflow:hidden}
 #themeStage .themezone{left:-2%;right:-2%;top:19%;height:62%}
 #themeStage .themewheelring{top:50%;width:min(92vw,1500px);height:52vh}
@@ -117,6 +117,39 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 #difficultyStage .diffrank{display:block!important;flex:1;max-width:250px;padding:26px 8px;border-radius:20px;border:1px solid #ffffff1c;background:#ffffff08;color:#7892a5;font-weight:1000;font-size:clamp(14px,1.2vw,21px);transition:transform .16s,background .16s,border-color .16s,color .16s}
 #difficultyStage .diffrank span{display:block;font-size:clamp(40px,4vw,70px);margin-bottom:8px}
 #difficultyStage .diffrank.hot{color:#fff;border-color:#ffd45e;background:#ffd45e20;transform:translateY(-10px) scale(1.08);box-shadow:0 0 34px #ffd45e44}
+
+/* v0.6.3 OLD-TV SAFE VISUAL LAYER: core graphics use basic CSS only */
+#themeStage,#difficultyStage,#awardStage{background:#03101b!important}
+#themeStage .head,#difficultyStage .head{position:absolute!important;top:28px!important;left:0!important;right:0!important;text-align:center!important}
+#themeStage .kicker,#difficultyStage .kicker{font-size:18px!important;color:#70ddff!important;font-weight:bold!important}
+#themeStage .title,#difficultyStage .title{font-size:46px!important;color:#fff!important;font-weight:bold!important;margin-top:8px!important}
+#themeStage .themezone{position:absolute!important;left:0!important;right:0!important;top:120px!important;bottom:35px!important;height:auto!important;overflow:hidden!important}
+#themeStage .themewheelring{display:block!important;position:absolute!important;left:5%!important;right:5%!important;top:48%!important;width:auto!important;height:330px!important;margin-top:-165px!important;border:2px solid #174d68!important;border-radius:50%!important}
+#themeStage .themecard{display:block!important;position:absolute!important;width:260px!important;height:310px!important;margin-left:-130px!important;margin-top:-155px!important;border:2px solid #2b789a!important;border-radius:22px!important;background:#0b2a40!important;box-shadow:0 12px 30px #000!important;text-align:center!important;overflow:hidden!important}
+#themeStage .themecard .icon{display:block!important;width:96px!important;height:96px!important;line-height:96px!important;margin:34px auto 0!important;border:2px solid #5edcff!important;border-radius:50%!important;background:#061522!important;font-size:52px!important;text-align:center!important}
+#themeStage .themecard .label{display:block!important;position:static!important;margin-top:25px!important;font-size:30px!important;color:#fff!important;font-weight:bold!important}
+#themeStage .themecard .desc{display:block!important;position:static!important;margin-top:10px!important;font-size:14px!important;color:#91aabc!important}
+#themeStage .themecard .tag{display:inline-block!important;position:static!important;margin-top:18px!important;padding:7px 12px!important;border:1px solid #4ddaff!important;border-radius:8px!important;color:#77ddff!important;font-size:12px!important}
+#themeStage .themecard.selected{border:3px solid #67e1ff!important;box-shadow:0 0 35px #299cff!important}
+#themeStage .themecard.locked{border:4px solid #ffd45e!important;box-shadow:0 0 40px #ffd45e!important}
+#themeStage .focusbracket{display:block!important;position:absolute!important;left:50%!important;top:48%!important;width:300px!important;height:350px!important;margin-left:-150px!important;margin-top:-175px!important;border:3px solid #53dfff!important;border-radius:26px!important}
+#themeStage .focusbracket.locked{border-color:#ffd45e!important;box-shadow:0 0 35px #ffd45e!important}
+#themeStage .lockline{display:none!important;position:absolute!important;left:0!important;right:0!important;bottom:6px!important;text-align:center!important}
+#themeStage .lockline.show{display:block!important;opacity:1!important}
+#themeStage .lockline b{font-size:20px!important;color:#ffd45e!important}
+#difficultyStage .diffzone{position:absolute!important;left:5%!important;right:5%!important;top:150px!important;bottom:50px!important}
+#difficultyStage #difficultyRail{display:block!important;white-space:nowrap!important;text-align:center!important;padding-top:110px!important}
+#difficultyStage .diffrank{display:inline-block!important;vertical-align:middle!important;width:17%!important;height:220px!important;margin:0 1%!important;padding-top:32px!important;border:2px solid #28536b!important;border-radius:18px!important;background:#0a2234!important;color:#91aabc!important;font-size:20px!important;font-weight:bold!important;text-align:center!important}
+#difficultyStage .diffrank span{display:block!important;font-size:58px!important;margin-bottom:18px!important}
+#difficultyStage .diffrank.hot{color:#fff!important;border:4px solid #ffd45e!important;background:#493c16!important;box-shadow:0 0 35px #ffd45e!important}
+#awardStage .awardbox{display:block!important;width:90%!important;margin:70px auto 0!important}
+#awardStage .awardanswer{display:block!important;font-size:26px!important;color:#b8d4e5!important;text-align:center!important;margin-bottom:24px!important}
+#awardStage .awardlist{display:block!important;width:82%!important;margin:0 auto!important}
+#awardStage .awardrow{display:block!important;position:relative!important;min-height:74px!important;margin:9px 0!important;padding:12px 190px 10px 86px!important;border:2px solid #274e66!important;border-radius:16px!important;background:#081e2d!important}
+#awardStage .awardavatar{display:block!important;position:absolute!important;left:14px!important;top:10px!important;width:52px!important;height:52px!important;line-height:52px!important;border:2px solid #4b7793!important;border-radius:50%!important;background:#15344a!important;text-align:center!important;font-size:22px!important}
+#awardStage .awardname{display:block!important;font-size:24px!important;color:#fff!important;font-weight:bold!important}
+#awardStage .awardbadges{display:block!important;font-size:14px!important;color:#7ddfff!important;margin-top:5px!important}
+#awardStage .awardscore{display:block!important;position:absolute!important;right:18px!important;top:23px!important;font-size:25px!important;color:#ffd45e!important;font-weight:bold!important}
 </style>
 </head>
 <body>
@@ -126,7 +159,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.2</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.3</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -189,7 +222,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   <div class="diffzone"><div id="difficultyRail"></div></div>
  </div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.2 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.3 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -257,7 +290,7 @@ function showThemeSelection(done){
   for(n=0;n<cards.length;n++){
    d=n-p;x=50+d*23;sc=Math.max(.60,1-Math.abs(d)*.15);op=Math.max(.07,1-Math.abs(d)*.28);
    cards[n].style.left=x+"%";cards[n].style.top=(49+Math.min(12,Math.abs(d)*3.5))+"%";cards[n].style.opacity=op;
-   cards[n].style.transform="translate(-50%,-50%) scale("+sc+") rotate("+(-d*2)+"deg)";
+   cards[n].style.transform="none";cards[n].style.webkitTransform="none";
    cards[n].className="themecard"+(Math.abs(d)<.48?" selected":"")+(locked&&n===target?" locked":"")+(locked&&n!==target?" dimmed":"")
   }
  }
