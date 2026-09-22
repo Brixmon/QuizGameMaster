@@ -45,7 +45,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.21</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.22</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -153,6 +153,7 @@
     </button>
    </div>
    <div class="modehint" id="usageModeHint" style="display:none"></div>
+   <a class="btn primary" id="openTvTest" href="tv.html" style="display:none;margin-top:10px;width:max-content">📺 ATVĒRT TV TESTU</a>
   </div>
 
   <div class="settingsconfig" id="settingsConfig">
@@ -609,9 +610,10 @@ function selectUsageMode(mode){
  markSettingsDirty();
 }
 function renderUsageMode(){
- const mode=getUsageMode(),config=document.querySelector("#settingsConfig"),hint=document.querySelector("#usageModeHint");
+ const mode=getUsageMode(),config=document.querySelector("#settingsConfig"),hint=document.querySelector("#usageModeHint"),tvLink=document.querySelector("#openTvTest");
  document.querySelectorAll("[data-usage-mode]").forEach(x=>x.classList.toggle("selected",x.dataset.usageMode===mode));
  if(config)config.classList.toggle("show",!!mode);
+ if(tvLink){tvLink.style.display=mode==="tv"?"inline-flex":"none";tvLink.textContent=lang==="lv"?"📺 ATVĒRT TV TESTU":"📺 OPEN TV TEST"}
  if(hint){
   if(!mode){hint.style.display="none";hint.textContent="";return}
   hint.style.display="block";
