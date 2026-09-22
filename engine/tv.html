@@ -23,7 +23,7 @@ button{font:inherit}.shell{min-height:100vh;padding:22px 28px 28px}.screen{displ
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · TV TEST 0.2</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY 0.3</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -144,7 +144,7 @@ function createRoom(){
  if(pollTimer){clearTimeout(pollTimer);pollTimer=null}
  transitioning=false;hostId=randomId();
  var ids=[],i;for(i=0;i<questions.length;i++)ids.push(questions[i].qid);
- room={code:randomCode(),hostId:hostId,phase:"lobby",createdAt:now(),updatedAt:now(),sequence:shuffle(ids),index:-1,qid:"",players:{},scores:{},streaks:{},answers:{},firstHolder:null,lastResults:{},questionStartedAt:0,answerDeadline:0,nextAt:0,answerSeconds:30};
+ room={code:randomCode(),hostId:hostId,mode:"party",roundId:randomId(),phase:"lobby",createdAt:now(),updatedAt:now(),sequence:shuffle(ids),index:-1,qid:"",players:{},scores:{},streaks:{},answers:{},firstHolder:null,lastResults:{},questionStartedAt:0,answerDeadline:0,nextAt:0,answerSeconds:30};
  $("status").innerHTML="Creating room…";
  getState(function(e,base){
   if(e){$("status").innerHTML="Cloud error: "+esc(e.message);return}
@@ -287,7 +287,7 @@ function schedulePoll(){if(pollTimer)clearTimeout(pollTimer);pollTimer=setTimeou
 $("fullBtn").onclick=function(){try{var el=document.documentElement;if(!document.fullscreenElement&&el.requestFullscreen)el.requestFullscreen();else if(document.exitFullscreen)document.exitFullscreen()}catch(e){}};
 $("newRoomBtn").onclick=function(){createRoom()};
 $("startBtn").onclick=function(){startQuiz()};
-$("againBtn").onclick=function(){createRoom()};
+$("againBtn").onclick=function(){if(!room)return;hostMutate(function(r){var ids=[];for(var i=0;i<questions.length;i++)ids.push(questions[i].qid);r.mode="party";r.roundId=randomId();r.phase="lobby";r.sequence=shuffle(ids);r.index=-1;r.qid="";r.scores={};r.streaks={};r.answers={};r.firstHolder=null;r.lastResults={};r.questionStartedAt=0;r.answerDeadline=0;r.nextAt=0},function(e){if(e){$("status").innerHTML="New round error: "+esc(e.message);return}renderLobby();show("lobby")})};
 document.onkeydown=function(e){e=e||window.event;if(e.keyCode===70)$("fullBtn").click();if(e.keyCode===13&&$("lobby").className.indexOf("show")>=0&&!$("startBtn").disabled)$("startBtn").click()};
 $("status").innerHTML="TV browser OK · loading questions…";
 loadQuestions(function(e){if(e){$("status").innerHTML="Question load error: "+esc(e.message);return}createRoom()});
