@@ -83,7 +83,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 
 
 
-/* TV v0.6.0: canonical TikTok V2 component + responsive 16:9 geometry */
+/* TV v0.6.1: canonical TikTok V2 component + responsive 16:9 geometry */
 #themeStage .stageinner,#difficultyStage .stageinner{position:relative;width:min(96vw,1700px);height:min(94vh,900px);overflow:hidden}
 #themeStage .themezone{left:-2%;right:-2%;top:19%;height:62%}
 #themeStage .themewheelring{top:50%;width:min(92vw,1500px);height:52vh}
@@ -102,6 +102,11 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
 }
 
 .awardstage{align-items:center}.awardbox{width:min(1300px,94vw)}.awardanswer{font-size:clamp(20px,1.8vw,30px);color:#9cb5c5;margin-bottom:20px}.awardanswer b{color:#55e59c}.awardlist{display:flex;flex-direction:column;gap:10px;max-width:1050px;margin:0 auto}.awardrow{display:grid;grid-template-columns:68px 1fr auto;align-items:center;gap:14px;min-height:72px;padding:9px 16px;border-radius:18px;border:1px solid #ffffff1f;background:#071824e8;text-align:left;transition:transform .8s cubic-bezier(.16,.8,.22,1)}.awardrow.top1{border-color:#ffd45e88;background:linear-gradient(90deg,#6d531a55,#071824e8)}.awardavatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#15344a;border:1px solid #4b7793;font-size:22px;font-weight:1000}.awardname{font-size:clamp(18px,1.5vw,27px);font-weight:1000}.awardbadges{font-size:14px;color:#d7efff;margin-top:3px}.awardscore{font-size:clamp(20px,1.7vw,30px);font-weight:1000;color:#ffd45e;white-space:nowrap}.awarddelta{display:inline-block;margin-left:10px;color:#55e59c}.awarddelta.neg{color:#ff6f7d}.gamebody{grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr)}.leaderrail{display:none!important}
+
+/* v0.6.1 stage visibility contract: TV host uses .stage.show */
+.stage{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;display:none;background:radial-gradient(circle at 50% 18%,#17466c 0,#0a2236 32%,#04101b 58%,#02070d 100%);color:#f6fbff;overflow:hidden}
+.stage.show{display:block}
+.stage .stageinner{display:block}
 </style>
 </head>
 <body>
@@ -111,7 +116,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
  <section class="screen lobby show" id="lobby">
   <div class="lobbybox">
    <div>
-    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.0</div>
+    <div class="brand">QUIZGAME <b>MASTER</b> · PARTY TV 0.6.1</div>
     <h1>TURN YOUR PHONE INTO A CONTROLLER</h1>
     <div class="sub">Scan the QR code, enter your name and answer with A / B / C / D on your phone.</div>
     <div class="roompanel">
@@ -174,7 +179,7 @@ html,body{height:100%;overflow:hidden}.shell{height:100vh;min-height:0;padding:1
   <div class="diffzone"><div id="difficultyRail"></div></div>
  </div></section>
  <section class="stage awardstage" id="awardStage"><div class="awardbox"><div class="stagekicker">QUESTION RESULTS</div><div class="stagetitle" style="font-size:clamp(38px,4vw,70px);margin-bottom:12px">STARS ARE MOVING</div><div class="awardanswer" id="awardAnswer"></div><div class="awardlist" id="awardList"></div></div></section>
- <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.0 · GAME v1.0.33</div>
+ <div class="status" id="status">Connecting…</div><div class="tvversion">TV v0.6.1 · GAME v1.0.33</div>
 </div>
 <script>
 (function(){
@@ -382,8 +387,9 @@ function startQuiz(){
  var count=0,k;
  for(k in (room.players||{}))if(Object.prototype.hasOwnProperty.call(room.players,k))count++;
  if(!count)return;
+ stage("themeStage");$("themeTrack").innerHTML='<div style="position:absolute;left:0;right:0;top:45%;text-align:center;font-size:3vw;font-weight:1000;color:#75dfff">LOADING THEME WHEEL…</div>';
  hostMutate(function(r){r.phase="intro";r.qid="";r.index=-1;r.answers={};r.lastResults={};r.nextAt=0},function(e){
-  if(e){$("status").innerHTML="Start error: "+esc(e.message);return}
+  if(e){hideStages();$("status").innerHTML="Start error: "+esc(e.message);return}
   showThemeSelection(function(theme,difficulty){
    var seq=sequenceForTheme(theme),preferred=[],rest=[],i,q;
    for(i=0;i<seq.length;i++){
