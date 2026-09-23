@@ -73,7 +73,7 @@ html,body{height:100%;overflow:hidden}.wrap{height:100dvh;min-height:0;padding:1
   <p>Look at the TV for the final ranking.</p>
  </section>
 </div>
-<script>
+<script src="debug-overlay.js?v=1.0.37"></script>\n<script>
 const BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev",ROOM_KEY="tvPrototype";
 const $=id=>document.getElementById(id);
 let roomCode=new URLSearchParams(location.search).get("room")||"",pid="",playerName="",room=null,lastQid="",pollTimer=0,writing=false,questions={},questionsReady=false;
