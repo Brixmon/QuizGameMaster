@@ -45,7 +45,7 @@
 .musiclibrarypanel{margin-top:12px;background:linear-gradient(180deg,#10202d,#0b1822);border:1px solid var(--line);border-radius:15px;padding:16px}
 .musiclibraryhead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}.musiclibraryhead h3{margin:0;font-size:16px}.musiclibraryhead p{margin:4px 0 0;color:var(--muted);font-size:12px}
 .musiclibraryfilters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.musiclibraryfilters input,.musiclibraryfilters select{border:1px solid var(--line);background:#081722;color:#fff;border-radius:9px;padding:8px 9px;min-width:150px}.musiclibraryfilters input{min-width:220px;flex:1}
-.musictable{min-width:1050px}.musictable th[data-musicsort]{cursor:pointer}.musictable th[data-musicsort]:hover{color:#bfeaff}.musictable td{vertical-align:top}.musictable .music-name-cell{min-width:250px}.musictable .music-name-cell b{display:block}.musictable .music-name-cell .path{display:block;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.musictable .music-inline-select{border:1px solid #29485d;background:#081722;color:#fff;border-radius:7px;padding:5px 6px;font-size:11px;max-width:145px}.musictable .musiccheck{width:18px;height:18px;accent-color:var(--blue)}.musictable .musiccellflex{display:flex;align-items:center;gap:7px;min-height:28px}.musictable .musicedit{margin-top:9px}
+.musictable{min-width:1050px}.musictable th[data-musicsort]{cursor:pointer}.musictable th[data-musicsort]:hover{color:#bfeaff}.musictable th[data-musicsort].sort-asc::after{content:" ▲";color:var(--gold)}.musictable th[data-musicsort].sort-desc::after{content:" ▼";color:var(--gold)}.musictable td{vertical-align:top}.musictable .music-name-cell{min-width:250px}.musictable .music-name-cell b{display:block}.musictable .music-name-cell .path{display:block;max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.musictable .music-inline-select{border:1px solid #29485d;background:#081722;color:#fff;border-radius:7px;padding:5px 6px;font-size:11px;max-width:145px}.musictable .musiccheck{width:18px;height:18px;accent-color:var(--blue)}.musictable .musiccellflex{display:flex;align-items:center;gap:7px;min-height:28px}.musictable .musicedit{margin-top:9px}
 .musicdiff{display:inline-flex;align-items:center;gap:5px}.musicdiff select{border:1px solid var(--line);background:#081722;color:#fff;border-radius:8px;padding:6px 8px;font-size:11px}
 .musicmodehint{margin-top:8px;color:#86d8ff;font-size:10px;line-height:1.4}.musicsetting.disabled{opacity:.45}.musicsetting.disabled select{pointer-events:none}
 .musictrackmodes{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.musictrackmode{display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border:1px solid #29485d;border-radius:8px;background:#081722;color:#c7d9e5;font-size:10px;font-weight:900}.musictrackmode input{width:15px!important;height:15px!important}.musictrackmode select{border:0;background:#0c2230;color:#fff;border-radius:6px;padding:4px 6px;font-size:10px;max-width:125px}.musictrackmode.off{opacity:.45}
@@ -638,6 +638,64 @@ function musicAssetName(a){
  raw=raw.replace(/^\d{10,}-/,"").replace(/[-_]+/g," ").trim();
  return raw||"TRACK";
 }
+let musicSort=(()=>{try{return JSON.parse(localStorage.getItem("qgm_music_sort_v1")||'{"key":"name","dir":"asc"}')}catch{return {key:"name",dir:"asc"}}})();
+function musicRouteCode(meta){
+ const d=meta.useDifficulty===true,r=meta.useRandom!==false;
+ return d&&r?"both":d?"difficulty":r?"random":"none";
+}
+function musicLicenseCode(meta){
+ return meta.commercial===true?"commercial":meta.commercial===false?"noncommercial":"unknown";
+}
+function musicDifficultyOrder(v){
+ return {"":0,newbie:1,rookie:2,pro:3,ninja:4,master:5}[String(v||"").toLowerCase()]??0;
+}
+function updateMusicRowDataset(row){
+ if(!row)return;
+ const diff=row.querySelector("[data-music-row-difficulty]")?.value||"";
+ const useDifficulty=row.querySelector("[data-music-use-difficulty]")?.checked===true;
+ const useRandom=row.querySelector("[data-music-use-random]")?.checked!==false;
+ const active=row.querySelector("[data-music-track]")?.checked===true;
+ row.dataset.diff=diff;
+ row.dataset.route=useDifficulty&&useRandom?"both":useDifficulty?"difficulty":useRandom?"random":"none";
+ row.dataset.active=active?"1":"0";
+ row.dataset.random=useRandom?"1":"0";
+}
+function applyMusicTableView(){
+ const tbody=document.querySelector("#musicRows");if(!tbody)return;
+ const search=(document.querySelector("#musicSearch")?.value||"").trim().toLowerCase();
+ const diff=document.querySelector("#musicDiffFilter")?.value||"";
+ const route=document.querySelector("#musicRouteFilter")?.value||"";
+ const lic=document.querySelector("#musicLicenseFilter")?.value||"";
+ const rows=[...tbody.querySelectorAll("tr[data-music-row]")];
+ rows.forEach(updateMusicRowDataset);
+ const key=musicSort?.key||"name",dir=musicSort?.dir==="desc"?-1:1;
+ const diffRank={none:0,difficulty:1,random:2,both:3};
+ rows.sort((a,b)=>{
+   let av,bv;
+   if(key==="size"){av=Number(a.dataset.size)||0;bv=Number(b.dataset.size)||0;return(av-bv)*dir}
+   if(key==="active"||key==="random"){av=Number(a.dataset[key])||0;bv=Number(b.dataset[key])||0;return(av-bv)*dir}
+   if(key==="difficulty"){av=musicDifficultyOrder(a.dataset.diff);bv=musicDifficultyOrder(b.dataset.diff);return(av-bv)*dir}
+   if(key==="license"){av=String(a.dataset.license||"");bv=String(b.dataset.license||"")}
+   else {av=String(a.dataset.name||"");bv=String(b.dataset.name||"")}
+   return av.localeCompare(bv,lang==="lv"?"lv":"en",{numeric:true,sensitivity:"base"})*dir;
+ });
+ rows.forEach(r=>tbody.appendChild(r));
+ let shown=0;
+ rows.forEach(row=>{
+   const okSearch=!search||String(row.dataset.search||"").includes(search);
+   const okDiff=!diff||row.dataset.diff===diff;
+   const okRoute=!route||row.dataset.route===route||(route==="difficulty"&&(row.dataset.route==="difficulty"||row.dataset.route==="both"))||(route==="random"&&(row.dataset.route==="random"||row.dataset.route==="both"));
+   const okLic=!lic||row.dataset.license===lic;
+   const show=okSearch&&okDiff&&okRoute&&okLic;
+   row.style.display=show?"":"none";if(show)shown++;
+ });
+ const total=rows.length,lv=lang==="lv";
+ document.querySelector("#musicLibraryCount").textContent=shown===total?(total+" "+(lv?(total===1?"celiņš":"celiņi"):(total===1?"track":"tracks"))):(shown+" / "+total);
+ document.querySelectorAll(".musictable th[data-musicsort]").forEach(th=>{
+   th.classList.toggle("sort-asc",th.dataset.musicsort===key&&dir===1);
+   th.classList.toggle("sort-desc",th.dataset.musicsort===key&&dir===-1);
+ });
+}
 function renderMusic(){
  const badge=document.querySelector("#musicCloudBadge");
  if(!badge)return;
@@ -681,17 +739,25 @@ function renderMusic(){
  document.querySelector("#musicLicenseName").placeholder=lv?"Licence / plāns (nav obligāti)":"License / plan (optional)";
  document.querySelector("#musicProof").placeholder=lv?"Pierādījuma URL / piezīme (vari pievienot arī vēlāk)":"Proof URL / note (can be added later)";
  document.querySelector("#musicLibraryTitle").textContent=lv?"🎵 Mūzikas bibliotēka":"🎵 Music library";
- document.querySelector("#musicLibrarySub").textContent=lv?"Visi pievienotie celiņi. Te redzi un rediģē nosaukumu, aktivitāti, grūtības pakāpi un licences informāciju.":"All uploaded tracks. Edit name, active state, difficulty and license information here.";
- document.querySelector("#musicLibraryCount").textContent=assets.length+" "+(lv?(assets.length===1?"celiņš":"celiņi"):(assets.length===1?"track":"tracks"));
- const box=document.querySelector("#musicTracks");
- if(!state.cloud.connected){box.innerHTML='<div class="empty">'+(lv?"Pieslēdz Cloud admin, lai augšupielādētu un izvēlētos mūziku.":"Connect Cloud admin to upload and select music.")+'</div>';return}
- if(!assets.length){box.innerHTML='<div class="empty">'+(lv?"Vēl nav neviena fona mūzikas faila. Pievienotie celiņi automātiski parādīsies šajā sarakstā.":"No background-music files yet. Uploaded tracks will automatically appear in this list.")+'</div>';return}
+ document.querySelector("#musicLibrarySub").textContent=lv?"Tabula ar visu mūziku. Vari meklēt, filtrēt, šķirot un rediģēt celiņus.":"Table of all music. Search, filter, sort and edit tracks.";
+ const searchEl=document.querySelector("#musicSearch"),diffEl=document.querySelector("#musicDiffFilter"),routeEl=document.querySelector("#musicRouteFilter"),licEl=document.querySelector("#musicLicenseFilter");
+ searchEl.placeholder=lv?"Meklēt pēc nosaukuma vai faila…":"Search name or file…";
+ const oldDiff=diffEl.value,oldRoute=routeEl.value,oldLic=licEl.value;
+ diffEl.innerHTML='<option value="">'+(lv?"Visas grūtības":"All difficulties")+'</option>'+MUSIC_DIFFS.map(x=>'<option value="'+esc(x.id)+'">'+x.icon+" "+esc(lv?x.lv:x.en)+'</option>').join("");
+ diffEl.value=oldDiff;
+ routeEl.innerHTML='<option value="">'+(lv?"Visi režīmi":"All routes")+'</option><option value="difficulty">🎯 '+(lv?"Grūtības":"Difficulty")+'</option><option value="random">🔀 Random</option><option value="both">🎯 + 🔀 '+(lv?"Abi":"Both")+'</option>';
+ routeEl.value=oldRoute;
+ licEl.innerHTML='<option value="">'+(lv?"Visas licences":"All licenses")+'</option><option value="commercial">COMMERCIAL ✓</option><option value="noncommercial">'+(lv?"NAV COMMERCIAL":"NOT COMMERCIAL")+'</option><option value="unknown">'+(lv?"LICENCE ?":"LICENSE ?")+'</option>';
+ licEl.value=oldLic;
+ const tbody=document.querySelector("#musicRows");
+ if(!state.cloud.connected){tbody.innerHTML='<tr><td colspan="8" class="empty">'+(lv?"Pieslēdz Cloud admin, lai redzētu mūzikas bibliotēku.":"Connect Cloud admin to view the music library.")+'</td></tr>';document.querySelector("#musicLibraryCount").textContent="0";return}
+ if(!assets.length){tbody.innerHTML='<tr><td colspan="8" class="empty">'+(lv?"Vēl nav neviena fona mūzikas faila.":"No background-music files yet.")+'</td></tr>';document.querySelector("#musicLibraryCount").textContent="0";return}
  const useSaved=saved.length>0;
- box.innerHTML=assets.map(a=>{
+ tbody.innerHTML=assets.map(a=>{
    const meta=musicMetaFor(a),checked=useSaved?selected.has(a.key):true,kb=Math.max(1,Math.round((Number(a.size)||0)/1024));
    const commercial=meta.commercial===true,nonCommercial=meta.commercial===false,diff=musicDiffMeta(meta.difficulty),useDifficulty=meta.useDifficulty===true,useRandom=meta.useRandom!==false;
    const lic=commercial?"COMMERCIAL ✓":nonCommercial?(lv?"NAV COMMERCIAL":"NOT COMMERCIAL"):(lv?"LICENCE ?":"LICENSE ?");
-   const licClass=commercial?"ok":nonCommercial?"bad":"warn";
+   const licClass=commercial?"ok":nonCommercial?"bad":"warn",licenseCode=musicLicenseCode(meta),routeCode=musicRouteCode(meta);
    const editing=state.musicEditKey===a.key;
    const editor=editing?'<div class="musicedit">'+
     '<input class="span2" data-meta-name value="'+esc(meta.name||musicAssetName(a))+'" placeholder="'+(lv?"Nosaukums":"Name")+'">'+
@@ -701,21 +767,35 @@ function renderMusic(){
     '<input data-meta-license value="'+esc(meta.licenseName||"")+'" placeholder="'+(lv?"Licence / plāns (nav obligāti)":"License / plan (optional)")+'">'+
     '<input class="span2" data-meta-proof value="'+esc(meta.proof||"")+'" placeholder="'+(lv?"Pierādījuma URL / piezīme (nav obligāti)":"Proof URL / note (optional)")+'">'+
     '<div class="musiceditactions"><button class="btn" type="button" data-music-meta-cancel="'+esc(a.key)+'">'+(lv?"Atcelt":"Cancel")+'</button><button class="btn good" type="button" data-music-meta-save="'+esc(a.key)+'">✓ '+(lv?"Saglabāt":"Save")+'</button></div></div>':"";
-   const modes='<div class="musictrackmodes">'+
-    '<label class="musictrackmode '+(useDifficulty?"":"off")+'"><input type="checkbox" data-music-use-difficulty '+(useDifficulty?"checked":"")+'><span>🎯 '+(lv?"GRŪTĪBA":"DIFFICULTY")+'</span><select data-music-row-difficulty '+(useDifficulty?"":"disabled")+'>'+musicDiffOptions(meta.difficulty||"")+'</select></label>'+
-    '<label class="musictrackmode '+(useRandom?"":"off")+'"><input type="checkbox" data-music-use-random '+(useRandom?"checked":"")+'><span>🔀 RANDOM</span></label>'+
-   '</div>';
-   return '<div class="musictrack" data-music-row="'+esc(a.key)+'"><input type="checkbox" data-music-track="'+esc(a.key)+'" '+(checked?"checked":"")+' title="'+(lv?"Izmantot šo celiņu":"Use this track")+'"><div class="musictrackmeta"><b>'+esc(musicAssetName(a))+'</b><span class="path">'+esc(a.key)+'</span><small>'+kb+' KB · <span class="pill '+licClass+'">'+esc(lic)+'</span> · <span class="pill info">'+diff.icon+" "+esc(lv?diff.lv:diff.en)+'</span></small>'+modes+'</div><div class="musictrackactions"><button class="btn" type="button" data-music-preview="'+esc(a.key)+'">▶ '+(lv?"Klausīties":"Preview")+'</button><button class="btn" type="button" data-music-edit="'+esc(a.key)+'">✎ '+(lv?"Rediģēt":"Edit")+'</button></div>'+editor+'</div>';
+   const name=musicAssetName(a),search=(name+" "+a.key+" "+(meta.provider||"")+" "+(meta.licenseName||"")).toLowerCase();
+   return '<tr data-music-row="'+esc(a.key)+'" data-name="'+esc(name.toLowerCase())+'" data-search="'+esc(search)+'" data-diff="'+esc(meta.difficulty||"")+'" data-route="'+routeCode+'" data-license="'+licenseCode+'" data-active="'+(checked?"1":"0")+'" data-random="'+(useRandom?"1":"0")+'" data-size="'+(Number(a.size)||0)+'">'+
+    '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-track="'+esc(a.key)+'" '+(checked?"checked":"")+'></div></td>'+
+    '<td class="music-name-cell"><b>'+esc(name)+'</b><span class="path">'+esc(a.key)+'</span>'+editor+'</td>'+
+    '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-use-difficulty '+(useDifficulty?"checked":"")+' title="'+(lv?"Izmantot pēc grūtības":"Use by difficulty")+'"><select class="music-inline-select" data-music-row-difficulty '+(useDifficulty?"":"disabled")+'>'+musicDiffOptions(meta.difficulty||"")+'</select></div></td>'+
+    '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-use-random '+(useRandom?"checked":"")+'><span>🔀</span></div></td>'+
+    '<td><span class="pill '+licClass+'">'+esc(lic)+'</span></td>'+
+    '<td>'+kb+' KB</td>'+
+    '<td><button class="btn" type="button" data-music-preview="'+esc(a.key)+'">▶</button></td>'+
+    '<td><button class="btn" type="button" data-music-edit="'+esc(a.key)+'">✎ '+(lv?"Rediģēt":"Edit")+'</button></td>'+
+   '</tr>';
  }).join("");
- box.querySelectorAll("[data-music-preview]").forEach(b=>b.onclick=()=>previewMusic(b.dataset.musicPreview,b));
- box.querySelectorAll("[data-music-edit]").forEach(b=>b.onclick=()=>{state.musicEditKey=b.dataset.musicEdit;renderMusic()});
- box.querySelectorAll("[data-music-meta-cancel]").forEach(b=>b.onclick=()=>{state.musicEditKey=null;renderMusic()});
- box.querySelectorAll("[data-music-meta-save]").forEach(b=>b.onclick=()=>saveMusicMetaEdit(b));
- box.querySelectorAll("[data-music-use-difficulty]").forEach(c=>c.onchange=()=>{
-   const lab=c.closest(".musictrackmode"),sel=lab?.querySelector("[data-music-row-difficulty]");
-   lab?.classList.toggle("off",!c.checked);if(sel)sel.disabled=!c.checked;
+ tbody.querySelectorAll("[data-music-preview]").forEach(b=>b.onclick=()=>previewMusic(b.dataset.musicPreview,b));
+ tbody.querySelectorAll("[data-music-edit]").forEach(b=>b.onclick=()=>{state.musicEditKey=b.dataset.musicEdit;renderMusic()});
+ tbody.querySelectorAll("[data-music-meta-cancel]").forEach(b=>b.onclick=()=>{state.musicEditKey=null;renderMusic()});
+ tbody.querySelectorAll("[data-music-meta-save]").forEach(b=>b.onclick=()=>saveMusicMetaEdit(b));
+ tbody.querySelectorAll("[data-music-use-difficulty]").forEach(c=>c.onchange=()=>{
+   const row=c.closest("[data-music-row]"),sel=row?.querySelector("[data-music-row-difficulty]");
+   if(sel)sel.disabled=!c.checked;updateMusicRowDataset(row);applyMusicTableView();
  });
- box.querySelectorAll("[data-music-use-random]").forEach(c=>c.onchange=()=>c.closest(".musictrackmode")?.classList.toggle("off",!c.checked));
+ tbody.querySelectorAll("[data-music-use-random],[data-music-track],[data-music-row-difficulty]").forEach(c=>c.onchange=()=>{updateMusicRowDataset(c.closest("[data-music-row]"));applyMusicTableView()});
+ [searchEl,diffEl,routeEl,licEl].forEach(el=>{el.oninput=applyMusicTableView;el.onchange=applyMusicTableView});
+ document.querySelectorAll(".musictable th[data-musicsort]").forEach(th=>th.onclick=()=>{
+   const key=th.dataset.musicsort;
+   musicSort={key,dir:musicSort.key===key&&musicSort.dir==="asc"?"desc":"asc"};
+   localStorage.setItem("qgm_music_sort_v1",JSON.stringify(musicSort));
+   applyMusicTableView();
+ });
+ applyMusicTableView();
 }
 let musicPreviewAudio=null;
 async function previewMusic(key,button){
