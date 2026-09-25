@@ -535,6 +535,117 @@ function filtered(){const s=document.querySelector("#search").value.trim().toLow
 function renderQuestions(){renderQHead();const qs=filtered();document.querySelector("#qRows").innerHTML=qs.map(q=>'<tr data-id="'+esc(q.id)+'">'+qColOrder.map(k=>qCell(q,k)).join("")+'</tr>').join("")||'<tr><td colspan="'+qColOrder.length+'" class="empty">'+(lang==="lv"?"Nekas nav atrasts.":"Nothing found.")+'</td></tr>';document.querySelector("#qCards").innerHTML=qs.map(q=>{const m=media(q),o=originMeta(q);return'<div class="qcard" data-id="'+esc(q.id)+'"><div class="qcardtop">'+(m.src?'<img class="thumb '+(m.flag?"flagthumb":"")+'" src="'+esc(m.src)+'">':"")+'<div><div class="qid">'+esc(q.qid)+'</div><div title="'+esc(o.label)+'" style="font-size:18px">'+o.icon+'</div><h3>'+esc(q.question)+'</h3></div></div><div style="margin-top:9px">'+categoryMini(q.category)+'</div><div class="qcardmeta">'+diffBadge(q.difficulty,q.id)+'</div><div style="margin-top:9px">'+materialStack(q)+'</div><p class="correctcell" data-answer-preview="'+esc(q.id)+'">✓ '+esc(q.correct)+' · '+(lang==="lv"?"skatīt 4 atbildes":"view 4 answers")+'</p></div>'}).join("");document.querySelectorAll("#qRows [data-id],#qCards [data-id]").forEach(x=>x.onclick=()=>openQuestion(x.dataset.id));document.querySelectorAll("[data-answer-preview]").forEach(x=>x.onclick=e=>{e.stopPropagation();openAnswerPreview(x.dataset.answerPreview)});bindMaterialActions()}
 function renderCats(){const g={};state.questions.forEach(q=>(g[q.category]??=[]).push(q));document.querySelector("#catCards").innerHTML=Object.entries(g).map(([k,qs])=>{const d={};qs.forEach(q=>d[q.difficulty]=(d[q.difficulty]||0)+1);return'<div class="card cat"><h3>'+esc(k)+'</h3><b>'+qs.length+'</b><div style="color:var(--muted);font-size:12px;margin-top:5px">'+Object.entries(d).map(([a,b])=>nice(a)+" "+b).join(" · ")+'</div><div class="bar"><i style="width:100%"></i></div></div>'}).join("")}
 function renderMedia(){const box=document.querySelector("#mediaList");if(!state.cloud.connected){box.innerHTML='<div class="empty">'+(lang==="lv"?"Pieslēdz Cloud admin. Tad šeit redzēsi un varēsi pārvaldīt R2 failus.":"Connect Cloud admin to view and manage R2 files.")+'</div>';return}const arr=contentAssets();box.innerHTML=arr.length?'<div class="assetlist">'+arr.map(x=>{const st=x.license_status==="verified"?{code:"free",label:"FREE"}:x.license_status==="review"?{code:"unclear",label:lang==="lv"?"NESKAIDRS":"UNCLEAR"}:{code:"ok",label:lang==="lv"?"LICENCE OK":"LICENSED"};return'<div class="assetrow"><div class="assetmeta"><b>'+esc(String(x.key).split("/").pop())+'</b><span class="path">'+esc(x.key)+'</span><small>'+Math.max(1,Math.round((Number(x.size)||0)/1024))+' KB</small></div>'+materialTag(st)+'</div>'}).join("")+'</div>':'<div class="empty">'+(lang==="lv"?"R2 vēl nav satura failu.":"No content files in R2 yet.")+'</div>'}
+function musicAssets(){return contentAssets().filter(x=>String(x.key||"").startsWith("music/"))}
+function musicCurrentConfig(){
+ const x=state.gameState?.settings?.backgroundMusic;
+ return x&&typeof x==="object"?x:{enabled:true,frequency:"round",volume:18,tracks:[]};
+}
+function musicAssetName(a){
+ const raw=String(a?.display_name||a?.name||String(a?.key||"").split("/").pop()||"TRACK");
+ return raw.replace(/\.[a-z0-9]{2,5}$/i,"");
+}
+function renderMusic(){
+ const badge=document.querySelector("#musicCloudBadge");
+ if(!badge)return;
+ badge.textContent=state.cloud.connected?"● CLOUD":"○ CLOUD";badge.className="pill "+(state.cloud.connected?"ok":"warn");
+ const lv=lang==="lv",cfg=musicCurrentConfig(),assets=musicAssets(),saved=Array.isArray(cfg.tracks)?cfg.tracks:[],selected=new Set(saved.map(x=>typeof x==="string"?x:x?.key).filter(Boolean));
+ document.querySelector("#musicTitle").textContent=lv?"♫ Fona mūzika":"♫ Background music";
+ document.querySelector("#musicSub").textContent=lv?"Augšupielādē savus loop failus, izvēlies aktīvos celiņus un cik bieži spēle maina mūziku.":"Upload your loop files, choose active tracks and how often the game changes music.";
+ document.querySelector("#musicUploadTitle").textContent=lv?"⬆ Pievienot mūzikas failu":"⬆ Add music file";
+ document.querySelector("#musicUploadSub").textContent=lv?"MP3, WAV vai OGG. Komerciālās licences informāciju glabājam kopā ar failu.":"MP3, WAV or OGG. Commercial-license information is stored with the file.";
+ document.querySelector("#musicPlayTitle").textContent=lv?"🎚 Atskaņošana":"🎚 Playback";
+ document.querySelector("#musicPlaySub").textContent=lv?"Atķeksē celiņus, kurus spēle drīkst izmantot. No atzīmētajiem celiņiem tiks veidota rotācija.":"Check the tracks the game may use. Checked tracks form the rotation.";
+ document.querySelector("#musicFreqLabel").textContent=lv?"Mainīt celiņu":"Change track";
+ document.querySelector("#musicFreqHelp").textContent=lv?"Izvēlies, kad sākt nākamo celiņu.":"Choose when the next track starts.";
+ document.querySelector("#musicVolumeLabel").textContent=lv?"Fona mūzikas skaļums":"Background music volume";
+ document.querySelector("#musicFrequency").innerHTML='<option value="round">'+(lv?"Reizi raundā":"Once per round")+'</option><option value="question">'+(lv?"Pie katra jautājuma":"Every question")+'</option>';
+ document.querySelector("#musicFrequency").value=cfg.frequency==="question"?"question":"round";
+ document.querySelector("#musicVolume").value=Math.max(0,Math.min(100,Number(cfg.volume??18)));
+ document.querySelector("#musicVolumeValue").textContent=document.querySelector("#musicVolume").value;
+ document.querySelector("#musicEnabled").checked=cfg.enabled!==false;
+ document.querySelector("#musicEnabledText").textContent=cfg.enabled===false?(lv?"MŪZIKA IZSLĒGTA":"MUSIC OFF"):(lv?"MŪZIKA IESLĒGTA":"MUSIC ON");
+ document.querySelector("#musicUploadBtn").textContent=lv?"⬆ AUGŠUPIELĀDĒT UZ R2":"⬆ UPLOAD TO R2";
+ document.querySelector("#musicSaveBtn").textContent=lv?"💾 SAGLABĀT MŪZIKU":"💾 SAVE MUSIC";
+ document.querySelector("#musicName").placeholder=lv?"Celiņa nosaukums":"Track name";
+ document.querySelector("#musicProvider").placeholder=lv?"Pakalpojums / avots, piem. Stable Audio":"Provider / source, e.g. Stable Audio";
+ document.querySelector("#musicLicenseName").placeholder=lv?"Licence / plāns":"License / plan";
+ document.querySelector("#musicProof").placeholder=lv?"Licences pierādījuma URL / piezīme":"License proof URL / note";
+ const box=document.querySelector("#musicTracks");
+ if(!state.cloud.connected){box.innerHTML='<div class="empty">'+(lv?"Pieslēdz Cloud admin, lai augšupielādētu un izvēlētos mūziku.":"Connect Cloud admin to upload and select music.")+'</div>';return}
+ if(!assets.length){box.innerHTML='<div class="empty">'+(lv?"Vēl nav neviena fona mūzikas faila. Augšupielādē pirmo loop pa kreisi.":"No background-music files yet. Upload the first loop on the left.")+'</div>';return}
+ const useSaved=saved.length>0;
+ box.innerHTML=assets.map(a=>{
+   const checked=useSaved?selected.has(a.key):true;
+   const kb=Math.max(1,Math.round((Number(a.size)||0)/1024));
+   const lic=a.license_status==="verified"?"FREE":a.license_status==="review"?(lv?"NESKAIDRS":"UNCLEAR"):(lv?"LICENCE OK":"LICENSED");
+   return '<div class="musictrack"><input type="checkbox" data-music-track="'+esc(a.key)+'" '+(checked?"checked":"")+'><div class="musictrackmeta"><b>'+esc(musicAssetName(a))+'</b><span class="path">'+esc(a.key)+'</span><small>'+kb+' KB · '+esc(lic)+'</small></div><div class="musictrackactions"><button class="btn" type="button" data-music-preview="'+esc(a.key)+'">▶ '+(lv?"Klausīties":"Preview")+'</button></div></div>';
+ }).join("");
+ box.querySelectorAll("[data-music-preview]").forEach(b=>b.onclick=()=>previewMusic(b.dataset.musicPreview,b));
+}
+let musicPreviewAudio=null,musicPreviewUrl="";
+async function previewMusic(key,button){
+ if(musicPreviewAudio){try{musicPreviewAudio.pause()}catch(e){}musicPreviewAudio=null}
+ if(musicPreviewUrl){try{URL.revokeObjectURL(musicPreviewUrl)}catch(e){}musicPreviewUrl=""}
+ const old=button?.textContent;if(button)button.textContent="…";
+ try{
+  const a=musicAssets().find(x=>x.key===key)||{},direct=a.url||a.public_url||a.publicUrl||"";
+  let src=direct;
+  if(!src){
+   const r=await fetch(BRIDGE+"/admin/assets/"+key,{headers:auth(),cache:"no-store"});
+   if(!r.ok)throw new Error("HTTP "+r.status);
+   const blob=await r.blob();musicPreviewUrl=URL.createObjectURL(blob);src=musicPreviewUrl;
+  }
+  musicPreviewAudio=new Audio(src);musicPreviewAudio.volume=.35;await musicPreviewAudio.play();
+  if(button)button.textContent="■ "+(lang==="lv"?"Apturēt":"Stop");
+  musicPreviewAudio.onended=()=>{if(button)button.textContent=old||"▶ Preview"};
+  if(button)button.onclick=()=>{try{musicPreviewAudio?.pause()}catch(e){}musicPreviewAudio=null;button.textContent=old||"▶ Preview";button.onclick=()=>previewMusic(key,button)};
+ }catch(e){
+  if(button){button.textContent=old||"▶ Preview";button.onclick=()=>previewMusic(key,button)}
+  const st=document.querySelector("#musicSaveStatus");st.textContent=(lang==="lv"?"Priekšskatījumu nevar atvērt: ":"Preview unavailable: ")+e.message;st.className="musicstatus bad";
+ }
+}
+function safeMusicSlug(v){
+ return String(v||"track").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,56)||"track";
+}
+async function uploadMusic(){
+ if(!state.cloud.connected){await connectCloud();if(!state.cloud.connected)return}
+ const file=document.querySelector("#musicFile")?.files?.[0],st=document.querySelector("#musicUploadStatus");
+ if(!file){st.textContent=lang==="lv"?"Vispirms izvēlies MP3, WAV vai OGG failu.":"Choose an MP3, WAV or OGG file first.";st.className="musicstatus bad";return}
+ if(!String(file.type||"").startsWith("audio/")&&!/\.(mp3|wav|ogg)$/i.test(file.name||"")){st.textContent=lang==="lv"?"Tas neizskatās pēc audio faila.":"That does not look like an audio file.";st.className="musicstatus bad";return}
+ const title=document.querySelector("#musicName").value.trim()||String(file.name||"track").replace(/\.[^.]+$/,"");
+ const key="music/"+Date.now()+"-"+safeMusicSlug(title)+"."+ext(file);
+ st.textContent=(lang==="lv"?"Augšupielādē ":"Uploading ")+file.name+"…";st.className="musicstatus";
+ try{
+  const provider=document.querySelector("#musicProvider").value.trim(),license=document.querySelector("#musicLicenseName").value.trim(),proof=document.querySelector("#musicProof").value.trim();
+  const h={...auth(),"Content-Type":file.type||"application/octet-stream","X-QGM-QID":"","X-QGM-Kind":"background_music","X-QGM-License-Status":"licensed","X-QGM-License-Provider":provider,"X-QGM-License-Name":license,"X-QGM-License-Source":provider,"X-QGM-Proof-URL":proof,"X-QGM-Display-Name":title};
+  const r=await fetch(BRIDGE+"/admin/assets/"+key,{method:"PUT",headers:h,body:file}),o=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(o.error||("HTTP "+r.status));
+  const obj={key,size:file.size,uploaded:new Date().toISOString(),license_status:"licensed",display_name:title,provider,license_name:license,proof_url:proof,url:o.url||o.public_url||o.publicUrl||""};
+  state.cloud.assets=(state.cloud.assets||[]).filter(x=>x.key!==key);state.cloud.assets.push(obj);
+  st.textContent="✓ "+(lang==="lv"?"Mūzika augšupielādēta uz R2.":"Music uploaded to R2.");st.className="musicstatus ok";
+  document.querySelector("#musicFile").value="";document.querySelector("#musicName").value="";
+  renderMusic();renderMedia();renderOverview();
+ }catch(e){st.textContent="✗ "+e.message;st.className="musicstatus bad"}
+}
+async function saveMusicSettings(){
+ const st=document.querySelector("#musicSaveStatus"),button=document.querySelector("#musicSaveBtn");
+ const keys=[...document.querySelectorAll("[data-music-track]:checked")].map(x=>x.dataset.musicTrack);
+ if(document.querySelector("#musicEnabled").checked&&!keys.length){st.textContent=lang==="lv"?"Atķeksē vismaz vienu celiņu vai izslēdz mūziku.":"Select at least one track or turn music off.";st.className="musicstatus bad";return}
+ const assets=musicAssets();
+ const tracks=keys.map(key=>{const a=assets.find(x=>x.key===key)||{};return{key,name:musicAssetName(a),url:a.url||a.public_url||a.publicUrl||""}});
+ const current=state.gameState?.settings&&typeof state.gameState.settings==="object"?state.gameState.settings:{};
+ const backgroundMusic={enabled:document.querySelector("#musicEnabled").checked,frequency:document.querySelector("#musicFrequency").value==="question"?"question":"round",volume:Math.max(0,Math.min(100,Number(document.querySelector("#musicVolume").value)||0)),tracks};
+ const next={...current,backgroundMusic};
+ const players=state.gameState?.players&&typeof state.gameState.players==="object"?state.gameState.players:Object.fromEntries(state.players.map(p=>[p.key,p]));
+ if(button)button.disabled=true;st.textContent=lang==="lv"?"Saglabā Cloud…":"Saving to Cloud…";st.className="musicstatus";
+ try{
+  const r=await fetch(BRIDGE+"/game/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings:next,players})});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  state.gameState={...(state.gameState||{}),ok:true,settings:next,players};
+  st.textContent="✓ "+(lang==="lv"?"Mūzikas iestatījumi saglabāti.":"Music settings saved.");st.className="musicstatus ok";renderMusic();
+ }catch(e){st.textContent=(lang==="lv"?"Neizdevās saglabāt: ":"Could not save: ")+e.message;st.className="musicstatus bad"}
+ finally{if(button)button.disabled=false}
+}
 function renderAnalytics(){if(!state.cloud.connected){["aPlays","aAnswers","aCorrect","aVisitors"].forEach(id=>document.querySelector("#"+id).textContent="—");document.querySelector("#aRows").innerHTML='<tr><td colspan="6" class="empty">'+(lang==="lv"?"Pieslēdz Cloud admin analītikai.":"Connect Cloud admin for analytics.")+'</td></tr>';document.querySelector("#aCards").innerHTML='<div class="empty">'+(lang==="lv"?"Pieslēdz Cloud admin analītikai.":"Connect Cloud admin for analytics.")+'</div>';return}const map=qStatsMap(),stats=Object.values(map),plays=stats.reduce((n,x)=>n+x.shown,0),ans=stats.reduce((n,x)=>n+x.answers,0),cor=stats.reduce((n,x)=>n+x.correct,0);document.querySelector("#aPlays").textContent=plays;document.querySelector("#aAnswers").textContent=ans;document.querySelector("#aCorrect").textContent=ans?Math.round(cor*100/ans)+"%":"—";document.querySelector("#aVisitors").textContent=(state.cloud.exp?.global_users||[]).length;const rows=state.questions.map(q=>{const s=map[q.qid]||{},a=Number(s.answers)||0,c=Number(s.correct)||0,avg=Number(s.avg_response_ms)||0;return{q,s,a,c,avg}});document.querySelector("#aRows").innerHTML=rows.map(x=>'<tr data-id="'+esc(x.q.id)+'"><td class="qid">'+esc(x.q.qid)+'</td><td>'+esc(x.q.question)+'</td><td>'+Number(x.s.shown||0)+'</td><td>'+x.a+'</td><td>'+(x.a?Math.round(x.c*100/x.a)+"%":"—")+'</td><td>'+(x.avg?(x.avg/1000).toFixed(1)+"s":"—")+'</td></tr>').join("");document.querySelector("#aCards").innerHTML=rows.map(x=>'<div class="qcard" data-id="'+esc(x.q.id)+'"><div class="qid">'+esc(x.q.qid)+'</div><h3>'+esc(x.q.question)+'</h3><div class="qcardmeta">'+pill("Shown "+Number(x.s.shown||0),"info")+pill("Answers "+x.a,"info")+pill(x.a?Math.round(x.c*100/x.a)+"%":"—","ok")+'</div></div>').join("");document.querySelectorAll("[data-id]").forEach(x=>x.onclick=()=>openQuestion(x.dataset.id))}
 function renderPlayers(){document.querySelector("#pRows").innerHTML=state.players.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><div style="display:flex;align-items:center;gap:8px">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<b>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</b></div></td><td class="qid">'+(Number(p.points)||0)+' ★</td><td class="path">'+esc(p.key)+'</td></tr>').join("");document.querySelector("#pCards").innerHTML=state.players.map((p,i)=>'<div class="qcard"><div class="qcardtop">'+(p.avatar?'<img class="playeravatar" src="'+esc(p.avatar)+'">':'<div class="playeravatar"></div>')+'<div><div class="qid">#'+(i+1)+' · '+(Number(p.points)||0)+' ★</div><h3>@'+esc(String(p.name||"PLAYER").replace(/^@/,""))+'</h3></div></div></div>').join("")}
 function qAssets(qid){return contentAssets().filter(x=>String(x.key||"").startsWith("questions/"+qid+"/"))}
@@ -758,12 +869,16 @@ async function saveSettings(){
   if(st){st.textContent=(lang==="lv"?"Neizdevās saglabāt: ":"Could not save: ")+e.message;st.className="settingsstatus bad"}
  }finally{if(button)button.disabled=false}
 }
-function renderAll(){applyLang();filters();renderOverview();renderQuestions();renderCats();renderMedia();renderAnalytics();renderPlayers();renderSettings()}
+function renderAll(){applyLang();filters();renderOverview();renderQuestions();renderCats();renderMedia();renderMusic();renderAnalytics();renderPlayers();renderSettings()}
 async function load(){const [f,l,catalog]=await Promise.all([fresh("../data/questions-flags.json"),fresh("../data/questions-landmarks.json"),fresh("../data/admin-catalog.json")]);state.questions=[...f.questions.map(q=>({...q,category:f.category})),...l.questions.map(q=>({...q,category:l.category}))];state.catalog=catalog;try{const cloud=await fetch(BRIDGE+"/game/state",{cache:"no-store"}).then(r=>r.json());state.gameState=cloud;const ov=cloud?.settings?.difficultyOverrides||{};state.questions.forEach(q=>{if(DIFF_META[ov[q.qid]])q.difficulty=ov[q.qid]});state.players=cloud?.players&&typeof cloud.players==="object"?Object.entries(cloud.players).map(([key,v])=>({key,...v})).sort((a,b)=>(Number(b.points)||0)-(Number(a.points)||0)):[]}catch{state.gameState=null;state.players=[]}await loadCloud(true);renderAll()}
 document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".section").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))});
 ["search","catFilter","diffFilter"].forEach(id=>document.querySelector("#"+id).addEventListener(id==="search"?"input":"change",renderQuestions));document.querySelector("#resetColumns").onclick=()=>{qColOrder=QCOL_DEFAULT.slice();qColWidths={...QCOL_WIDTH_DEFAULT};qSort={key:"qid",dir:"asc"};localStorage.setItem("qgm_question_columns_v1",JSON.stringify(qColOrder));localStorage.setItem("qgm_question_widths_v1",JSON.stringify(qColWidths));localStorage.setItem("qgm_question_sort_v1",JSON.stringify(qSort));renderQuestions()};
 document.querySelector("#cloudBtn").onclick=connectCloud;
 document.querySelector("#saveSettingsBtn").onclick=saveSettings;
+document.querySelector("#musicUploadBtn").onclick=uploadMusic;
+document.querySelector("#musicSaveBtn").onclick=saveMusicSettings;
+document.querySelector("#musicVolume").oninput=e=>document.querySelector("#musicVolumeValue").textContent=e.target.value;
+document.querySelector("#musicEnabled").onchange=e=>document.querySelector("#musicEnabledText").textContent=e.target.checked?(lang==="lv"?"MŪZIKA IESLĒGTA":"MUSIC ON"):(lang==="lv"?"MŪZIKA IZSLĒGTA":"MUSIC OFF");
 document.querySelectorAll("[data-usage-mode]").forEach(x=>x.onclick=()=>selectUsageMode(x.dataset.usageMode));
 document.querySelector("#settings").addEventListener("input",e=>{if(e.target.matches("input,select")){if(e.target.id==="setFactEnabled")syncFactSettingUi();markSettingsDirty()}});
 document.querySelector("#settings").addEventListener("change",e=>{if(e.target.matches("input,select")){if(e.target.id==="setFactEnabled")syncFactSettingUi();markSettingsDirty()}});
