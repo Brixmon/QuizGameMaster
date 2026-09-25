@@ -683,7 +683,7 @@ function applyMusicTableView(){
  let shown=0;
  rows.forEach(row=>{
    const okSearch=!search||String(row.dataset.search||"").includes(search);
-   const okDiff=!diff||row.dataset.diff===diff;
+   const okDiff=!diff||(diff==="__unassigned"?!row.dataset.diff:row.dataset.diff===diff);
    const okRoute=!route||row.dataset.route===route||(route==="difficulty"&&(row.dataset.route==="difficulty"||row.dataset.route==="both"))||(route==="random"&&(row.dataset.route==="random"||row.dataset.route==="both"));
    const okLic=!lic||row.dataset.license===lic;
    const show=okSearch&&okDiff&&okRoute&&okLic;
@@ -743,7 +743,7 @@ function renderMusic(){
  const searchEl=document.querySelector("#musicSearch"),diffEl=document.querySelector("#musicDiffFilter"),routeEl=document.querySelector("#musicRouteFilter"),licEl=document.querySelector("#musicLicenseFilter");
  searchEl.placeholder=lv?"Meklēt pēc nosaukuma vai faila…":"Search name or file…";
  const oldDiff=diffEl.value,oldRoute=routeEl.value,oldLic=licEl.value;
- diffEl.innerHTML='<option value="">'+(lv?"Visas grūtības":"All difficulties")+'</option>'+MUSIC_DIFFS.map(x=>'<option value="'+esc(x.id)+'">'+x.icon+" "+esc(lv?x.lv:x.en)+'</option>').join("");
+ diffEl.innerHTML='<option value="">'+(lv?"Visas grūtības":"All difficulties")+'</option><option value="__unassigned">• '+(lv?"Piešķirt grūtības pakāpi":"Assign difficulty")+'</option>'+MUSIC_DIFFS.slice(1).map(x=>'<option value="'+esc(x.id)+'">'+x.icon+" "+esc(lv?x.lv:x.en)+'</option>').join("");
  diffEl.value=oldDiff;
  routeEl.innerHTML='<option value="">'+(lv?"Visi režīmi":"All routes")+'</option><option value="difficulty">🎯 '+(lv?"Grūtības":"Difficulty")+'</option><option value="random">🔀 Random</option><option value="both">🎯 + 🔀 '+(lv?"Abi":"Both")+'</option>';
  routeEl.value=oldRoute;
