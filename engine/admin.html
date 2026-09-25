@@ -64,7 +64,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.33</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.34</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -743,7 +743,7 @@ function renderMusic(){
  document.querySelector("#musicLicenseName").placeholder=lv?"Licence / plāns (nav obligāti)":"License / plan (optional)";
  document.querySelector("#musicProof").placeholder=lv?"Pierādījuma URL / piezīme (vari pievienot arī vēlāk)":"Proof URL / note (can be added later)";
  document.querySelector("#musicLibraryTitle").textContent=lv?"🎵 Mūzikas bibliotēka":"🎵 Music library";
- document.querySelector("#musicLibrarySub").textContent=lv?"Tabula ar visu mūziku. Vari meklēt, filtrēt, šķirot un rediģēt celiņus.":"Table of all music. Search, filter, sort and edit tracks.";
+ document.querySelector("#musicLibrarySub").textContent=lv?"Tabula ar visu mūziku. Piešķirot grūtības pakāpi, treks automātiski kļūst AKTĪVS; pēc tam nospied SAGLABĀT TREKU IESTATĪJUMUS.":"Table of all music. Assigning a difficulty automatically makes the track ACTIVE; then press SAVE TRACK SETTINGS.";
  const searchEl=document.querySelector("#musicSearch"),diffEl=document.querySelector("#musicDiffFilter"),routeEl=document.querySelector("#musicRouteFilter"),licEl=document.querySelector("#musicLicenseFilter");
  searchEl.placeholder=lv?"Meklēt pēc nosaukuma vai faila…":"Search name or file…";
  const oldDiff=diffEl.value,oldRoute=routeEl.value,oldLic=licEl.value;
@@ -788,11 +788,14 @@ function renderMusic(){
  tbody.querySelectorAll("[data-music-meta-cancel]").forEach(b=>b.onclick=()=>{state.musicEditKey=null;renderMusic()});
  tbody.querySelectorAll("[data-music-meta-save]").forEach(b=>b.onclick=()=>saveMusicMetaEdit(b));
  tbody.querySelectorAll("[data-music-use-difficulty]").forEach(c=>c.onchange=()=>{
-   const row=c.closest("[data-music-row]");updateMusicRowDataset(row);applyMusicTableView();markMusicSettingsDirty();
+   const row=c.closest("[data-music-row]"),active=row?.querySelector("[data-music-track]");
+   if(active&&c.checked)active.checked=true;
+   updateMusicRowDataset(row);applyMusicTableView();markMusicSettingsDirty();
  });
  tbody.querySelectorAll("[data-music-row-difficulty]").forEach(sel=>sel.onchange=()=>{
-   const row=sel.closest("[data-music-row]"),box=row?.querySelector("[data-music-use-difficulty]");
+   const row=sel.closest("[data-music-row]"),box=row?.querySelector("[data-music-use-difficulty]"),active=row?.querySelector("[data-music-track]");
    if(box)box.checked=Boolean(sel.value);
+   if(active&&sel.value)active.checked=true;
    updateMusicRowDataset(row);applyMusicTableView();markMusicSettingsDirty();
  });
  tbody.querySelectorAll("[data-music-use-random],[data-music-track]").forEach(c=>c.onchange=()=>{updateMusicRowDataset(c.closest("[data-music-row]"));applyMusicTableView();markMusicSettingsDirty()});
