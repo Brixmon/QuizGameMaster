@@ -8,7 +8,7 @@
     if(window.parent!==window&&__qgmParams.get("embed")==="1")return;
   }catch(__qgmEmbedErr){}
 
-  var VERSION="1.0.43";
+  var VERSION="1.0.44";
   var BRIDGE_HOST="quizgamemaster-bridge.vip-krasts.workers.dev";
   var LIMITS={workerRequests:100000,kvReads:100000,kvWrites:1000,kvDeletes:1000,kvLists:1000};
 
