@@ -40,12 +40,14 @@
 .musictracks{display:grid;gap:8px}.musictrack{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border:1px solid #1f3748;border-radius:11px;background:#0a1721}.musictrack input[type=checkbox]{width:20px;height:20px;accent-color:var(--blue)}
 .musictrackmeta{min-width:0}.musictrackmeta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.musictrackmeta small{display:block;color:var(--muted);margin-top:3px}.musictrackmeta .path{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}.musictrackactions{display:flex;gap:6px}.musictrackactions button{padding:7px 9px}
 .musicbar{margin-top:12px;padding:10px 12px;border:1px solid #31536a;border-radius:13px;background:#091722;display:flex;align-items:center;justify-content:space-between;gap:10px}.musicbar .settingtoggle{justify-content:flex-start}
+.musicfieldlabel{display:block;color:#b8cbd8;font-size:11px;font-weight:900;margin:2px 0 -2px}.musicoptional{color:var(--muted);font-weight:700}
+.musicedit{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;padding:10px;border:1px solid #2b5068;border-radius:10px;background:#0c1c28}.musicedit .span2{grid-column:1/-1}.musicedit input,.musicedit select{width:100%;border:1px solid var(--line);background:#081722;color:#fff;border-radius:9px;padding:9px 10px}.musiceditactions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:7px}
 @media(max-width:950px){.app{grid-template-columns:185px 1fr}.main{padding:20px 16px}.uploadgrid{grid-template-columns:1fr 1fr}.musicgrid{grid-template-columns:1fr}}
 @media(max-width:720px){
  body{padding-bottom:76px}.app{display:block}.side{position:relative;height:auto;padding:14px 12px 11px;border-right:0;border-bottom:1px solid var(--line)}.nav{position:fixed;left:0;right:0;bottom:0;z-index:150;display:flex;gap:5px;overflow-x:auto;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#07131df7;border-top:1px solid var(--line);backdrop-filter:blur(14px);scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{min-width:100px;text-align:center;padding:9px 6px;font-size:10px;white-space:nowrap}.nav button.active{box-shadow:inset 0 3px var(--blue)}
  .main{padding:14px 10px 20px}.top{display:block}.top h1{font-size:23px}.actions{display:grid;grid-template-columns:1fr 1fr;margin-top:11px}.langs{grid-column:1/-1}.langs button{flex:1}.head{display:block;margin-top:18px}.toolbar{display:grid;grid-template-columns:1fr;margin-top:9px}.toolbar input,.toolbar select{width:100%;min-width:0}.metrics{grid-template-columns:1fr 1fr}.tablewrap{display:none}.mobilecards{display:grid;gap:9px}.qcard{border:1px solid var(--line);border-radius:13px;padding:12px;background:#0b1822}.qcardtop{display:flex;gap:10px;align-items:center}.qcard .thumb{width:66px;height:48px}.qcard h3{margin:0;font-size:14px}.qcard p{margin:8px 0 0;color:#dcebf5;font-size:13px}.qcardmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
  .settingsgrid{grid-template-columns:1fr}.settingcard.span2{grid-column:auto}.settingrow{grid-template-columns:1fr 95px;gap:10px}.scoregrid{grid-template-columns:repeat(2,1fr)}.usecards{grid-template-columns:1fr}.settingsbar{bottom:82px}.usagechoices,.settingsbasic,.advancedgrid{grid-template-columns:1fr}.usagechoice{min-height:118px}
- .musiclicensegrid,.musicsettings{grid-template-columns:1fr}.musictrack{grid-template-columns:auto minmax(0,1fr)}.musictrackactions{grid-column:2}.musicbar{align-items:flex-start;flex-direction:column}
+ .musiclicensegrid,.musicsettings,.musicedit{grid-template-columns:1fr}.musictrack{grid-template-columns:auto minmax(0,1fr)}.musictrackactions{grid-column:2}.musicbar{align-items:flex-start;flex-direction:column}
  .modal{padding:0}.modal.show{align-items:flex-end}.box{width:100%;max-height:93vh;overflow:auto;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.answerpeek{padding:0;align-items:flex-end!important}.answerbox{width:100%;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.audioquick{padding:0;align-items:flex-end!important}.audioquickbox{width:100%;margin:0;border-radius:20px 20px 0 0;padding:15px 12px calc(18px + env(safe-area-inset-bottom))}.copyfield{grid-template-columns:1fr}.copyfield .btn{width:100%}.gameanswers{grid-template-columns:1fr 1fr;gap:8px}.gameanswer{min-height:74px;padding:8px;font-size:13px}.gameletter{width:38px;height:38px;flex-basis:38px;font-size:16px}.gameflagchoice{width:78px;height:52px}.boxtop{position:sticky;top:-15px;z-index:4;background:#0b1822;padding:10px 0 8px}.detailgrid,.formgrid,.uploadgrid{grid-template-columns:1fr}.detail.span2{grid-column:auto}.assetrow{align-items:flex-start}
 }
 @media(max-width:410px){.metrics{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.langs{grid-column:auto}}
@@ -55,7 +57,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.23</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.24</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -121,13 +123,25 @@
     <h3 id="musicUploadTitle">⬆ Pievienot mūzikas failu</h3>
     <p id="musicUploadSub">MP3, WAV vai OGG. Komerciālās licences informāciju glabājam kopā ar failu.</p>
     <div class="musicupload">
+     <label class="musicfieldlabel" id="musicFileLabel">Audio fails</label>
      <input id="musicFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg">
-     <input id="musicName" type="text" placeholder="Celiņa nosaukums">
-     <div class="musiclicensegrid">
-      <input id="musicProvider" type="text" placeholder="Pakalpojums / avots, piem. Stable Audio">
-      <input id="musicLicenseName" type="text" placeholder="Licence / plāns">
-     </div>
-     <input id="musicProof" type="text" placeholder="Licences pierādījuma URL / piezīme">
+     <label class="musicfieldlabel"><span id="musicNameLabel">Nosaukums</span> <span class="musicoptional" id="musicNameHint">(automātiski no faila nosaukuma)</span></label>
+     <input id="musicName" type="text" placeholder="Nosaukums no faila">
+     <label class="musicfieldlabel" id="musicCommercialLabel">Komerciāla izmantošana</label>
+     <select id="musicCommercial">
+      <option value="yes">✅ Atļauta</option>
+      <option value="no">⛔ Nav atļauta</option>
+     </select>
+     <details>
+      <summary id="musicOptionalSummary">Papildu licences informācija (nav obligāti)</summary>
+      <div class="musicupload" style="margin-top:9px">
+       <div class="musiclicensegrid">
+        <input id="musicProvider" type="text" placeholder="Pakalpojums / avots (nav obligāti)">
+        <input id="musicLicenseName" type="text" placeholder="Licence / plāns (nav obligāti)">
+       </div>
+       <input id="musicProof" type="text" placeholder="Pierādījuma URL / piezīme (vari pievienot arī vēlāk)">
+      </div>
+     </details>
      <button class="btn good" id="musicUploadBtn" type="button">⬆ AUGŠUPIELĀDĒT UZ R2</button>
     </div>
     <div class="musicstatus" id="musicUploadStatus"></div>
