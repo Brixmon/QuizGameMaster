@@ -62,7 +62,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.27</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.28</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -139,7 +139,7 @@
      </select>
      <label class="musicfieldlabel" id="musicDifficultyLabel">Grūtības pakāpe <span class="musicoptional">(var mainīt vēlāk)</span></label>
      <select id="musicDifficulty">
-      <option value="">— Nav piešķirta —</option>
+      <option value="">— Piešķirt grūtības pakāpi —</option>
       <option value="newbie">🌱 Newbie</option>
       <option value="rookie">🎯 Rookie</option>
       <option value="pro">⚡ Pro</option>
@@ -589,7 +589,7 @@ function musicLibraryEntries(){
  return Array.isArray(x)?x.filter(v=>v&&v.key):[];
 }
 const MUSIC_DIFFS=[
- {id:"",icon:"•",lv:"Nav piešķirta",en:"Unassigned"},
+ {id:"",icon:"•",lv:"Piešķirt grūtības pakāpi",en:"Assign difficulty"},
  {id:"newbie",icon:"🌱",lv:"Newbie",en:"Newbie"},
  {id:"rookie",icon:"🎯",lv:"Rookie",en:"Rookie"},
  {id:"pro",icon:"⚡",lv:"Pro",en:"Pro"},
