@@ -292,7 +292,7 @@ function cloudMusicSelected(){
   let library=Array.isArray(cfg.library)?cfg.library:[];
   return cfg.tracks.filter(t=>t&&t.key&&/^https?:\/\//i.test(String(t.url||""))).map(t=>{
     let meta=library.find(m=>String(m?.key||"")===String(t.key))||{};
-    let difficulty=String(t.difficulty||meta.difficulty||"").toLowerCase();
+    let difficulty=String(meta.difficulty||t.difficulty||"").toLowerCase();
     if(!["newbie","rookie","pro","ninja","master"].includes(difficulty))difficulty="";
     return {
       id:"cloud:"+t.key,
