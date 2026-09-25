@@ -553,11 +553,30 @@ function renderMedia(){const box=document.querySelector("#mediaList");if(!state.
 function musicAssets(){return contentAssets().filter(x=>String(x.key||"").startsWith("music/"))}
 function musicCurrentConfig(){
  const x=state.gameState?.settings?.backgroundMusic;
- return x&&typeof x==="object"?x:{enabled:true,frequency:"round",volume:18,tracks:[]};
+ return x&&typeof x==="object"?x:{enabled:true,frequency:"round",volume:18,tracks:[],library:[]};
+}
+function musicPublicUrl(key){
+ return BRIDGE+"/assets/"+String(key||"").split("/").map(encodeURIComponent).join("/");
+}
+function musicLibraryEntries(){
+ const x=musicCurrentConfig().library;
+ return Array.isArray(x)?x.filter(v=>v&&v.key):[];
+}
+function musicMetaFor(a){
+ const key=String(a?.key||"");
+ const saved=musicLibraryEntries().find(x=>String(x.key)===key);
+ if(saved)return saved;
+ let commercial=null;
+ if(a?.license_status==="licensed")commercial=true;
+ if(a?.license_status==="noncommercial")commercial=false;
+ return {key,name:a?.display_name||"",commercial,provider:a?.provider||"",licenseName:a?.license_name||"",proof:a?.proof_url||""};
 }
 function musicAssetName(a){
- const raw=String(a?.display_name||a?.name||String(a?.key||"").split("/").pop()||"TRACK");
- return raw.replace(/\.[a-z0-9]{2,5}$/i,"");
+ const meta=musicMetaFor(a);
+ if(meta?.name)return String(meta.name);
+ let raw=String(a?.display_name||a?.name||String(a?.key||"").split("/").pop()||"TRACK").replace(/\.[a-z0-9]{2,5}$/i,"");
+ raw=raw.replace(/^\d{10,}-/,"").replace(/[-_]+/g," ").trim();
+ return raw||"TRACK";
 }
 function renderMusic(){
  const badge=document.querySelector("#musicCloudBadge");
@@ -565,11 +584,17 @@ function renderMusic(){
  badge.textContent=state.cloud.connected?"● CLOUD":"○ CLOUD";badge.className="pill "+(state.cloud.connected?"ok":"warn");
  const lv=lang==="lv",cfg=musicCurrentConfig(),assets=musicAssets(),saved=Array.isArray(cfg.tracks)?cfg.tracks:[],selected=new Set(saved.map(x=>typeof x==="string"?x:x?.key).filter(Boolean));
  document.querySelector("#musicTitle").textContent=lv?"♫ Fona mūzika":"♫ Background music";
- document.querySelector("#musicSub").textContent=lv?"Augšupielādē savus loop failus, izvēlies aktīvos celiņus un cik bieži spēle maina mūziku.":"Upload your loop files, choose active tracks and how often the game changes music.";
+ document.querySelector("#musicSub").textContent=lv?"Augšupielādē failus, izvēlies aktīvos celiņus un cik bieži spēle maina mūziku.":"Upload files, choose active tracks and how often the game changes music.";
  document.querySelector("#musicUploadTitle").textContent=lv?"⬆ Pievienot mūzikas failu":"⬆ Add music file";
- document.querySelector("#musicUploadSub").textContent=lv?"MP3, WAV vai OGG. Komerciālās licences informāciju glabājam kopā ar failu.":"MP3, WAV or OGG. Commercial-license information is stored with the file.";
+ document.querySelector("#musicUploadSub").textContent=lv?"Obligāts ir tikai pats audio fails. Nosaukumu paņemam no faila; pārējo vari norādīt tagad vai vēlāk.":"Only the audio file is required. The name comes from the filename; everything else can be added now or later.";
+ document.querySelector("#musicFileLabel").textContent=lv?"Audio fails":"Audio file";
+ document.querySelector("#musicNameLabel").textContent=lv?"Nosaukums":"Name";
+ document.querySelector("#musicNameHint").textContent=lv?"(automātiski no faila nosaukuma)":"(automatic from filename)";
+ document.querySelector("#musicCommercialLabel").textContent=lv?"Komerciāla izmantošana":"Commercial use";
+ document.querySelector("#musicCommercial").innerHTML='<option value="yes">'+(lv?"✅ Atļauta":"✅ Allowed")+'</option><option value="no">'+(lv?"⛔ Nav atļauta":"⛔ Not allowed")+'</option>';
+ document.querySelector("#musicOptionalSummary").textContent=lv?"Papildu licences informācija (nav obligāti)":"Extra license information (optional)";
  document.querySelector("#musicPlayTitle").textContent=lv?"🎚 Atskaņošana":"🎚 Playback";
- document.querySelector("#musicPlaySub").textContent=lv?"Atķeksē celiņus, kurus spēle drīkst izmantot. No atzīmētajiem celiņiem tiks veidota rotācija.":"Check the tracks the game may use. Checked tracks form the rotation.";
+ document.querySelector("#musicPlaySub").textContent=lv?"Atķeksē celiņus, kurus spēle drīkst izmantot. Licences datus vari papildināt arī pēc augšupielādes.":"Check the tracks the game may use. License details can also be added after upload.";
  document.querySelector("#musicFreqLabel").textContent=lv?"Mainīt celiņu":"Change track";
  document.querySelector("#musicFreqHelp").textContent=lv?"Izvēlies, kad sākt nākamo celiņu.":"Choose when the next track starts.";
  document.querySelector("#musicVolumeLabel").textContent=lv?"Fona mūzikas skaļums":"Background music volume";
@@ -581,36 +606,40 @@ function renderMusic(){
  document.querySelector("#musicEnabledText").textContent=cfg.enabled===false?(lv?"MŪZIKA IZSLĒGTA":"MUSIC OFF"):(lv?"MŪZIKA IESLĒGTA":"MUSIC ON");
  document.querySelector("#musicUploadBtn").textContent=lv?"⬆ AUGŠUPIELĀDĒT UZ R2":"⬆ UPLOAD TO R2";
  document.querySelector("#musicSaveBtn").textContent=lv?"💾 SAGLABĀT MŪZIKU":"💾 SAVE MUSIC";
- document.querySelector("#musicName").placeholder=lv?"Celiņa nosaukums":"Track name";
- document.querySelector("#musicProvider").placeholder=lv?"Pakalpojums / avots, piem. Stable Audio":"Provider / source, e.g. Stable Audio";
- document.querySelector("#musicLicenseName").placeholder=lv?"Licence / plāns":"License / plan";
- document.querySelector("#musicProof").placeholder=lv?"Licences pierādījuma URL / piezīme":"License proof URL / note";
+ document.querySelector("#musicName").placeholder=lv?"Nosaukums no faila":"Name from filename";
+ document.querySelector("#musicProvider").placeholder=lv?"Pakalpojums / avots (nav obligāti)":"Provider / source (optional)";
+ document.querySelector("#musicLicenseName").placeholder=lv?"Licence / plāns (nav obligāti)":"License / plan (optional)";
+ document.querySelector("#musicProof").placeholder=lv?"Pierādījuma URL / piezīme (vari pievienot arī vēlāk)":"Proof URL / note (can be added later)";
  const box=document.querySelector("#musicTracks");
  if(!state.cloud.connected){box.innerHTML='<div class="empty">'+(lv?"Pieslēdz Cloud admin, lai augšupielādētu un izvēlētos mūziku.":"Connect Cloud admin to upload and select music.")+'</div>';return}
- if(!assets.length){box.innerHTML='<div class="empty">'+(lv?"Vēl nav neviena fona mūzikas faila. Augšupielādē pirmo loop pa kreisi.":"No background-music files yet. Upload the first loop on the left.")+'</div>';return}
+ if(!assets.length){box.innerHTML='<div class="empty">'+(lv?"Vēl nav neviena fona mūzikas faila.":"No background-music files yet.")+'</div>';return}
  const useSaved=saved.length>0;
  box.innerHTML=assets.map(a=>{
-   const checked=useSaved?selected.has(a.key):true;
-   const kb=Math.max(1,Math.round((Number(a.size)||0)/1024));
-   const lic=a.license_status==="verified"?"FREE":a.license_status==="review"?(lv?"NESKAIDRS":"UNCLEAR"):(lv?"LICENCE OK":"LICENSED");
-   return '<div class="musictrack"><input type="checkbox" data-music-track="'+esc(a.key)+'" '+(checked?"checked":"")+'><div class="musictrackmeta"><b>'+esc(musicAssetName(a))+'</b><span class="path">'+esc(a.key)+'</span><small>'+kb+' KB · '+esc(lic)+'</small></div><div class="musictrackactions"><button class="btn" type="button" data-music-preview="'+esc(a.key)+'">▶ '+(lv?"Klausīties":"Preview")+'</button></div></div>';
+   const meta=musicMetaFor(a),checked=useSaved?selected.has(a.key):true,kb=Math.max(1,Math.round((Number(a.size)||0)/1024));
+   const commercial=meta.commercial===true,nonCommercial=meta.commercial===false;
+   const lic=commercial?(lv?"COMMERCIAL ✓":"COMMERCIAL ✓"):nonCommercial?(lv?"NAV COMMERCIAL":"NOT COMMERCIAL"):(lv?"LICENCE ?":"LICENSE ?");
+   const licClass=commercial?"ok":nonCommercial?"bad":"warn";
+   const editing=state.musicEditKey===a.key;
+   const editor=editing?'<div class="musicedit">'+
+    '<input class="span2" data-meta-name value="'+esc(meta.name||musicAssetName(a))+'" placeholder="'+(lv?"Nosaukums":"Name")+'">'+
+    '<select data-meta-commercial><option value="yes" '+(commercial?"selected":"")+'>'+(lv?"✅ Komerciāli atļauta":"✅ Commercial allowed")+'</option><option value="no" '+(nonCommercial?"selected":"")+'>'+(lv?"⛔ Nav komerciāli atļauta":"⛔ Not commercial")+'</option></select>'+
+    '<input data-meta-provider value="'+esc(meta.provider||"")+'" placeholder="'+(lv?"Avots / pakalpojums (nav obligāti)":"Provider / source (optional)")+'">'+
+    '<input data-meta-license value="'+esc(meta.licenseName||"")+'" placeholder="'+(lv?"Licence / plāns (nav obligāti)":"License / plan (optional)")+'">'+
+    '<input class="span2" data-meta-proof value="'+esc(meta.proof||"")+'" placeholder="'+(lv?"Pierādījuma URL / piezīme (nav obligāti)":"Proof URL / note (optional)")+'">'+
+    '<div class="musiceditactions"><button class="btn" type="button" data-music-meta-cancel="'+esc(a.key)+'">'+(lv?"Atcelt":"Cancel")+'</button><button class="btn good" type="button" data-music-meta-save="'+esc(a.key)+'">✓ '+(lv?"Saglabāt info":"Save info")+'</button></div></div>':"";
+   return '<div class="musictrack" data-music-row="'+esc(a.key)+'"><input type="checkbox" data-music-track="'+esc(a.key)+'" '+(checked?"checked":"")+'><div class="musictrackmeta"><b>'+esc(musicAssetName(a))+'</b><span class="path">'+esc(a.key)+'</span><small>'+kb+' KB · <span class="pill '+licClass+'">'+esc(lic)+'</span></small></div><div class="musictrackactions"><button class="btn" type="button" data-music-preview="'+esc(a.key)+'">▶ '+(lv?"Klausīties":"Preview")+'</button><button class="btn" type="button" data-music-edit="'+esc(a.key)+'">✎ '+(lv?"Licence":"License")+'</button></div>'+editor+'</div>';
  }).join("");
  box.querySelectorAll("[data-music-preview]").forEach(b=>b.onclick=()=>previewMusic(b.dataset.musicPreview,b));
+ box.querySelectorAll("[data-music-edit]").forEach(b=>b.onclick=()=>{state.musicEditKey=b.dataset.musicEdit;renderMusic()});
+ box.querySelectorAll("[data-music-meta-cancel]").forEach(b=>b.onclick=()=>{state.musicEditKey=null;renderMusic()});
+ box.querySelectorAll("[data-music-meta-save]").forEach(b=>b.onclick=()=>saveMusicMetaEdit(b));
 }
-let musicPreviewAudio=null,musicPreviewUrl="";
+let musicPreviewAudio=null;
 async function previewMusic(key,button){
  if(musicPreviewAudio){try{musicPreviewAudio.pause()}catch(e){}musicPreviewAudio=null}
- if(musicPreviewUrl){try{URL.revokeObjectURL(musicPreviewUrl)}catch(e){}musicPreviewUrl=""}
  const old=button?.textContent;if(button)button.textContent="…";
  try{
-  const a=musicAssets().find(x=>x.key===key)||{},direct=a.url||a.public_url||a.publicUrl||"";
-  let src=direct;
-  if(!src){
-   const r=await fetch(BRIDGE+"/admin/assets/"+key,{headers:auth(),cache:"no-store"});
-   if(!r.ok)throw new Error("HTTP "+r.status);
-   const blob=await r.blob();musicPreviewUrl=URL.createObjectURL(blob);src=musicPreviewUrl;
-  }
-  musicPreviewAudio=new Audio(src);musicPreviewAudio.volume=.35;await musicPreviewAudio.play();
+  musicPreviewAudio=new Audio(musicPublicUrl(key));musicPreviewAudio.volume=.35;await musicPreviewAudio.play();
   if(button)button.textContent="■ "+(lang==="lv"?"Apturēt":"Stop");
   musicPreviewAudio.onended=()=>{if(button)button.textContent=old||"▶ Preview"};
   if(button)button.onclick=()=>{try{musicPreviewAudio?.pause()}catch(e){}musicPreviewAudio=null;button.textContent=old||"▶ Preview";button.onclick=()=>previewMusic(key,button)};
@@ -622,41 +651,81 @@ async function previewMusic(key,button){
 function safeMusicSlug(v){
  return String(v||"track").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,56)||"track";
 }
+function musicFileBaseName(file){
+ return String(file?.name||"track").replace(/\.[^.]+$/,"").trim()||"track";
+}
+async function persistMusicBackground(backgroundMusic){
+ const current=state.gameState?.settings&&typeof state.gameState.settings==="object"?state.gameState.settings:{};
+ const next={...current,backgroundMusic};
+ const players=state.gameState?.players&&typeof state.gameState.players==="object"?state.gameState.players:Object.fromEntries(state.players.map(p=>[p.key,p]));
+ const r=await fetch(BRIDGE+"/game/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings:next,players})});
+ if(!r.ok)throw new Error("HTTP "+r.status);
+ state.gameState={...(state.gameState||{}),ok:true,settings:next,players};
+ return backgroundMusic;
+}
+async function saveMusicLibraryEntry(key,values){
+ const cfg=musicCurrentConfig(),library=musicLibraryEntries().filter(x=>String(x.key)!==String(key));
+ library.push({key:String(key),name:String(values.name||"").trim(),commercial:values.commercial!==false,provider:String(values.provider||"").trim(),licenseName:String(values.licenseName||"").trim(),proof:String(values.proof||"").trim()});
+ const next={...cfg,library};
+ await persistMusicBackground(next);
+ return next;
+}
+async function saveMusicMetaEdit(button){
+ const row=button.closest("[data-music-row]"),key=row?.dataset.musicRow,st=document.querySelector("#musicSaveStatus");
+ if(!row||!key)return;
+ const values={
+  name:row.querySelector("[data-meta-name]")?.value||"",
+  commercial:row.querySelector("[data-meta-commercial]")?.value!=="no",
+  provider:row.querySelector("[data-meta-provider]")?.value||"",
+  licenseName:row.querySelector("[data-meta-license]")?.value||"",
+  proof:row.querySelector("[data-meta-proof]")?.value||""
+ };
+ button.disabled=true;st.textContent=lang==="lv"?"Saglabā licences info…":"Saving license info…";st.className="musicstatus";
+ try{
+  await saveMusicLibraryEntry(key,values);
+  state.musicEditKey=null;
+  st.textContent="✓ "+(lang==="lv"?"Licences informācija saglabāta.":"License information saved.");st.className="musicstatus ok";
+  renderMusic();
+ }catch(e){st.textContent="✗ "+e.message;st.className="musicstatus bad"}
+ finally{button.disabled=false}
+}
 async function uploadMusic(){
  if(!state.cloud.connected){await connectCloud();if(!state.cloud.connected)return}
  const file=document.querySelector("#musicFile")?.files?.[0],st=document.querySelector("#musicUploadStatus");
- if(!file){st.textContent=lang==="lv"?"Vispirms izvēlies MP3, WAV vai OGG failu.":"Choose an MP3, WAV or OGG file first.";st.className="musicstatus bad";return}
+ if(!file){st.textContent=lang==="lv"?"Izvēlies MP3, WAV vai OGG failu.":"Choose an MP3, WAV or OGG file.";st.className="musicstatus bad";return}
  if(!String(file.type||"").startsWith("audio/")&&!/\.(mp3|wav|ogg)$/i.test(file.name||"")){st.textContent=lang==="lv"?"Tas neizskatās pēc audio faila.":"That does not look like an audio file.";st.className="musicstatus bad";return}
- const title=document.querySelector("#musicName").value.trim()||String(file.name||"track").replace(/\.[^.]+$/,"");
+ const title=document.querySelector("#musicName").value.trim()||musicFileBaseName(file);
+ const commercial=document.querySelector("#musicCommercial").value!=="no";
+ const provider=document.querySelector("#musicProvider").value.trim(),license=document.querySelector("#musicLicenseName").value.trim(),proof=document.querySelector("#musicProof").value.trim();
  const key="music/"+Date.now()+"-"+safeMusicSlug(title)+"."+ext(file);
  st.textContent=(lang==="lv"?"Augšupielādē ":"Uploading ")+file.name+"…";st.className="musicstatus";
+ let o={};
  try{
-  const provider=document.querySelector("#musicProvider").value.trim(),license=document.querySelector("#musicLicenseName").value.trim(),proof=document.querySelector("#musicProof").value.trim();
-  const h={...auth(),"Content-Type":file.type||"application/octet-stream","X-QGM-QID":"","X-QGM-Kind":"background_music","X-QGM-License-Status":"licensed","X-QGM-License-Provider":provider,"X-QGM-License-Name":license,"X-QGM-License-Source":provider,"X-QGM-Proof-URL":proof,"X-QGM-Display-Name":title};
-  const r=await fetch(BRIDGE+"/admin/assets/"+key,{method:"PUT",headers:h,body:file}),o=await r.json().catch(()=>({}));
+  const h={...auth(),"Content-Type":file.type||"application/octet-stream","X-QGM-QID":"","X-QGM-Kind":"background_music","X-QGM-License-Status":commercial?"licensed":"noncommercial","X-QGM-License-Provider":provider,"X-QGM-License-Name":license,"X-QGM-License-Source":provider,"X-QGM-Proof-URL":proof};
+  const r=await fetch(BRIDGE+"/admin/assets/"+key,{method:"PUT",headers:h,body:file});o=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(o.error||("HTTP "+r.status));
-  const obj={key,size:file.size,uploaded:new Date().toISOString(),license_status:"licensed",display_name:title,provider,license_name:license,proof_url:proof,url:o.url||o.public_url||o.publicUrl||""};
-  state.cloud.assets=(state.cloud.assets||[]).filter(x=>x.key!==key);state.cloud.assets.push(obj);
-  st.textContent="✓ "+(lang==="lv"?"Mūzika augšupielādēta uz R2.":"Music uploaded to R2.");st.className="musicstatus ok";
-  document.querySelector("#musicFile").value="";document.querySelector("#musicName").value="";
-  renderMusic();renderMedia();renderOverview();
- }catch(e){st.textContent="✗ "+e.message;st.className="musicstatus bad"}
+ }catch(e){
+  st.textContent="✗ "+(lang==="lv"?"Augšupielāde neizdevās: ":"Upload failed: ")+e.message;st.className="musicstatus bad";return;
+ }
+ const obj={key,size:file.size,uploaded:new Date().toISOString(),license_status:commercial?"licensed":"noncommercial",display_name:title,provider,license_name:license,proof_url:proof,url:o.url||musicPublicUrl(key)};
+ state.cloud.assets=(state.cloud.assets||[]).filter(x=>x.key!==key);state.cloud.assets.push(obj);
+ let metaSaved=true;
+ try{await saveMusicLibraryEntry(key,{name:title,commercial,provider,licenseName:license,proof})}catch(e){metaSaved=false}
+ st.textContent="✓ "+(lang==="lv"?"Mūzika augšupielādēta.":"Music uploaded.")+(metaSaved?"":(lang==="lv"?" Licences info Cloud nesaglabājās — vari pievienot vēlāk.":" License info was not saved to Cloud — you can add it later."));
+ st.className="musicstatus "+(metaSaved?"ok":"warn");
+ document.querySelector("#musicFile").value="";document.querySelector("#musicName").value="";document.querySelector("#musicCommercial").value="yes";document.querySelector("#musicProvider").value="";document.querySelector("#musicLicenseName").value="";document.querySelector("#musicProof").value="";
+ renderMusic();renderMedia();renderOverview();
 }
 async function saveMusicSettings(){
  const st=document.querySelector("#musicSaveStatus"),button=document.querySelector("#musicSaveBtn");
  const keys=[...document.querySelectorAll("[data-music-track]:checked")].map(x=>x.dataset.musicTrack);
  if(document.querySelector("#musicEnabled").checked&&!keys.length){st.textContent=lang==="lv"?"Atķeksē vismaz vienu celiņu vai izslēdz mūziku.":"Select at least one track or turn music off.";st.className="musicstatus bad";return}
- const assets=musicAssets();
- const tracks=keys.map(key=>{const a=assets.find(x=>x.key===key)||{};return{key,name:musicAssetName(a),url:a.url||a.public_url||a.publicUrl||""}});
- const current=state.gameState?.settings&&typeof state.gameState.settings==="object"?state.gameState.settings:{};
- const backgroundMusic={enabled:document.querySelector("#musicEnabled").checked,frequency:document.querySelector("#musicFrequency").value==="question"?"question":"round",volume:Math.max(0,Math.min(100,Number(document.querySelector("#musicVolume").value)||0)),tracks};
- const next={...current,backgroundMusic};
- const players=state.gameState?.players&&typeof state.gameState.players==="object"?state.gameState.players:Object.fromEntries(state.players.map(p=>[p.key,p]));
+ const assets=musicAssets(),cfg=musicCurrentConfig();
+ const tracks=keys.map(key=>{const a=assets.find(x=>x.key===key)||{};return{key,name:musicAssetName(a),url:musicPublicUrl(key)}});
+ const backgroundMusic={...cfg,enabled:document.querySelector("#musicEnabled").checked,frequency:document.querySelector("#musicFrequency").value==="question"?"question":"round",volume:Math.max(0,Math.min(100,Number(document.querySelector("#musicVolume").value)||0)),tracks,library:musicLibraryEntries()};
  if(button)button.disabled=true;st.textContent=lang==="lv"?"Saglabā Cloud…":"Saving to Cloud…";st.className="musicstatus";
  try{
-  const r=await fetch(BRIDGE+"/game/state",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings:next,players})});
-  if(!r.ok)throw new Error("HTTP "+r.status);
-  state.gameState={...(state.gameState||{}),ok:true,settings:next,players};
+  await persistMusicBackground(backgroundMusic);
   st.textContent="✓ "+(lang==="lv"?"Mūzikas iestatījumi saglabāti.":"Music settings saved.");st.className="musicstatus ok";renderMusic();
  }catch(e){st.textContent=(lang==="lv"?"Neizdevās saglabāt: ":"Could not save: ")+e.message;st.className="musicstatus bad"}
  finally{if(button)button.disabled=false}
