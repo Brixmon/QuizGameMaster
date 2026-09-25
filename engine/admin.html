@@ -64,7 +64,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.30</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.31</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -801,17 +801,35 @@ function renderMusic(){
  });
  applyMusicTableView();
 }
-let musicPreviewAudio=null;
+let musicPreviewAudio=null,musicPreviewKey="",musicPreviewSeq=0;
+function resetMusicPreviewButtons(){
+ document.querySelectorAll("[data-music-preview]").forEach(b=>{b.textContent="▶";b.classList.remove("good")});
+}
+function stopMusicPreview(){
+ musicPreviewSeq++;
+ if(musicPreviewAudio){
+   try{musicPreviewAudio.pause();musicPreviewAudio.currentTime=0}catch(e){}
+   try{musicPreviewAudio.src=""}catch(e){}
+ }
+ musicPreviewAudio=null;musicPreviewKey="";
+ resetMusicPreviewButtons();
+}
 async function previewMusic(key,button){
- if(musicPreviewAudio){try{musicPreviewAudio.pause()}catch(e){}musicPreviewAudio=null}
- const old=button?.textContent;if(button)button.textContent="…";
+ if(musicPreviewAudio&&musicPreviewKey===key&&!musicPreviewAudio.paused){stopMusicPreview();return}
+ stopMusicPreview();
+ const seq=musicPreviewSeq,keyNow=String(key||"");
+ if(button)button.textContent="…";
+ const audio=new Audio(musicPublicUrl(keyNow));
+ audio.volume=.35;
+ musicPreviewAudio=audio;musicPreviewKey=keyNow;
  try{
-  musicPreviewAudio=new Audio(musicPublicUrl(key));musicPreviewAudio.volume=.35;await musicPreviewAudio.play();
-  if(button)button.textContent="■ "+(lang==="lv"?"Apturēt":"Stop");
-  musicPreviewAudio.onended=()=>{if(button)button.textContent=old||"▶ Preview"};
-  if(button)button.onclick=()=>{try{musicPreviewAudio?.pause()}catch(e){}musicPreviewAudio=null;button.textContent=old||"▶ Preview";button.onclick=()=>previewMusic(key,button)};
+  await audio.play();
+  if(seq!==musicPreviewSeq||musicPreviewAudio!==audio){try{audio.pause()}catch(e){}return}
+  resetMusicPreviewButtons();
+  if(button){button.textContent="■";button.classList.add("good")}
+  audio.onended=()=>{if(musicPreviewAudio===audio)stopMusicPreview()};
  }catch(e){
-  if(button){button.textContent=old||"▶ Preview";button.onclick=()=>previewMusic(key,button)}
+  if(musicPreviewAudio===audio)stopMusicPreview();
   const st=document.querySelector("#musicSaveStatus");st.textContent=(lang==="lv"?"Priekšskatījumu nevar atvērt: ":"Preview unavailable: ")+e.message;st.className="musicstatus bad";
  }
 }
