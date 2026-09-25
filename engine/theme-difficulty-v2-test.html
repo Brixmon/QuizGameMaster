@@ -215,7 +215,7 @@ body.embed .stage{top:2.5%;bottom:31.5%;left:5%;right:5%}
         </div>
         <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">0</b></div>
         <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
-        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.48</div>
+        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.49</div>
       </div>
     </section>
   </div>
@@ -230,7 +230,7 @@ body.embed .stage{top:2.5%;bottom:31.5%;left:5%;right:5%}
     <button onclick="replay()">↻ REPLAY</button>
   </div>
 </div>
-<script src="debug-overlay.js?v=1.0.48"></script>\n<script>
+<script src="debug-overlay.js?v=1.0.49"></script>\n<script>
 const $=id=>document.getElementById(id);
 const THEMES={
   flags:{label:"FLAGS",icon:"🌍",desc:"IDENTIFY THE COUNTRY",tag:"WORLD FLAGS"},
@@ -488,10 +488,26 @@ function runDifficulty(){
     if(t<1)requestAnimationFrame(spin);
     else{
       renderDifficultyWheel(0,target,true);
+      notifyDifficultyLocked(target);
       later(()=>finishDifficulty(target),240);
     }
   }
   requestAnimationFrame(spin);
+}
+function notifyDifficultyLocked(target){
+  const l=LEVELS[target];if(!l)return;
+  if(embedded){
+    let direct=false;
+    try{
+      if(typeof parent.qgmDifficultyLocked==="function"){
+        parent.qgmDifficultyLocked(l.id);
+        direct=true;
+      }
+    }catch(e){}
+    try{parent.postMessage({type:"qgm-v2-difficulty-locked",level:l.id,direct},"*")}catch(e){}
+  }else if(testMusicConfig?.mode==="difficulty"){
+    playTestMusic(l.id);
+  }
 }
 function finishDifficulty(target){
   let rows=[...document.querySelectorAll(".level")],l=LEVELS[target];
@@ -500,11 +516,6 @@ function finishDifficulty(target){
   $("resultname").textContent=l.emoji+" "+l.name+" LOCKED";
   $("resultreward").textContent="CORRECT ANSWER · +"+l.reward+" ★";
   $("resultcard").classList.add("show");
-  if(embedded){
-    try{parent.postMessage({type:"qgm-v2-difficulty-locked",level:l.id},"*")}catch(e){}
-  }else if(testMusicConfig?.mode==="difficulty"){
-    playTestMusic(l.id);
-  }
   finalTone(l.reward);
   later(()=>$("readyflash").classList.add("show"),650);
   later(()=>showSummary(target),1750);
