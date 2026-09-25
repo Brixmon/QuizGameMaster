@@ -142,9 +142,9 @@ body{display:grid;place-items:center}
 .controls button.active{border-color:#ffd45e88;color:#ffe58a;background:#ffd45e12}
 .back{position:absolute;z-index:50;top:1.1vh;left:1.1vh;text-decoration:none}
 .note{position:absolute;bottom:4.6vh;left:0;right:0;text-align:center;color:#ffffff33;font-size:.55vh;font-weight:900;letter-spacing:.1em}
-body.embed .back,body.embed .controls,body.embed .note,body.embed .brand,body.embed .version{display:none!important}
+body.embed .back,body.embed .controls,body.embed .note,body.embed .brand,body.embed .version,body.embed .safe{display:none!important}
 body.embed #app{max-width:none;width:100vw}
-body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
+body.embed .stage{top:2.5%;bottom:31.5%;left:5%;right:5%}
 </style>
 </head>
 <body>
@@ -215,7 +215,7 @@ body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
         </div>
         <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">0</b></div>
         <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
-        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.37</div>
+        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.39</div>
       </div>
     </section>
   </div>
@@ -230,7 +230,7 @@ body.embed .stage{top:2.5%;bottom:29%;left:5%;right:5%}
     <button onclick="replay()">↻ REPLAY</button>
   </div>
 </div>
-<script src="debug-overlay.js?v=1.0.37"></script>\n<script>
+<script src="debug-overlay.js?v=1.0.39"></script>\n<script>
 const $=id=>document.getElementById(id);
 const THEMES={
   flags:{label:"FLAGS",icon:"🌍",desc:"IDENTIFY THE COUNTRY",tag:"WORLD FLAGS"},
