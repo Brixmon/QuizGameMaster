@@ -64,7 +64,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.31</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.32</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -727,7 +727,7 @@ function renderMusic(){
  const diffMode=cfg.mode==="difficulty";
  document.querySelector("#musicFrequencyCard").classList.toggle("disabled",diffMode);
  document.querySelector("#musicFrequency").disabled=diffMode;
- document.querySelector("#musicModeHint").textContent=diffMode?(lv?"Jautājumam sākoties, tiek izvēlēts aktīvs celiņš ar tādu pašu grūtības pakāpi.":"When a question starts, an active track with the same difficulty is selected."):(lv?"Celiņš tiek izvēlēts random no visiem atķeksētajiem.":"A track is chosen randomly from all checked tracks.");
+ document.querySelector("#musicModeHint").textContent=diffMode?(lv?"Kad grūtības rats nofiksē pakāpi, uzreiz ieslēdzas tai piešķirtais aktīvais celiņš.":"When the difficulty wheel locks a level, its assigned active track starts immediately."):(lv?"Celiņš tiek izvēlēts random no visiem atķeksētajiem.":"A track is chosen randomly from all checked tracks.");
  document.querySelector("#musicVolume").value=Math.max(0,Math.min(100,Number(cfg.volume??18)));
  document.querySelector("#musicVolumeValue").textContent=document.querySelector("#musicVolume").value;
  document.querySelector("#musicEnabled").checked=cfg.enabled!==false;
@@ -784,14 +784,14 @@ function renderMusic(){
  tbody.querySelectorAll("[data-music-meta-cancel]").forEach(b=>b.onclick=()=>{state.musicEditKey=null;renderMusic()});
  tbody.querySelectorAll("[data-music-meta-save]").forEach(b=>b.onclick=()=>saveMusicMetaEdit(b));
  tbody.querySelectorAll("[data-music-use-difficulty]").forEach(c=>c.onchange=()=>{
-   const row=c.closest("[data-music-row]");updateMusicRowDataset(row);applyMusicTableView();
+   const row=c.closest("[data-music-row]");updateMusicRowDataset(row);applyMusicTableView();queueMusicAutoSave();
  });
  tbody.querySelectorAll("[data-music-row-difficulty]").forEach(sel=>sel.onchange=()=>{
    const row=sel.closest("[data-music-row]"),box=row?.querySelector("[data-music-use-difficulty]");
    if(box)box.checked=Boolean(sel.value);
-   updateMusicRowDataset(row);applyMusicTableView();
+   updateMusicRowDataset(row);applyMusicTableView();queueMusicAutoSave();
  });
- tbody.querySelectorAll("[data-music-use-random],[data-music-track]").forEach(c=>c.onchange=()=>{updateMusicRowDataset(c.closest("[data-music-row]"));applyMusicTableView()});
+ tbody.querySelectorAll("[data-music-use-random],[data-music-track]").forEach(c=>c.onchange=()=>{updateMusicRowDataset(c.closest("[data-music-row]"));applyMusicTableView();queueMusicAutoSave()});
  [searchEl,diffEl,routeEl,licEl].forEach(el=>{el.oninput=applyMusicTableView;el.onchange=applyMusicTableView});
  document.querySelectorAll(".musictable th[data-musicsort]").forEach(th=>th.onclick=()=>{
    const key=th.dataset.musicsort;
@@ -904,6 +904,11 @@ async function uploadMusic(){
  st.className="musicstatus "+(metaSaved?"ok":"warn");
  document.querySelector("#musicFile").value="";document.querySelector("#musicName").value="";document.querySelector("#musicCommercial").value="yes";document.querySelector("#musicDifficulty").value="";document.querySelector("#musicProvider").value="";document.querySelector("#musicLicenseName").value="";document.querySelector("#musicProof").value="";
  renderMusic();renderMedia();renderOverview();
+}
+let musicAutoSaveTimer=null;
+function queueMusicAutoSave(delay=550){
+ clearTimeout(musicAutoSaveTimer);
+ musicAutoSaveTimer=setTimeout(()=>saveMusicSettings(),Math.max(200,Number(delay)||550));
 }
 async function saveMusicSettings(){
  const st=document.querySelector("#musicSaveStatus"),button=document.querySelector("#musicSaveBtn");
@@ -1167,9 +1172,11 @@ document.querySelector("#saveSettingsBtn").onclick=saveSettings;
 document.querySelector("#musicUploadBtn").onclick=uploadMusic;
 document.querySelector("#musicFile").onchange=e=>{const f=e.target.files?.[0];if(f)document.querySelector("#musicName").value=musicFileBaseName(f)};
 document.querySelector("#musicSaveBtn").onclick=saveMusicSettings;
-document.querySelector("#musicMode").onchange=()=>{const diff=document.querySelector("#musicMode").value==="difficulty";document.querySelector("#musicFrequencyCard").classList.toggle("disabled",diff);document.querySelector("#musicFrequency").disabled=diff;document.querySelector("#musicModeHint").textContent=diff?(lang==="lv"?"Jautājumam sākoties, tiek izvēlēts aktīvs celiņš ar tādu pašu grūtības pakāpi.":"When a question starts, an active track with the same difficulty is selected."):(lang==="lv"?"Celiņš tiek izvēlēts random no visiem atķeksētajiem.":"A track is chosen randomly from all checked tracks.")};
+document.querySelector("#musicMode").onchange=()=>{const diff=document.querySelector("#musicMode").value==="difficulty";document.querySelector("#musicFrequencyCard").classList.toggle("disabled",diff);document.querySelector("#musicFrequency").disabled=diff;document.querySelector("#musicModeHint").textContent=diff?(lang==="lv"?"Kad grūtības rats nofiksē pakāpi, uzreiz ieslēdzas tai piešķirtais aktīvais celiņš.":"When the difficulty wheel locks a level, its assigned active track starts immediately."):(lang==="lv"?"Celiņš tiek izvēlēts random no visiem atķeksētajiem.":"A track is chosen randomly from all checked tracks.");queueMusicAutoSave()};
 document.querySelector("#musicVolume").oninput=e=>document.querySelector("#musicVolumeValue").textContent=e.target.value;
-document.querySelector("#musicEnabled").onchange=e=>document.querySelector("#musicEnabledText").textContent=e.target.checked?(lang==="lv"?"MŪZIKA IESLĒGTA":"MUSIC ON"):(lang==="lv"?"MŪZIKA IZSLĒGTA":"MUSIC OFF");
+document.querySelector("#musicVolume").onchange=()=>queueMusicAutoSave();
+document.querySelector("#musicFrequency").onchange=()=>queueMusicAutoSave();
+document.querySelector("#musicEnabled").onchange=e=>{document.querySelector("#musicEnabledText").textContent=e.target.checked?(lang==="lv"?"MŪZIKA IESLĒGTA":"MUSIC ON"):(lang==="lv"?"MŪZIKA IZSLĒGTA":"MUSIC OFF");queueMusicAutoSave()};
 document.querySelectorAll("[data-usage-mode]").forEach(x=>x.onclick=()=>selectUsageMode(x.dataset.usageMode));
 document.querySelector("#settings").addEventListener("input",e=>{if(e.target.matches("input,select")){if(e.target.id==="setFactEnabled")syncFactSettingUi();markSettingsDirty()}});
 document.querySelector("#settings").addEventListener("change",e=>{if(e.target.matches("input,select")){if(e.target.id==="setFactEnabled")syncFactSettingUi();markSettingsDirty()}});
