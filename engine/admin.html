@@ -64,7 +64,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.29</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.30</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -771,7 +771,7 @@ function renderMusic(){
    return '<tr data-music-row="'+esc(a.key)+'" data-name="'+esc(name.toLowerCase())+'" data-search="'+esc(search)+'" data-diff="'+esc(meta.difficulty||"")+'" data-route="'+routeCode+'" data-license="'+licenseCode+'" data-active="'+(checked?"1":"0")+'" data-random="'+(useRandom?"1":"0")+'" data-size="'+(Number(a.size)||0)+'">'+
     '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-track="'+esc(a.key)+'" '+(checked?"checked":"")+'></div></td>'+
     '<td class="music-name-cell"><b>'+esc(name)+'</b><span class="path">'+esc(a.key)+'</span>'+editor+'</td>'+
-    '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-use-difficulty '+(useDifficulty?"checked":"")+' title="'+(lv?"Izmantot pēc grūtības":"Use by difficulty")+'"><select class="music-inline-select" data-music-row-difficulty '+(useDifficulty?"":"disabled")+'>'+musicDiffOptions(meta.difficulty||"")+'</select></div></td>'+
+    '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-use-difficulty '+(useDifficulty?"checked":"")+' title="'+(lv?"Izmantot pēc grūtības":"Use by difficulty")+'"><select class="music-inline-select" data-music-row-difficulty>'+musicDiffOptions(meta.difficulty||"")+'</select></div></td>'+
     '<td><div class="musiccellflex"><input class="musiccheck" type="checkbox" data-music-use-random '+(useRandom?"checked":"")+'><span>🔀</span></div></td>'+
     '<td><span class="pill '+licClass+'">'+esc(lic)+'</span></td>'+
     '<td>'+kb+' KB</td>'+
@@ -784,10 +784,14 @@ function renderMusic(){
  tbody.querySelectorAll("[data-music-meta-cancel]").forEach(b=>b.onclick=()=>{state.musicEditKey=null;renderMusic()});
  tbody.querySelectorAll("[data-music-meta-save]").forEach(b=>b.onclick=()=>saveMusicMetaEdit(b));
  tbody.querySelectorAll("[data-music-use-difficulty]").forEach(c=>c.onchange=()=>{
-   const row=c.closest("[data-music-row]"),sel=row?.querySelector("[data-music-row-difficulty]");
-   if(sel)sel.disabled=!c.checked;updateMusicRowDataset(row);applyMusicTableView();
+   const row=c.closest("[data-music-row]");updateMusicRowDataset(row);applyMusicTableView();
  });
- tbody.querySelectorAll("[data-music-use-random],[data-music-track],[data-music-row-difficulty]").forEach(c=>c.onchange=()=>{updateMusicRowDataset(c.closest("[data-music-row]"));applyMusicTableView()});
+ tbody.querySelectorAll("[data-music-row-difficulty]").forEach(sel=>sel.onchange=()=>{
+   const row=sel.closest("[data-music-row]"),box=row?.querySelector("[data-music-use-difficulty]");
+   if(box)box.checked=Boolean(sel.value);
+   updateMusicRowDataset(row);applyMusicTableView();
+ });
+ tbody.querySelectorAll("[data-music-use-random],[data-music-track]").forEach(c=>c.onchange=()=>{updateMusicRowDataset(c.closest("[data-music-row]"));applyMusicTableView()});
  [searchEl,diffEl,routeEl,licEl].forEach(el=>{el.oninput=applyMusicTableView;el.onchange=applyMusicTableView});
  document.querySelectorAll(".musictable th[data-musicsort]").forEach(th=>th.onclick=()=>{
    const key=th.dataset.musicsort;
