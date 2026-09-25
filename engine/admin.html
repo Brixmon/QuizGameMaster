@@ -960,6 +960,7 @@ document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.quer
 document.querySelector("#cloudBtn").onclick=connectCloud;
 document.querySelector("#saveSettingsBtn").onclick=saveSettings;
 document.querySelector("#musicUploadBtn").onclick=uploadMusic;
+document.querySelector("#musicFile").onchange=e=>{const f=e.target.files?.[0];if(f)document.querySelector("#musicName").value=musicFileBaseName(f)};
 document.querySelector("#musicSaveBtn").onclick=saveMusicSettings;
 document.querySelector("#musicVolume").oninput=e=>document.querySelector("#musicVolumeValue").textContent=e.target.value;
 document.querySelector("#musicEnabled").onchange=e=>document.querySelector("#musicEnabledText").textContent=e.target.checked?(lang==="lv"?"MŪZIKA IESLĒGTA":"MUSIC ON"):(lang==="lv"?"MŪZIKA IZSLĒGTA":"MUSIC OFF");
