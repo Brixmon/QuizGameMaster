@@ -716,7 +716,7 @@ async function persistMusicBackground(backgroundMusic){
 }
 async function saveMusicLibraryEntry(key,values){
  const cfg=musicCurrentConfig(),library=musicLibraryEntries().filter(x=>String(x.key)!==String(key));
- library.push({key:String(key),name:String(values.name||"").trim(),commercial:values.commercial!==false,provider:String(values.provider||"").trim(),licenseName:String(values.licenseName||"").trim(),proof:String(values.proof||"").trim()});
+ library.push({key:String(key),name:String(values.name||"").trim(),commercial:values.commercial!==false,difficulty:["newbie","rookie","pro","ninja","master"].includes(String(values.difficulty||"").toLowerCase())?String(values.difficulty).toLowerCase():"",provider:String(values.provider||"").trim(),licenseName:String(values.licenseName||"").trim(),proof:String(values.proof||"").trim()});
  const next={...cfg,library};
  await persistMusicBackground(next);
  return next;
@@ -727,15 +727,16 @@ async function saveMusicMetaEdit(button){
  const values={
   name:row.querySelector("[data-meta-name]")?.value||"",
   commercial:row.querySelector("[data-meta-commercial]")?.value!=="no",
+  difficulty:row.querySelector("[data-meta-difficulty]")?.value||"",
   provider:row.querySelector("[data-meta-provider]")?.value||"",
   licenseName:row.querySelector("[data-meta-license]")?.value||"",
   proof:row.querySelector("[data-meta-proof]")?.value||""
  };
- button.disabled=true;st.textContent=lang==="lv"?"Saglabā licences info…":"Saving license info…";st.className="musicstatus";
+ button.disabled=true;st.textContent=lang==="lv"?"Saglabā celiņa iestatījumus…":"Saving track settings…";st.className="musicstatus";
  try{
   await saveMusicLibraryEntry(key,values);
   state.musicEditKey=null;
-  st.textContent="✓ "+(lang==="lv"?"Licences informācija saglabāta.":"License information saved.");st.className="musicstatus ok";
+  st.textContent="✓ "+(lang==="lv"?"Celiņa iestatījumi saglabāti.":"Track settings saved.");st.className="musicstatus ok";
   renderMusic();
  }catch(e){st.textContent="✗ "+e.message;st.className="musicstatus bad"}
  finally{button.disabled=false}
@@ -747,6 +748,7 @@ async function uploadMusic(){
  if(!String(file.type||"").startsWith("audio/")&&!/\.(mp3|wav|ogg)$/i.test(file.name||"")){st.textContent=lang==="lv"?"Tas neizskatās pēc audio faila.":"That does not look like an audio file.";st.className="musicstatus bad";return}
  const title=document.querySelector("#musicName").value.trim()||musicFileBaseName(file);
  const commercial=document.querySelector("#musicCommercial").value!=="no";
+ const difficulty=document.querySelector("#musicDifficulty").value||"";
  const provider=document.querySelector("#musicProvider").value.trim(),license=document.querySelector("#musicLicenseName").value.trim(),proof=document.querySelector("#musicProof").value.trim();
  const key="music/"+Date.now()+"-"+safeMusicSlug(title)+"."+ext(file);
  st.textContent=(lang==="lv"?"Augšupielādē ":"Uploading ")+file.name+"…";st.className="musicstatus";
@@ -761,10 +763,10 @@ async function uploadMusic(){
  const obj={key,size:file.size,uploaded:new Date().toISOString(),license_status:commercial?"licensed":"noncommercial",display_name:title,provider,license_name:license,proof_url:proof,url:o.url||musicPublicUrl(key)};
  state.cloud.assets=(state.cloud.assets||[]).filter(x=>x.key!==key);state.cloud.assets.push(obj);
  let metaSaved=true;
- try{await saveMusicLibraryEntry(key,{name:title,commercial,provider,licenseName:license,proof})}catch(e){metaSaved=false}
+ try{await saveMusicLibraryEntry(key,{name:title,commercial,difficulty,provider,licenseName:license,proof})}catch(e){metaSaved=false}
  st.textContent="✓ "+(lang==="lv"?"Mūzika augšupielādēta.":"Music uploaded.")+(metaSaved?"":(lang==="lv"?" Licences info Cloud nesaglabājās — vari pievienot vēlāk.":" License info was not saved to Cloud — you can add it later."));
  st.className="musicstatus "+(metaSaved?"ok":"warn");
- document.querySelector("#musicFile").value="";document.querySelector("#musicName").value="";document.querySelector("#musicCommercial").value="yes";document.querySelector("#musicProvider").value="";document.querySelector("#musicLicenseName").value="";document.querySelector("#musicProof").value="";
+ document.querySelector("#musicFile").value="";document.querySelector("#musicName").value="";document.querySelector("#musicCommercial").value="yes";document.querySelector("#musicDifficulty").value="";document.querySelector("#musicProvider").value="";document.querySelector("#musicLicenseName").value="";document.querySelector("#musicProof").value="";
  renderMusic();renderMedia();renderOverview();
 }
 async function saveMusicSettings(){
@@ -772,8 +774,8 @@ async function saveMusicSettings(){
  const keys=[...document.querySelectorAll("[data-music-track]:checked")].map(x=>x.dataset.musicTrack);
  if(document.querySelector("#musicEnabled").checked&&!keys.length){st.textContent=lang==="lv"?"Atķeksē vismaz vienu celiņu vai izslēdz mūziku.":"Select at least one track or turn music off.";st.className="musicstatus bad";return}
  const assets=musicAssets(),cfg=musicCurrentConfig();
- const tracks=keys.map(key=>{const a=assets.find(x=>x.key===key)||{};return{key,name:musicAssetName(a),url:musicPublicUrl(key)}});
- const backgroundMusic={...cfg,enabled:document.querySelector("#musicEnabled").checked,frequency:document.querySelector("#musicFrequency").value==="question"?"question":"round",volume:Math.max(0,Math.min(100,Number(document.querySelector("#musicVolume").value)||0)),tracks,library:musicLibraryEntries()};
+ const tracks=keys.map(key=>{const a=assets.find(x=>x.key===key)||{},m=musicMetaFor(a);return{key,name:musicAssetName(a),url:musicPublicUrl(key),difficulty:m.difficulty||""}});
+ const backgroundMusic={...cfg,enabled:document.querySelector("#musicEnabled").checked,mode:document.querySelector("#musicMode").value==="difficulty"?"difficulty":"random",frequency:document.querySelector("#musicFrequency").value==="question"?"question":"round",volume:Math.max(0,Math.min(100,Number(document.querySelector("#musicVolume").value)||0)),tracks,library:musicLibraryEntries()};
  if(button)button.disabled=true;st.textContent=lang==="lv"?"Saglabā Cloud…":"Saving to Cloud…";st.className="musicstatus";
  try{
   await persistMusicBackground(backgroundMusic);
@@ -1013,6 +1015,7 @@ document.querySelector("#saveSettingsBtn").onclick=saveSettings;
 document.querySelector("#musicUploadBtn").onclick=uploadMusic;
 document.querySelector("#musicFile").onchange=e=>{const f=e.target.files?.[0];if(f)document.querySelector("#musicName").value=musicFileBaseName(f)};
 document.querySelector("#musicSaveBtn").onclick=saveMusicSettings;
+document.querySelector("#musicMode").onchange=()=>{const diff=document.querySelector("#musicMode").value==="difficulty";document.querySelector("#musicFrequencyCard").classList.toggle("disabled",diff);document.querySelector("#musicFrequency").disabled=diff;document.querySelector("#musicModeHint").textContent=diff?(lang==="lv"?"Jautājumam sākoties, tiek izvēlēts aktīvs celiņš ar tādu pašu grūtības pakāpi.":"When a question starts, an active track with the same difficulty is selected."):(lang==="lv"?"Celiņš tiek izvēlēts random no visiem atķeksētajiem.":"A track is chosen randomly from all checked tracks.")};
 document.querySelector("#musicVolume").oninput=e=>document.querySelector("#musicVolumeValue").textContent=e.target.value;
 document.querySelector("#musicEnabled").onchange=e=>document.querySelector("#musicEnabledText").textContent=e.target.checked?(lang==="lv"?"MŪZIKA IESLĒGTA":"MUSIC ON"):(lang==="lv"?"MŪZIKA IZSLĒGTA":"MUSIC OFF");
 document.querySelectorAll("[data-usage-mode]").forEach(x=>x.onclick=()=>selectUsageMode(x.dataset.usageMode));
