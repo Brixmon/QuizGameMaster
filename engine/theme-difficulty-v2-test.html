@@ -215,7 +215,7 @@ body.embed .stage{top:2.5%;bottom:31.5%;left:5%;right:5%}
         </div>
         <div id="summaryonline" class="summaryonline"><span class="dot"></span><span>ONLINE PLAYERS</span><b id="summaryonlinecount">0</b></div>
         <div class="summaryready">GET READY FOR THE <b>QUESTION</b></div>
-        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.46</div>
+        <div class="summarybrand">THE QUIZGAME MASTER · v1.0.47</div>
       </div>
     </section>
   </div>
@@ -230,7 +230,7 @@ body.embed .stage{top:2.5%;bottom:31.5%;left:5%;right:5%}
     <button onclick="replay()">↻ REPLAY</button>
   </div>
 </div>
-<script src="debug-overlay.js?v=1.0.46"></script>\n<script>
+<script src="debug-overlay.js?v=1.0.47"></script>\n<script>
 const $=id=>document.getElementById(id);
 const THEMES={
   flags:{label:"FLAGS",icon:"🌍",desc:"IDENTIFY THE COUNTRY",tag:"WORLD FLAGS"},
@@ -499,7 +499,13 @@ function finishDifficulty(target){
   $("diffscan").style.opacity=".95";
   $("resultname").textContent=l.emoji+" "+l.name+" LOCKED";
   $("resultreward").textContent="CORRECT ANSWER · +"+l.reward+" ★";
-  $("resultcard").classList.add("show");finalTone(l.reward);
+  $("resultcard").classList.add("show");
+  if(embedded){
+    try{parent.postMessage({type:"qgm-v2-difficulty-locked",level:l.id},"*")}catch(e){}
+  }else if(testMusicConfig?.mode==="difficulty"){
+    playTestMusic(l.id);
+  }
+  finalTone(l.reward);
   later(()=>$("readyflash").classList.add("show"),650);
   later(()=>showSummary(target),1750);
 }
@@ -536,18 +542,21 @@ function showSummary(target){
     later(()=>parent.postMessage({type:"qgm-v2-transition-complete"},"*"),3900);
   }
 }
-function replay(){playTestMusic(preset.level);startSequence()}
+function replay(){
+  if(testMusicConfig?.mode!=="difficulty")playTestMusic(preset.level);
+  startSequence();
+}
 function playPreset(theme,level,btn){
   preset={theme,level};
   document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
   btn?.classList.add("active");
-  playTestMusic(level);
+  if(testMusicConfig?.mode!=="difficulty")playTestMusic(level);
   startSequence();
 }
 applyGameMeta();
 buildLevels();
 loadTestMusicConfig();
 later(startSequence,embedded?120:350);
-document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){};playTestMusic(preset.level)},{once:true});
+document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){};if(testMusicConfig?.mode!=="difficulty")playTestMusic(preset.level)},{once:true});
 </script>
 </body></html>
