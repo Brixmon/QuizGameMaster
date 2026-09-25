@@ -42,6 +42,10 @@
 .musicbar{margin-top:12px;padding:10px 12px;border:1px solid #31536a;border-radius:13px;background:#091722;display:flex;align-items:center;justify-content:space-between;gap:10px}.musicbar .settingtoggle{justify-content:flex-start}
 .musicfieldlabel{display:block;color:#b8cbd8;font-size:11px;font-weight:900;margin:2px 0 -2px}.musicoptional{color:var(--muted);font-weight:700}
 .musicedit{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;padding:10px;border:1px solid #2b5068;border-radius:10px;background:#0c1c28}.musicedit .span2{grid-column:1/-1}.musicedit input,.musicedit select{width:100%;border:1px solid var(--line);background:#081722;color:#fff;border-radius:9px;padding:9px 10px}.musiceditactions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:7px}
+.musiclibrarypanel{margin-top:12px;background:linear-gradient(180deg,#10202d,#0b1822);border:1px solid var(--line);border-radius:15px;padding:16px}
+.musiclibraryhead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}.musiclibraryhead h3{margin:0;font-size:16px}.musiclibraryhead p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.musicdiff{display:inline-flex;align-items:center;gap:5px}.musicdiff select{border:1px solid var(--line);background:#081722;color:#fff;border-radius:8px;padding:6px 8px;font-size:11px}
+.musicmodehint{margin-top:8px;color:#86d8ff;font-size:10px;line-height:1.4}.musicsetting.disabled{opacity:.45}.musicsetting.disabled select{pointer-events:none}
 @media(max-width:950px){.app{grid-template-columns:185px 1fr}.main{padding:20px 16px}.uploadgrid{grid-template-columns:1fr 1fr}.musicgrid{grid-template-columns:1fr}}
 @media(max-width:720px){
  body{padding-bottom:76px}.app{display:block}.side{position:relative;height:auto;padding:14px 12px 11px;border-right:0;border-bottom:1px solid var(--line)}.nav{position:fixed;left:0;right:0;bottom:0;z-index:150;display:flex;gap:5px;overflow-x:auto;margin:0;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:#07131df7;border-top:1px solid var(--line);backdrop-filter:blur(14px);scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{min-width:100px;text-align:center;padding:9px 6px;font-size:10px;white-space:nowrap}.nav button.active{box-shadow:inset 0 3px var(--blue)}
@@ -57,7 +61,7 @@
 <div class="app">
 <aside class="side">
  <div class="brand">QUIZGAME <b>MASTER</b></div>
- <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.25</div>
+ <div class="ver"><span id="ccLabel">VADĪBAS CENTRS</span> · v0.26</div>
  <div class="nav">
   <button class="active" data-tab="overview">◈ <span data-t="overview">Pārskats</span></button>
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
@@ -132,6 +136,15 @@
       <option value="yes">✅ Atļauta</option>
       <option value="no">⛔ Nav atļauta</option>
      </select>
+     <label class="musicfieldlabel" id="musicDifficultyLabel">Grūtības pakāpe <span class="musicoptional">(var mainīt vēlāk)</span></label>
+     <select id="musicDifficulty">
+      <option value="">— Nav piešķirta —</option>
+      <option value="newbie">🌱 Newbie</option>
+      <option value="rookie">🎯 Rookie</option>
+      <option value="pro">⚡ Pro</option>
+      <option value="ninja">🥷 Ninja</option>
+      <option value="master">👑 Master</option>
+     </select>
      <details>
       <summary id="musicOptionalSummary">Papildu licences informācija (nav obligāti)</summary>
       <div class="musicupload" style="margin-top:9px">
@@ -151,8 +164,14 @@
     <p id="musicPlaySub">Atķeksē celiņus, kurus spēle drīkst izmantot. No atzīmētajiem celiņiem tiks veidota rotācija.</p>
     <div class="musicsettings">
      <div class="musicsetting">
-      <b id="musicFreqLabel">Mainīt celiņu</b>
-      <small id="musicFreqHelp">Izvēlies, kad sākt nākamo celiņu.</small>
+      <b id="musicModeLabel">Atskaņošanas režīms</b>
+      <small id="musicModeHelp">Pēc grūtības pakāpes vai random no aktīvajiem celiņiem.</small>
+      <select id="musicMode"><option value="difficulty">Pēc grūtības pakāpes</option><option value="random">Random</option></select>
+      <div class="musicmodehint" id="musicModeHint"></div>
+     </div>
+     <div class="musicsetting" id="musicFrequencyCard">
+      <b id="musicFreqLabel">Random režīmā mainīt celiņu</b>
+      <small id="musicFreqHelp">Izvēlies, kad random režīmā sākt nākamo celiņu.</small>
       <select id="musicFrequency"><option value="round">Reizi raundā</option><option value="question">Pie katra jautājuma</option></select>
      </div>
      <div class="musicsetting">
@@ -161,13 +180,19 @@
       <input id="musicVolume" type="range" min="0" max="100" step="1" value="18">
      </div>
     </div>
-    <div class="musictracks" id="musicTracks"></div>
     <div class="musicbar">
      <label class="settingtoggle"><input id="musicEnabled" type="checkbox" checked><span id="musicEnabledText">MŪZIKA IESLĒGTA</span></label>
      <button class="btn primary" id="musicSaveBtn" type="button">💾 SAGLABĀT MŪZIKU</button>
     </div>
     <div class="musicstatus" id="musicSaveStatus"></div>
    </div>
+  </div>
+  <div class="musiclibrarypanel">
+   <div class="musiclibraryhead">
+    <div><h3 id="musicLibraryTitle">🎵 Mūzikas bibliotēka</h3><p id="musicLibrarySub">Visi pievienotie celiņi. Te vari ieslēgt/izslēgt, piešķirt grūtības pakāpi, klausīties un rediģēt licences informāciju.</p></div>
+    <span class="pill info" id="musicLibraryCount">0 celiņi</span>
+   </div>
+   <div class="musictracks" id="musicTracks"></div>
   </div>
  </section>
 
