@@ -60,6 +60,7 @@
   <button data-tab="questions">▤ <span data-t="questions">Jautājumi</span></button>
   <button data-tab="categories">▦ <span data-t="categories">Kategorijas</span></button>
   <button data-tab="media">◉ <span data-t="media">Faili</span></button>
+  <button data-tab="music">♫ <span data-t="music">Fona mūzika</span></button>
   <button data-tab="analytics">⌁ <span data-t="analytics">Analītika</span></button>
   <button data-tab="players">♟ <span data-t="players">Spēlētāji</span></button>
   <button data-tab="settings">⚙ <span data-t="settings">Iestatījumi</span></button>
@@ -107,6 +108,52 @@
  <section id="media" class="section">
   <div class="head"><div><h2 data-t="mediaTitle">Cloud faili (R2)</h2><p data-t="mediaSub">Šie faili tiek augšupielādēti no vadības centra — GitHub nav vajadzīgs.</p></div></div>
   <div class="card" id="mediaList"></div>
+ </section>
+
+ <section id="music" class="section">
+  <div class="head">
+   <div><h2 id="musicTitle">♫ Fona mūzika</h2><p id="musicSub">Augšupielādē savus loop failus, izvēlies aktīvos celiņus un cik bieži spēle maina mūziku.</p></div>
+   <div class="toolbar"><span class="pill info" id="musicCloudBadge">Cloud</span></div>
+  </div>
+  <div class="musicgrid">
+   <div class="musicpanel">
+    <h3 id="musicUploadTitle">⬆ Pievienot mūzikas failu</h3>
+    <p id="musicUploadSub">MP3, WAV vai OGG. Komerciālās licences informāciju glabājam kopā ar failu.</p>
+    <div class="musicupload">
+     <input id="musicFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg">
+     <input id="musicName" type="text" placeholder="Celiņa nosaukums">
+     <div class="musiclicensegrid">
+      <input id="musicProvider" type="text" placeholder="Pakalpojums / avots, piem. Stable Audio">
+      <input id="musicLicenseName" type="text" placeholder="Licence / plāns">
+     </div>
+     <input id="musicProof" type="text" placeholder="Licences pierādījuma URL / piezīme">
+     <button class="btn good" id="musicUploadBtn" type="button">⬆ AUGŠUPIELĀDĒT UZ R2</button>
+    </div>
+    <div class="musicstatus" id="musicUploadStatus"></div>
+   </div>
+   <div class="musicpanel">
+    <h3 id="musicPlayTitle">🎚 Atskaņošana</h3>
+    <p id="musicPlaySub">Atķeksē celiņus, kurus spēle drīkst izmantot. No atzīmētajiem celiņiem tiks veidota rotācija.</p>
+    <div class="musicsettings">
+     <div class="musicsetting">
+      <b id="musicFreqLabel">Mainīt celiņu</b>
+      <small id="musicFreqHelp">Izvēlies, kad sākt nākamo celiņu.</small>
+      <select id="musicFrequency"><option value="round">Reizi raundā</option><option value="question">Pie katra jautājuma</option></select>
+     </div>
+     <div class="musicsetting">
+      <b id="musicVolumeLabel">Fona mūzikas skaļums</b>
+      <small><span id="musicVolumeValue">18</span>%</small>
+      <input id="musicVolume" type="range" min="0" max="100" step="1" value="18">
+     </div>
+    </div>
+    <div class="musictracks" id="musicTracks"></div>
+    <div class="musicbar">
+     <label class="settingtoggle"><input id="musicEnabled" type="checkbox" checked><span id="musicEnabledText">MŪZIKA IESLĒGTA</span></label>
+     <button class="btn primary" id="musicSaveBtn" type="button">💾 SAGLABĀT MŪZIKU</button>
+    </div>
+    <div class="musicstatus" id="musicSaveStatus"></div>
+   </div>
+  </div>
  </section>
 
  <section id="analytics" class="section">
@@ -335,8 +382,8 @@ const BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
 const T={
 lv:{overview:"Pārskats",questions:"Jautājumi",categories:"Kategorijas",media:"Faili",analytics:"Analītika",players:"Spēlētāji",title:"Spēles vadības centrs",subtitle:"Jautājumi, faili, licences un LIVE dati vienuviet.",refresh:"Atjaunot",openGame:"Atvērt spēli",totalQuestions:"KOPĀ JAUTĀJUMU",rankingPlayers:"REITINGA SPĒLĒTĀJI",rankingSub:"globālajā spēles reitingā",visitors:"LIVE APMEKLĒTĀJI",visitorsSub:"unikāli analītikā",sessions:"LIVE SESIJAS",sessionsSub:"saglabātas D1",cloudFiles:"CLOUD FAILI",cloudFilesSub:"R2 satura faili",status:"Sistēmas statuss",statusSub:"Kas šobrīd ir pieslēgts un gatavs darbam.",questionsSub:"Atver jautājumu, lai apskatītu detaļas un augšupielādētu failus tieši Cloudflare R2.",preview:"Priekšskatījums",category:"Kategorija",difficulty:"Grūtība",question:"Jautājums",correct:"Pareizā",categoriesSub:"Jautājumu un grūtības līmeņu pārklājums.",mediaTitle:"Cloud faili (R2)",mediaSub:"Šie faili tiek augšupielādēti no vadības centra — GitHub nav vajadzīgs.",analyticsTitle:"LIVE analītika",analyticsSub:"Reālie D1 dati no TikTok LIVE sesijām.",questionPlays:"JAUTĀJUMU PARĀDĪŠANAS",answers:"ATBILDES",correctPct:"PAREIZI",perQuestion:"Pa jautājumiem",shown:"Parādīts",avgTime:"Vid. laiks",playersSub:"Globālais reitings no spēles cloud state. Tas nav tas pats, kas visi LIVE apmeklētāji.",player:"Spēlētājs",points:"Punkti",questionMedia:"JAUTĀJUMA ATTĒLS",fact:"FAKTS",performance:"REZULTĀTI",cloudUpload:"CLOUD FAILU AUGŠUPIELĀDE",connectToUpload:"Pieslēdz Cloud admin, lai augšupielādētu failus tieši R2.",licenseStatus:"LICENCES STATUSS",provider:"PAKALPOJUMS / AVOTS",license:"LICENCE",source:"AVOTA URL / PIEZĪME",proof:"PIERĀDĪJUMA URL / PIEZĪME",questionImage:"Jautājuma attēls",factImage:"Fakta attēls",questionAudio:"Jautājuma audio",upload:"Augšupielādēt"},
 en:{overview:"Overview",questions:"Questions",categories:"Categories",media:"Files",analytics:"Analytics",players:"Players",title:"Game Control Center",subtitle:"Questions, files, licenses and LIVE data in one place.",refresh:"Refresh",openGame:"Open game",totalQuestions:"TOTAL QUESTIONS",rankingPlayers:"RANKING PLAYERS",rankingSub:"in the global game ranking",visitors:"LIVE VISITORS",visitorsSub:"unique users in analytics",sessions:"LIVE SESSIONS",sessionsSub:"stored in D1",cloudFiles:"CLOUD FILES",cloudFilesSub:"R2 content files",status:"System status",statusSub:"What is connected and ready right now.",questionsSub:"Open a question to inspect it and upload files directly to Cloudflare R2.",preview:"Preview",category:"Category",difficulty:"Difficulty",question:"Question",correct:"Correct",categoriesSub:"Question counts and difficulty coverage.",mediaTitle:"Cloud files (R2)",mediaSub:"These files are uploaded from Control Center — GitHub is not used.",analyticsTitle:"LIVE analytics",analyticsSub:"Real D1 data from TikTok LIVE sessions.",questionPlays:"QUESTION PLAYS",answers:"ANSWERS",correctPct:"CORRECT",perQuestion:"Per question",shown:"Shown",avgTime:"Avg time",playersSub:"Global ranking from game cloud state. This is not the same as all LIVE visitors.",player:"Player",points:"Points",questionMedia:"QUESTION IMAGE",fact:"FACT",performance:"PERFORMANCE",cloudUpload:"CLOUD MEDIA UPLOAD",connectToUpload:"Connect Cloud admin to upload files directly to R2.",licenseStatus:"LICENSE STATUS",provider:"PROVIDER / SOURCE",license:"LICENSE",source:"SOURCE URL / NOTE",proof:"PROOF URL / NOTE",questionImage:"Question image",factImage:"Fact image",questionAudio:"Question audio",upload:"Upload"}};
-Object.assign(T.lv,{settings:"Iestatījumi",settingsSub:"Galvenie spēles noteikumi vienuviet — bez tehniskiem terminiem."});
-Object.assign(T.en,{settings:"Settings",settingsSub:"The main game rules in one place — without technical jargon."});
+Object.assign(T.lv,{settings:"Iestatījumi",settingsSub:"Galvenie spēles noteikumi vienuviet — bez tehniskiem terminiem.",music:"Fona mūzika"});
+Object.assign(T.en,{settings:"Settings",settingsSub:"The main game rules in one place — without technical jargon.",music:"Background music"});
 let lang=localStorage.getItem("qgm_admin_lang")||"lv";
 const state={questions:[],catalog:{questions:{},id_policy:{}},players:[],cloud:{connected:false,assets:[],exp:null},gameState:null,current:null,diffQuestion:null};
 const QCOL_DEFAULT=["qid","creator","preview","category","difficulty","question","materials","correct"];
