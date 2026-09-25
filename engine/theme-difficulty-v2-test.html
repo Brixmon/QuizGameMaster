@@ -255,6 +255,56 @@ let preset={
   theme:THEMES[requestedTheme]?requestedTheme:"flags",
   level:LEVELS.some(x=>x.id===requestedLevel)?requestedLevel:"pro"
 },timers=[],audio=null;
+const LIVE_BRIDGE="https://quizgamemaster-bridge.vip-krasts.workers.dev";
+let testMusicConfig=null,testMusicAudio=null,testMusicTrackKey="";
+function publicMusicUrl(key){return LIVE_BRIDGE+"/assets/"+String(key||"").split("/").map(encodeURIComponent).join("/")}
+async function loadTestMusicConfig(){
+  if(embedded)return null;
+  try{
+    const r=await fetch(LIVE_BRIDGE+"/game/state",{cache:"no-store"});
+    if(!r.ok)return null;
+    const j=await r.json(),cfg=j?.settings?.backgroundMusic;
+    testMusicConfig=cfg&&typeof cfg==="object"?cfg:null;
+  }catch(e){testMusicConfig=null}
+  return testMusicConfig;
+}
+function testMusicTracks(){
+  const cfg=testMusicConfig;if(!cfg)return [];
+  const lib=Array.isArray(cfg.library)?cfg.library:[];
+  const configured=Array.isArray(cfg.tracks)?cfg.tracks.filter(t=>t&&t.key):[];
+  const src=configured.length?configured:lib.map(m=>({key:m.key,name:m.name,url:publicMusicUrl(m.key),difficulty:m.difficulty,useDifficulty:m.useDifficulty,useRandom:m.useRandom}));
+  return src.filter(t=>t?.key).map(t=>{
+    const meta=lib.find(m=>String(m?.key||"")===String(t.key))||{};
+    return {
+      key:String(t.key),
+      url:String(t.url||publicMusicUrl(t.key)),
+      difficulty:String(meta.difficulty||t.difficulty||"").toLowerCase(),
+      useDifficulty:(meta.useDifficulty===true)||(t.useDifficulty===true),
+      useRandom:(meta.useRandom!==false)&&(t.useRandom!==false)
+    };
+  });
+}
+function stopTestMusic(){
+  if(testMusicAudio){try{testMusicAudio.pause();testMusicAudio.currentTime=0}catch(e){}}
+  testMusicAudio=null;testMusicTrackKey="";
+}
+function playTestMusic(level=preset.level){
+  if(embedded||!testMusicConfig)return;
+  const all=testMusicTracks();if(!all.length)return;
+  let pool=testMusicConfig.mode==="difficulty"
+    ? all.filter(t=>t.useDifficulty===true&&t.difficulty===String(level||"").toLowerCase())
+    : all.filter(t=>t.useRandom!==false);
+  if(!pool.length)pool=all;
+  const track=pool.find(t=>t.key===testMusicTrackKey)||pool[Math.floor(Math.random()*pool.length)];
+  if(!track)return;
+  if(testMusicAudio&&testMusicTrackKey===track.key&&!testMusicAudio.paused)return;
+  stopTestMusic();
+  try{
+    const el=new Audio(track.url);el.loop=true;el.preload="auto";el.volume=Math.max(0,Math.min(1,(Number(testMusicConfig.volume)||18)/100));
+    testMusicAudio=el;testMusicTrackKey=track.key;
+    const p=el.play();if(p?.catch)p.catch(()=>{if(testMusicAudio===el){testMusicAudio=null;testMusicTrackKey=""}});
+  }catch(e){stopTestMusic()}
+}
 if(embedded)document.body.classList.add("embed");
 window.addEventListener("message",ev=>{
   if(!embedded)return;
@@ -486,16 +536,18 @@ function showSummary(target){
     later(()=>parent.postMessage({type:"qgm-v2-transition-complete"},"*"),3900);
   }
 }
-function replay(){startSequence()}
+function replay(){playTestMusic(preset.level);startSequence()}
 function playPreset(theme,level,btn){
   preset={theme,level};
   document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
   btn?.classList.add("active");
+  playTestMusic(level);
   startSequence();
 }
 applyGameMeta();
 buildLevels();
+loadTestMusicConfig();
 later(startSequence,embedded?120:350);
-document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){}},{once:true});
+document.body.addEventListener("pointerdown",()=>{try{audio||=new(window.AudioContext||window.webkitAudioContext)();audio.resume?.()}catch(e){};playTestMusic(preset.level)},{once:true});
 </script>
 </body></html>
